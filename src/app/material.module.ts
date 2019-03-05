@@ -6,6 +6,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSelectModule } from '@angular/material/select';
+import { MatListModule } from '@angular/material/list';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
     imports: [
@@ -16,6 +20,10 @@ import { MatInputModule } from '@angular/material/input';
         MatMenuModule,
         MatFormFieldModule,
         MatInputModule,
+        MatAutocompleteModule,
+        MatSelectModule,
+        MatListModule,
+        MatCardModule,
     ],
     exports: [
         MatButtonModule,
@@ -25,6 +33,10 @@ import { MatInputModule } from '@angular/material/input';
         MatMenuModule,
         MatFormFieldModule,
         MatInputModule,
+        MatAutocompleteModule,
+        MatSelectModule,
+        MatListModule,
+        MatCardModule,
     ]
 })
 export class MaterialAppModule {}

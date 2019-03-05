@@ -1,20 +1,32 @@
-<span class="role-selector">
-  <button mat-icon-button [matMenuTriggerFor]="menu">
-    <mat-icon>perm_identity</mat-icon>
-  </button>
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item>
-      <a routerLink="user">Пользователь</a>
+<mat-toolbar color="primary" class="toolbar-center">
+  <span>Зарядка Электромобилей</span>
+  <span class="menu-buttons">
+    <button mat-icon-button *ngIf="!isMenuOpened" (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
     </button>
-    <button mat-menu-item>
-      <a routerLink="station-owner">Хозяин станции</a>
+    <button mat-icon-button *ngIf="isMenuOpened" (click)="sidenav.toggle()">
+      <mat-icon>clear</mat-icon>
     </button>
-    <button mat-menu-item>
-      <a routerLink="service-owner">Хозяин сервиса</a>
-    </button>
-    <button mat-menu-item>
-      <a routerLink="settings">Настройки</a>
-    </button>
-  </mat-menu>
-</span>
-<router-outlet></router-outlet>
+  </span>
+</mat-toolbar>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav>
+    <mat-list>
+      <mat-list-item class="list-item"> 
+        <a routerLink="/user" class="sidenav-item">Пользователь</a>
+      </mat-list-item>
+      <mat-list-item class="list-item">
+        <a routerLink="/station-owner" class="sidenav-item">Хозяин станции</a>
+      </mat-list-item>
+      <mat-list-item class="list-item">
+        <a routerLink="/service-owner" class="sidenav-item">Хозяин сервиса</a>
+      </mat-list-item>
+      <mat-list-item class="list-item">
+        <a routerLink="/settings" class="sidenav-item">Настройки</a>
+      </mat-list-item>
+    </mat-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

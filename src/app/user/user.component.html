@@ -1,3 +1,35 @@
-<p>
-  user works!
-</p>
+<div class="container">
+  <mat-card class="page-heading">
+    <span class="username">{{username}}</span>
+    <span class="balance">Баланс: <b>{{balance | currency}}</b></span>
+  </mat-card>
+  <mat-card class="form">
+    <mat-form-field class="form-input" *ngIf="showInput">
+      <input type="text" matInput (input)="findVariants()" [(ngModel)]="address" placeholder="Начните вводить адрес" />
+      <ul class="variants" *ngIf="variants.length">
+        <li *ngFor="let variant of variants" class="variants-item" (click)="setAddress(variant)">{{variant}}</li>
+      </ul>
+    </mat-form-field>
+    <mat-form-field *ngIf="!showInput">
+      <mat-select placeholder="Выберите адрес" [(ngModel)]="address">
+        <mat-option *ngFor="let station of stations" [value]="station">
+          {{station}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <p>
+      <button *ngIf="showInput" mat-stroked-button (click)="toggleForm()">выбрать адрес из списка</button>
+      <button *ngIf="!showInput" mat-stroked-button (click)="toggleForm()">ввести адрес вручную</button>
+    </p>
+    <p class="time-field">
+      Укажите время:
+      <input matInput type="time" class="time-input" [(ngModel)]="time" />
+    </p>
+    <p>
+      <button [disabled]="!validateForm()" mat-raised-button color="primary" (click)="reserve()">Забронировать</button>
+    </p>
+  </mat-card>
+  <mat-card class="charge-panel">
+    <button mat-raised-button color="warn" class="charge-button" (click)="charge()">Заряжать</button>
+  </mat-card>
+</div>
