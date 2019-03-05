@@ -1,0 +1,17 @@
+<mat-toolbar color="primary" class="toolbar-center">
+    <span>Зарядка Электромобилей</span>
+  </mat-toolbar>
+<div class="container settings-container">
+  <h3 class="text-center">Настройки</h3>
+  <form class="settings-form">
+    <mat-form-field>
+      <input matInput placeholder="Адрес" name="address" [(ngModel)]="address" />
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput placeholder="ABI" class="settings-form_textarea" name="abi" [(ngModel)]="abi"></textarea>
+    </mat-form-field>
+    <div class="settings-form_actions">
+      <button mat-raised-button color="primary" (click)="sendSettings()">Установить</button>
+    </div>
+  </form>
+</div>
