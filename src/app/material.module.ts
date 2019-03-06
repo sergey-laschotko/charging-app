@@ -10,6 +10,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
     imports: [
@@ -24,6 +25,7 @@ import { MatCardModule } from '@angular/material/card';
         MatSelectModule,
         MatListModule,
         MatCardModule,
+        MatGridListModule,
     ],
     exports: [
         MatButtonModule,
@@ -37,6 +39,7 @@ import { MatCardModule } from '@angular/material/card';
         MatSelectModule,
         MatListModule,
         MatCardModule,
+        MatGridListModule,
     ]
 })
 export class MaterialAppModule {}

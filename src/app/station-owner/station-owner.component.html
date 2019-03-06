@@ -1,3 +1,52 @@
-<p>
-  station-owner works!
-</p>
+<div class="container">
+    <mat-card class="page-heading">
+      <span class="username">{{username}}</span>
+      <span class="balance">Баланс: <b>{{balance | currency}}</b></span>
+    </mat-card>
+    <div class="registered-stations">
+      <mat-card>
+        <h4>Зарегестрированные станции</h4>
+        <mat-list>
+          <mat-list-item *ngFor="let station of stations">{{station}}</mat-list-item>
+        </mat-list>
+      </mat-card>
+    </div>
+    <div class="register-station">
+      <mat-card>
+        <h4>Зарегестрировать новую станцию</h4>
+        <mat-form-field>
+          <input matInput placeholder="Адрес новой станции" [(ngModel)]="newStation" />
+        </mat-form-field>
+        <div>
+          <button mat-raised-button color="primary" [disabled]="!validateNewStation()" (click)="addNewStation()">Добавить</button>
+        </div>
+      </mat-card>
+    </div>
+    <div class="tariffs">
+      <mat-card>
+        <h4>Тарифы</h4>
+        <div class="inline-form">
+          <span class="inline-form_label">C</span>
+          <mat-form-field>
+            <input matInput type="time" [(ngModel)]="newTariffFrom" class="inline-input"/>
+          </mat-form-field>
+          <span class="inline-form_label">До</span>
+          <mat-form-field>
+            <input matInput type="time" [(ngModel)]="newTariffTo" class="inline-input" />
+          </mat-form-field>
+          <span class="inline-form_label">Цена</span>
+          <mat-form-field>
+            <input matInput type="number" [(ngModel)]="newTariffPrice" class="inline-input" />
+          </mat-form-field>
+          <div>
+            <button mat-raised-button color="primary" (click)="addNewTariff()">Добавить</button>
+          </div>
+        </div>
+        <div class="tariffs-list">
+          <mat-list>
+            <mat-list-item *ngFor="let tariff of tariffs">{{tariff}}</mat-list-item>
+          </mat-list>
+        </div>
+      </mat-card>
+    </div>
+  </div>

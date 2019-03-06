@@ -1,32 +1,34 @@
-<mat-toolbar color="primary" class="toolbar-center">
-  <span>Зарядка Электромобилей</span>
-  <span class="menu-buttons">
-    <button mat-icon-button *ngIf="!isMenuOpened" (click)="sidenav.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <button mat-icon-button *ngIf="isMenuOpened" (click)="sidenav.toggle()">
-      <mat-icon>clear</mat-icon>
-    </button>
-  </span>
-</mat-toolbar>
-<mat-sidenav-container>
-  <mat-sidenav #sidenav>
-    <mat-list>
-      <mat-list-item class="list-item"> 
-        <a routerLink="/user" class="sidenav-item">Пользователь</a>
-      </mat-list-item>
-      <mat-list-item class="list-item">
-        <a routerLink="/station-owner" class="sidenav-item">Хозяин станции</a>
-      </mat-list-item>
-      <mat-list-item class="list-item">
-        <a routerLink="/service-owner" class="sidenav-item">Хозяин сервиса</a>
-      </mat-list-item>
-      <mat-list-item class="list-item">
-        <a routerLink="/settings" class="sidenav-item">Настройки</a>
-      </mat-list-item>
-    </mat-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<div class="main-container">
+  <mat-toolbar color="primary" class="toolbar-center main-toolbar">
+    <span>Зарядка Электромобилей</span>
+    <span class="menu-buttons">
+      <button mat-icon-button *ngIf="!isMenuOpened" (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <button mat-icon-button *ngIf="isMenuOpened" (click)="sidenav.toggle()">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </span>
+  </mat-toolbar>
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav>
+      <mat-list>
+        <mat-list-item class="list-item"> 
+          <a routerLink="/user" class="sidenav-item" (click)="sidenav.toggle()">Пользователь</a>
+        </mat-list-item>
+        <mat-list-item class="list-item">
+          <a routerLink="/station-owner" class="sidenav-item" (click)="sidenav.toggle()">Хозяин станции</a>
+        </mat-list-item>
+        <mat-list-item class="list-item">
+          <a routerLink="/service-owner" class="sidenav-item" (click)="sidenav.toggle()">Хозяин сервиса</a>
+        </mat-list-item>
+        <mat-list-item class="list-item">
+          <a routerLink="/settings" class="sidenav-item" (click)="sidenav.toggle()">Настройки</a>
+        </mat-list-item>
+      </mat-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
