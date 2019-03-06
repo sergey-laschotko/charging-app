@@ -1,12 +1,10 @@
 .aligned-right {
-    display: inline-block;
     float: right;
     position: relative;
     top: -10px;
 }
 
 .aligend-left {
-    display: inline-block;
     float: left;
 }
 
