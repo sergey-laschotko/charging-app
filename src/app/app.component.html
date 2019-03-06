@@ -4,20 +4,32 @@
   </mat-toolbar>
   <mat-sidenav-container hasBackdrop="false">
     <mat-sidenav opened="true" mode="side">
-      <mat-list>
-        <mat-list-item class="list-item"> 
-          <a routerLink="/user" class="sidenav-item">Пользователь</a>
-        </mat-list-item>
-        <mat-list-item class="list-item">
-          <a routerLink="/station-owner" class="sidenav-item">Владелец станции</a>
-        </mat-list-item>
-        <mat-list-item class="list-item">
-          <a routerLink="/service-owner" class="sidenav-item">Диспетчер</a>
-        </mat-list-item>
-        <mat-list-item class="list-item">
-          <a routerLink="/settings" class="sidenav-item">Настройки</a>
-        </mat-list-item>
-      </mat-list>
+      <ul class="list">
+        <li class="list-item"> 
+          <a routerLink="/user" class="sidenav-item">
+            <mat-icon class="menu-icon">account_circle</mat-icon>
+            Пользователь
+          </a>
+        </li>
+        <li class="list-item">
+          <a routerLink="/station-owner" class="sidenav-item">
+            <mat-icon class="menu-icon">ev_station</mat-icon>
+            Владелец станции
+          </a>
+        </li>
+        <li class="list-item">
+          <a routerLink="/service-owner" class="sidenav-item">
+            <mat-icon class="menu-icon">device_hub</mat-icon>
+            Диспетчер
+          </a>
+        </li>
+        <li class="list-item">
+          <a routerLink="/settings" class="sidenav-item">
+            <mat-icon class="menu-icon">settings</mat-icon>
+            Настройки
+          </a>
+        </li>
+      </ul>
     </mat-sidenav>
     <mat-sidenav-content>
       <router-outlet></router-outlet>

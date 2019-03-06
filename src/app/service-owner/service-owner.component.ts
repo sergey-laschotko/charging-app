@@ -10,24 +10,13 @@ import { journal, stationsBalance } from '../locations-journal';
 })
 export class ServiceOwnerComponent implements OnInit {
   username: string = 'Диспетчер';
-  balance: string = '23750';
   tokens: number = 500;
-  tokenCreating: boolean = false;
-  tokenDeleting: boolean = false;
   serviceProviders: any[] = [
     'Service Provider 1',
     'Service Provider 2',
     'Service Provider 3',
     'Service Provider 4',
     'Service Provider 5',
-  ];
-  smartContracts: any[] = [
-    'Contract 1',
-    'Contract 1',
-    'Contract 1',
-    'Contract 1',
-    'Contract 1',
-    'Contract 1'
   ];
   chosen: string = "Никто не выбран";
   isModalOpened: boolean = false;
@@ -72,33 +61,11 @@ export class ServiceOwnerComponent implements OnInit {
     this.isModalOpened = false;
   }
 
-  createTokens() {
-    if (this.tokenCreating) {
-      this.tokenCreating = !this.tokenCreating;
-    } else {
-      this.tokenCreating = true;
-    }
+  produceTokens(amount: number) {
+    this.tokens += amount;
   }
 
-  deleteTokens() {
-    if (this.tokenDeleting) {
-      this.tokenDeleting = !this.tokenDeleting;
-    } else {
-      this.tokenDeleting = true;
-    }
-  }
-
-  manipulateTokens(val: number) {
-    if (this.tokenCreating) {
-      this.tokens += Number(val);
-    } else if (this.tokenDeleting) {
-      this.tokens -= Number(val);
-    } else {
-      this.tokenCreating = false;
-      this.tokenDeleting = false;
-      return false;
-    }
-    this.tokenCreating = false;
-    this.tokenDeleting = false;
+  removeTokens(amount: number) {
+    this.tokens -= amount;
   }
 }

@@ -1,0 +1,26 @@
+<mat-card>
+    <h4 class="text-center">Баланс</h4>
+    <p>
+      Сумма: <b>{{tokens}}</b>
+    </p>
+    <p>
+      <button mat-stroked-button color="accent" (click)="increaseAdding(amountToAdd)">
+        <mat-icon>add</mat-icon>
+      </button>
+      <span class="amount">{{amountToAdd}}</span>
+      <button mat-stroked-button color="warn" (click)="decreaseAdding(amountToAdd)">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button class="balance-action-button" mat-raised-button color="primary" (click)="addTokens()">{{add}}</button>
+    </p>
+    <p>
+      <button mat-stroked-button color="accent" (click)="increaseRemoving(amountToRemove)">
+        <mat-icon>add</mat-icon>
+      </button>
+      <span class="amount">{{amountToRemove}}</span>
+      <button mat-stroked-button color="warn" (click)="decreaseRemoving(amountToRemove)">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button class="balance-action-button" mat-raised-button color="warn" (click)="removeTokens()">{{remove}}</button>
+    </p>
+  </mat-card>

@@ -1,26 +1,10 @@
 <div class="container">
     <mat-card class="page-heading">
-      <span class="username">{{username}}</span>
-      <span class="balance">Баланс: <b>{{balance | currency}}</b></span>
+      <span class="username"><b>{{username}}</b></span>
     </mat-card>
     <mat-tab-group>
       <mat-tab label="Токены">
-        <mat-card>
-          <h4 class="text-center">Токены</h4>
-          <p>
-            Количество: <b>{{tokens}}</b>
-            <span class="tokens-actions">
-              <button mat-raised-button color="primary" (click)="createTokens()" *ngIf="!tokenDeleting">Выпуск токенов</button>
-              <button mat-raised-button color="warn" (click)="deleteTokens()" *ngIf="!tokenCreating">Стирание токенов</button>
-            </span>
-            <span class="token-operations" *ngIf="tokenCreating || tokenDeleting">
-              <mat-form-field>
-                <input type="number" min="0" #amount matInput value="0" />
-              </mat-form-field>
-              <button mat-raised-button color="accent" (click)="manipulateTokens(amount.value)">Готово</button>
-            </span>
-          </p>
-        </mat-card>
+        <app-balance [tokens]="tokens" add="Выпустить" remove="Сжечь" (onAdd)="produceTokens($event)" (onRemove)="removeTokens($event)"></app-balance>
       </mat-tab>
       <mat-tab label="Провайдеры">
         <mat-card>
@@ -31,17 +15,6 @@
               <span class="aligned-right"><button mat-raised-button color="accent" (click)="openModel(sp)">Посмотреть данные</button></span>
             </li>
           </ul>
-        </mat-card>
-      </mat-tab>
-      <mat-tab label="Смарт-контракты">
-        <mat-card>
-          <h4>Смарт-контракты</h4>
-          <div>
-            <button mat-raised-button color="primary">Выпустить смарт-контракт</button>
-          </div>
-          <mat-list>
-            <mat-list-item *ngFor="let contract of smartContracts">{{contract}}</mat-list-item>
-          </mat-list>
         </mat-card>
       </mat-tab>
       <mat-tab label="Журнал Операций">

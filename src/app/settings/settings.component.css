@@ -1,16 +1,9 @@
-.settings-container {
-    position: absolute;
-    width: 500px;
-    height: 500px;
-    top: 50%;
-    left: 50%;
-    margin-top: -250px;
-    margin-left: -250px;
+.settings-card {
+    width: 450px;
 }
 
 .settings-form {
     width: 400px;
-    margin: 20px auto;
 }
 
 .settings-form mat-form-field {

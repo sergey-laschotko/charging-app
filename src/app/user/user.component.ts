@@ -21,10 +21,7 @@ const operations: { date: string, operation: string }[] = [
 })
 export class UserComponent implements OnInit {
   username: string = "John Doe";
-  balance: string = "250";
   tokens: number = 5;
-  tokenBuying: boolean = false;
-  tokenSaling: boolean = false;
   showInput: boolean = true;
   address: string = "";
   variants: string[] = [];
@@ -39,6 +36,14 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  onBuy(amount: number) {
+    this.tokens += amount;
+  }
+
+  onSale(amount: number) {
+    this.tokens -= amount;
   }
 
   findVariants() {
@@ -73,35 +78,5 @@ export class UserComponent implements OnInit {
 
   charge() {
     console.log("Идет зарядка");
-  }
-
-  buyTokens() {
-    if (this.tokenBuying) {
-      this.tokenBuying = !this.tokenBuying;
-    } else {
-      this.tokenBuying = true;
-    }
-  }
-
-  saleTokens() {
-    if (this.tokenSaling) {
-      this.tokenSaling = !this.tokenSaling;
-    } else {
-      this.tokenSaling = true;
-    }
-  }
-
-  manipulateTokens(val: number) {
-    if (this.tokenBuying) {
-      this.tokens += Number(val);
-    } else if (this.tokenSaling) {
-      this.tokens -= Number(val);
-    } else {
-      this.tokenBuying = false;
-      this.tokenSaling = false;
-      return false;
-    }
-    this.tokenBuying = false;
-    this.tokenSaling = false;
   }
 }

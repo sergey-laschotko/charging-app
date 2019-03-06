@@ -1,26 +1,10 @@
 <div class="container">
     <mat-card class="page-heading">
-      <span class="username">{{username}}</span>
-      <span class="balance">Баланс: <b>{{balance | currency}}</b></span>
+      <span class="username"><b>{{username}}</b></span>
     </mat-card>
     <mat-tab-group>
-      <mat-tab label="Токены">
-        <mat-card>
-          <h4 class="text-center">Токены</h4>
-          <p>
-            Количество: <b>{{tokens}}</b>
-            <span class="tokens-actions">
-              <button mat-raised-button color="primary" (click)="buyTokens()" *ngIf="!tokenSaling">Купить</button>
-              <button mat-raised-button color="warn" (click)="saleTokens()" *ngIf="!tokenBuying">Продать</button>
-            </span>
-            <span class="token-operations" *ngIf="tokenBuying || tokenSaling">
-              <mat-form-field>
-                <input type="number" min="0" #amount matInput value="0" />
-              </mat-form-field>
-              <button mat-raised-button color="accent" (click)="manipulateTokens(amount.value)">Готово</button>
-            </span>
-          </p>
-          </mat-card>
+      <mat-tab label="Баланс">
+          <app-balance [tokens]="tokens" add="Купить" remove="Продать" (onAdd)="buyTokens($event)" (onRemove)="saleTokens($event)"></app-balance>
       </mat-tab>
       <mat-tab label="Зарегестрированные станции">
         <div class="registered-stations">

@@ -1,0 +1,11 @@
+.amount {
+    display: inline-block;
+    width: 60px;
+    text-align: center;
+    position: relative;
+    top: 3px;
+}
+
+.balance-action-button {
+    margin-left: 10px;
+}

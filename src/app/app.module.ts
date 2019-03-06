@@ -11,6 +11,7 @@ import { UserComponent } from './user/user.component';
 import { StationOwnerComponent } from './station-owner/station-owner.component';
 import { ServiceOwnerComponent } from './service-owner/service-owner.component';
 import { SettingsComponent } from './settings/settings.component';
+import { BalanceComponent } from './balance/balance.component';
 
 const routes: Routes = [
   { path: "", redirectTo: "/settings", pathMatch: "full" },
@@ -27,6 +28,7 @@ const routes: Routes = [
     StationOwnerComponent,
     ServiceOwnerComponent,
     SettingsComponent,
+    BalanceComponent,
   ],
   imports: [
     BrowserModule,

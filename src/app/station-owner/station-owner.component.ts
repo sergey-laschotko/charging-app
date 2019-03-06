@@ -20,7 +20,6 @@ const operations: { date: string, operation: string }[] = [
 })
 export class StationOwnerComponent implements OnInit {
   username: string = 'Поставщик услуг сервиса зарядки';
-  balance: string = '2750';
   tokens: number = 10;
   stations: string[] = [];
   tariffs: string[] = [];
@@ -28,8 +27,6 @@ export class StationOwnerComponent implements OnInit {
   newTariffFrom: string = "00:00";
   newTariffTo: string = "00:00";
   newTariffPrice: number = 0;
-  tokenBuying: boolean = false;
-  tokenSaling: boolean = false;
   displayedColumns: string[] = ["date", "operation"];
   dataSource = new MatTableDataSource(operations);
 
@@ -66,33 +63,11 @@ export class StationOwnerComponent implements OnInit {
     this.newTariffPrice = 0
   }
 
-  buyTokens() {
-    if (this.tokenBuying) {
-      this.tokenBuying = !this.tokenBuying;
-    } else {
-      this.tokenBuying = true;
-    }
+  buyTokens(amount: number) {
+    this.tokens += amount;
   }
 
-  saleTokens() {
-    if (this.tokenSaling) {
-      this.tokenSaling = !this.tokenSaling;
-    } else {
-      this.tokenSaling = true;
-    }
-  }
-
-  manipulateTokens(val: number) {
-    if (this.tokenBuying) {
-      this.tokens += Number(val);
-    } else if (this.tokenSaling) {
-      this.tokens -= Number(val);
-    } else {
-      this.tokenBuying = false;
-      this.tokenSaling = false;
-      return false;
-    }
-    this.tokenBuying = false;
-    this.tokenSaling = false;
+  saleTokens(amount: number) {
+    this.tokens -= amount;
   }
 }
