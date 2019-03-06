@@ -3,33 +3,98 @@
       <span class="username">{{username}}</span>
       <span class="balance">Баланс: <b>{{balance | currency}}</b></span>
     </mat-card>
-    <mat-card>
-      <h4>Сервис Провайдеры</h4>
-      <ul class="providers-list">
-        <li class="providers-list_item" *ngFor="let sp of serviceProviders">
-          <span class="aligned-left">{{sp}}</span>
-          <span class="aligned-right"><button mat-raised-button color="accent" (click)="openModel(sp)">Посмотреть данные</button></span>
-        </li>
-      </ul>
-    </mat-card>
-    <mat-card>
-      <h4>Смарт-контракты</h4>
-      <div>
-        <button mat-raised-button color="primary">Выпустить смарт-контракт</button>
-      </div>
-      <mat-list>
-        <mat-list-item *ngFor="let contract of smartContracts">{{contract}}</mat-list-item>
-      </mat-list>
-    </mat-card>
-    <div [ngClass]="{ 'user-data': true, 'show-user-data': isModalOpened }">
-      <div class="container">
-        <mat-card class="user-data_card">
-          <button class="close-button" (click)="closeModal()" mat-icon-button>
-            <mat-icon color="warn">clear</mat-icon>
-          </button>
-          <h4 class="text-center">{{chosen}}</h4>
-          <p>Данные пользователя</p>
+    <mat-tab-group>
+      <mat-tab label="Токены">
+        <mat-card>
+          <h4 class="text-center">Токены</h4>
+          <p>
+            Количество: <b>{{tokens}}</b>
+            <span class="tokens-actions">
+              <button mat-raised-button color="primary" (click)="createTokens()" *ngIf="!tokenDeleting">Выпуск токенов</button>
+              <button mat-raised-button color="warn" (click)="deleteTokens()" *ngIf="!tokenCreating">Стирание токенов</button>
+            </span>
+            <span class="token-operations" *ngIf="tokenCreating || tokenDeleting">
+              <mat-form-field>
+                <input type="number" min="0" #amount matInput value="0" />
+              </mat-form-field>
+              <button mat-raised-button color="accent" (click)="manipulateTokens(amount.value)">Готово</button>
+            </span>
+          </p>
         </mat-card>
-      </div>
+      </mat-tab>
+      <mat-tab label="Провайдеры">
+        <mat-card>
+          <h4>Сервис Провайдеры</h4>
+          <ul class="providers-list">
+            <li class="providers-list_item" *ngFor="let sp of serviceProviders">
+              <span class="aligned-left">{{sp}}</span>
+              <span class="aligned-right"><button mat-raised-button color="accent" (click)="openModel(sp)">Посмотреть данные</button></span>
+            </li>
+          </ul>
+        </mat-card>
+      </mat-tab>
+      <mat-tab label="Смарт-контракты">
+        <mat-card>
+          <h4>Смарт-контракты</h4>
+          <div>
+            <button mat-raised-button color="primary">Выпустить смарт-контракт</button>
+          </div>
+          <mat-list>
+            <mat-list-item *ngFor="let contract of smartContracts">{{contract}}</mat-list-item>
+          </mat-list>
+        </mat-card>
+      </mat-tab>
+      <mat-tab label="Журнал Операций">
+        <mat-card>
+          <mat-form-field>
+            <mat-select [(ngModel)]="selectedStation" (ngModelChange)="switchStation()">
+              <mat-option *ngFor="let station of stations, let i = index" [value]="i">{{station}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="mat-elevation-z8">
+            <table class="journal-table" mat-table [dataSource]="dataSource">
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Дата </th>
+                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+              </ng-container>
+              <ng-container matColumnDef="operation">
+                <th mat-header-cell *matHeaderCellDef> Операция </th>
+                <td mat-cell *matCellDef="let element"> {{element.operation}} </td>
+              </ng-container>          
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator #opPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          </div>
+        </mat-card>
+      </mat-tab>
+      <mat-tab label="Баланс станций">
+        <div class="mat-elevation-z8">
+            <table class="journal-table" mat-table [dataSource]="balanceSource">
+              <ng-container matColumnDef="station">
+                <th mat-header-cell *matHeaderCellDef> Станция </th>
+                <td mat-cell *matCellDef="let element"> {{element.station}} </td>
+              </ng-container>
+              <ng-container matColumnDef="balance">
+                <th mat-header-cell *matHeaderCellDef> Баланс </th>
+                <td mat-cell *matCellDef="let element"> {{element.balance}} </td>
+              </ng-container>          
+              <tr mat-header-row *matHeaderRowDef="balanceColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: balanceColumns;"></tr>
+            </table>
+            <mat-paginator #bPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  <div [ngClass]="{ 'user-data': true, 'show-user-data': isModalOpened }">
+    <div class="container">
+      <mat-card class="user-data_card">
+        <button class="close-button" (click)="closeModal()" mat-icon-button>
+          <mat-icon color="warn">clear</mat-icon>
+        </button>
+        <h4 class="text-center">{{chosen}}</h4>
+        <p>Данные пользователя</p>
+      </mat-card>
     </div>
-</div>
+  </div>

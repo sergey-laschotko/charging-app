@@ -75,3 +75,25 @@ a:hover, a:focus {
 .page-heading {
     margin-bottom: 30px;
 }
+
+mat-card {
+    margin: 15px 0;
+}
+
+.tokens-actions {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.tokens-actions button {
+    margin: 0 10px;
+}
+
+.token-operations mat-form-field {
+    width: 70px;
+    margin-right: 10px;
+}
+
+.journal-table {
+    width: 100%;
+}

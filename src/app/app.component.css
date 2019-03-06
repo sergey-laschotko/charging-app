@@ -12,7 +12,7 @@ mat-sidenav-container {
 }
 
 mat-sidenav {
-    width: 300px;
+    width: 200px;
 }
 
 mat-list.mat-list.mat-list-base {
@@ -38,5 +38,4 @@ mat-list.mat-list.mat-list-base {
 
 .list-item:hover .sidenav-item {
     color: white;
-    text-align: right;
 }

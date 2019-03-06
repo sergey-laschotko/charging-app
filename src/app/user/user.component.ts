@@ -1,6 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatTableDataSource, MatTable } from '@angular/material';
 
 import { stations } from '../stations';
+
+const operations: { date: string, operation: string }[] = [
+  { date: "17:00 21.02.2019", operation: "Зарядка" },
+  { date: "19:00 21.02.2019", operation: "Покупка 3 токенов" },
+  { date: "09:34 22.02.2019", operation: "Бронь зарядки на 12:00" },
+  { date: "12:00 22.02.2019", operation: "Зарядка" },
+  { date: "16:23 22.02.2019", operation: "Продажа 1 токена" },
+  { date: "21:12 22.02.2019", operation: "Продажа 2 токенов" },
+  { date: "10:17 23.02.2019", operation: "Зарядка" },
+  { date: "15:43 24.02.2019", operation: "Зарядка" },
+];  
 
 @Component({
   selector: 'app-user',
@@ -8,23 +20,31 @@ import { stations } from '../stations';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  public username: string = "John Doe";
-  public balance: string = "250";
-  public showInput: boolean = true;
-  public address: string = "";
-  public variants: string[] = [];
-  public stations: string[] = stations;
-  public time: string;
+  username: string = "John Doe";
+  balance: string = "250";
+  tokens: number = 5;
+  tokenBuying: boolean = false;
+  tokenSaling: boolean = false;
+  showInput: boolean = true;
+  address: string = "";
+  variants: string[] = [];
+  stations: string[] = stations;
+  time: string;
+  displayedColumns: string[] = ['date', 'operation'];
+  dataSource = new MatTableDataSource(operations);
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor() { }
 
   ngOnInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
   findVariants() {
     if (this.address.length) {
       this.variants = this.stations.filter((station: string) => {
-        return station.toLowerCase().indexOf(this.address) === 0;
+        return station.toLowerCase().indexOf(this.address.toLowerCase()) === 0;
       });
     } else {
       this.variants = [];
@@ -46,9 +66,42 @@ export class UserComponent implements OnInit {
 
   reserve() {
     console.log(`Зарядка по адресу ${this.address} в ${this.time}`);
+    this.address = "";
+    this.variants = [];
+    this.time = "00:00";
   }
 
   charge() {
     console.log("Идет зарядка");
+  }
+
+  buyTokens() {
+    if (this.tokenBuying) {
+      this.tokenBuying = !this.tokenBuying;
+    } else {
+      this.tokenBuying = true;
+    }
+  }
+
+  saleTokens() {
+    if (this.tokenSaling) {
+      this.tokenSaling = !this.tokenSaling;
+    } else {
+      this.tokenSaling = true;
+    }
+  }
+
+  manipulateTokens(val: number) {
+    if (this.tokenBuying) {
+      this.tokens += Number(val);
+    } else if (this.tokenSaling) {
+      this.tokens -= Number(val);
+    } else {
+      this.tokenBuying = false;
+      this.tokenSaling = false;
+      return false;
+    }
+    this.tokenBuying = false;
+    this.tokenSaling = false;
   }
 }
