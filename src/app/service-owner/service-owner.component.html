@@ -1,3 +1,35 @@
-<p>
-  service-owner works!
-</p>
+<div class="container">
+    <mat-card class="page-heading">
+      <span class="username">{{username}}</span>
+      <span class="balance">Баланс: <b>{{balance | currency}}</b></span>
+    </mat-card>
+    <mat-card>
+      <h4>Сервис Провайдеры</h4>
+      <ul class="providers-list">
+        <li class="providers-list_item" *ngFor="let sp of serviceProviders">
+          <span class="aligned-left">{{sp}}</span>
+          <span class="aligned-right"><button mat-raised-button color="accent" (click)="openModel(sp)">Посмотреть данные</button></span>
+        </li>
+      </ul>
+    </mat-card>
+    <mat-card>
+      <h4>Смарт-контракты</h4>
+      <div>
+        <button mat-raised-button color="primary">Выпустить смарт-контракт</button>
+      </div>
+      <mat-list>
+        <mat-list-item *ngFor="let contract of smartContracts">{{contract}}</mat-list-item>
+      </mat-list>
+    </mat-card>
+    <div [ngClass]="{ 'user-data': true, 'show-user-data': isModalOpened }">
+      <div class="container">
+        <mat-card class="user-data_card">
+          <button class="close-button" (click)="closeModal()" mat-icon-button>
+            <mat-icon color="warn">clear</mat-icon>
+          </button>
+          <h4 class="text-center">{{chosen}}</h4>
+          <p>Данные пользователя</p>
+        </mat-card>
+      </div>
+    </div>
+</div>

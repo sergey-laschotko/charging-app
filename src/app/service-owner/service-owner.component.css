@@ -1,0 +1,55 @@
+.aligned-right {
+    display: inline-block;
+    float: right;
+    position: relative;
+    top: -10px;
+}
+
+.aligend-left {
+    display: inline-block;
+    float: left;
+}
+
+.providers-list {
+    list-style-type: none;
+}
+
+.providers-list_item {
+    padding: 15px 5px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 5px;
+}
+
+.user-data {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.show-user-data {
+    display: block;
+}
+
+.user-data_card {
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    top: 50%;
+    left: 50%;
+    margin-top: -180px;
+    margin-left: -180px;
+}   
+
+.close-button {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
+
+mat-card {
+    margin-top: 15px;
+}
