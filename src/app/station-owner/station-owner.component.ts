@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatTable } from '@angular/material';
-import { stations } from '../stations';
+import { stations } from '../journal';
 
 const operations: { date: string, operation: string }[] = [
   { date: "17:00 21.02.2019", operation: "Зарядка" },

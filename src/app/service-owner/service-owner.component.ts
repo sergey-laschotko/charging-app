@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatTable } from '@angular/material';
-import { stations } from '../stations';
-import { journal, stationsBalance } from '../locations-journal';
+import { stations } from '../journal';
 
 @Component({
   selector: 'app-service-owner',
@@ -11,21 +10,15 @@ import { journal, stationsBalance } from '../locations-journal';
 export class ServiceOwnerComponent implements OnInit {
   username: string = 'Диспетчер';
   tokens: number = 500;
-  serviceProviders: any[] = [
-    'Service Provider 1',
-    'Service Provider 2',
-    'Service Provider 3',
-    'Service Provider 4',
-    'Service Provider 5',
-  ];
+  serviceProviders: any[] = [];
   chosen: string = "Никто не выбран";
   isModalOpened: boolean = false;
   stations = stations;
-  operations = journal;
+  operations: string[] = [];
   selectedStation = 0;
   displayedColumns: string[] = ["date", "operation"];
   dataSource: any = [];
-  stationsBalance = stationsBalance;
+  stationsBalance: string[] = [];
   balanceColumns: string[] = ["station", "balance"];
   balanceSource = new MatTableDataSource(this.stationsBalance);
 

@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatTable } from '@angular/material';
+import { BaseService } from '../base.service';
 
-import { stations } from '../stations';
+import { stations } from '../journal';
 
 const operations: { date: string, operation: string }[] = [
   { date: "17:00 21.02.2019", operation: "Зарядка" },
@@ -32,7 +33,7 @@ export class UserComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor() { }
+  constructor(private bs: BaseService) { }
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
