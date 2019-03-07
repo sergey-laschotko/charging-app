@@ -1,17 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatTable } from '@angular/material';
-import { stations } from '../journal';
-
-const operations: { date: string, operation: string }[] = [
-  { date: "17:00 21.02.2019", operation: "Зарядка" },
-  { date: "19:00 21.02.2019", operation: "Покупка 3 токенов" },
-  { date: "09:34 22.02.2019", operation: "Бронь зарядки на 12:00" },
-  { date: "12:00 22.02.2019", operation: "Зарядка" },
-  { date: "16:23 22.02.2019", operation: "Продажа 1 токена" },
-  { date: "21:12 22.02.2019", operation: "Продажа 2 токенов" },
-  { date: "10:17 23.02.2019", operation: "Зарядка" },
-  { date: "15:43 24.02.2019", operation: "Зарядка" },
-];  
+import { stations } from '../mock-data/datasource';
 
 @Component({
   selector: 'app-station-owner',
@@ -24,11 +13,12 @@ export class StationOwnerComponent implements OnInit {
   stations: string[] = [];
   tariffs: string[] = [];
   newStation: string = "";
+  adding: boolean = false;
   newTariffFrom: string = "00:00";
   newTariffTo: string = "00:00";
   newTariffPrice: number = 0;
   displayedColumns: string[] = ["date", "operation"];
-  dataSource = new MatTableDataSource(operations);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -38,6 +28,10 @@ export class StationOwnerComponent implements OnInit {
   ngOnInit() {
     this.getStations();
     this.dataSource.paginator = this.paginator;
+  }
+
+  toggleAdding() {
+    this.adding = !this.adding;
   }
 
   getStations() {

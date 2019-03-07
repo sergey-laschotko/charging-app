@@ -10,48 +10,15 @@
         <div class="registered-stations">
           <mat-card>
             <h4>Зарегестрированные станции</h4>
+            <button mat-raised-button class="inline-item" *ngIf="!adding" color="primary" (click)="toggleAdding()">Добавить станцию</button>
+            <mat-form-field *ngIf="adding" class="inline-item">
+              <input matInput class="inline-item" placeholder="Адрес станции" [(ngModel)]="newStation" />
+            </mat-form-field>
+            <button class="inline-item" *ngIf="adding" mat-raised-button color="accent" (click)="addNewStation()">Добавить</button>
+            <button mat-raised-button *ngIf="adding" color="warn" (click)="toggleAdding()">Отмена</button>
             <mat-list>
               <mat-list-item *ngFor="let station of stations">{{station}}</mat-list-item>
             </mat-list>
-          </mat-card>
-        </div>
-      </mat-tab>
-      <mat-tab label="Добавить станцию">
-
-        <div class="register-station">
-          <mat-card>
-            <h4>Зарегестрировать новую станцию</h4>
-            <mat-form-field>
-              <input matInput placeholder="Адрес новой станции" [(ngModel)]="newStation" />
-            </mat-form-field>
-            <div class="tariffs">
-              <h4>Тарифы</h4>
-              <div class="inline-form">
-                <span class="inline-form_label">C</span>
-                <mat-form-field>
-                  <input matInput type="time" [(ngModel)]="newTariffFrom" class="inline-input"/>
-                </mat-form-field>
-                <span class="inline-form_label">До</span>
-                <mat-form-field>
-                  <input matInput type="time" [(ngModel)]="newTariffTo" class="inline-input" />
-                </mat-form-field>
-                <span class="inline-form_label">Цена</span>
-                <mat-form-field>
-                  <input matInput type="number" [(ngModel)]="newTariffPrice" class="inline-input" />
-                </mat-form-field>
-                <div>
-                  <button mat-raised-button color="primary" (click)="addNewTariff()">Добавить тариф</button>
-                </div>
-              </div>
-              <div class="tariffs-list">
-                <mat-list>
-                  <mat-list-item *ngFor="let tariff of tariffs">{{tariff}}</mat-list-item>
-                </mat-list>
-              </div>
-            </div>
-            <div class="right-button">
-              <button mat-raised-button color="primary" [disabled]="!validateNewStation()" (click)="addNewStation()">Добавить станцию</button>
-            </div>
           </mat-card>
         </div>
       </mat-tab>
@@ -59,7 +26,8 @@
         <div class="journal">
           <mat-card>
             <h4 class="text-center">Журнал</h4>
-            <div class="mat-elevation-z8">
+            <p *ngIf="!dataSource">На данный момент записей в журнале нет</p>
+            <div class="mat-elevation-z8" *ngIf="dataSource">
               <table class="journal-table" mat-table [dataSource]="dataSource">
                 <ng-container matColumnDef="date">
                   <th mat-header-cell *matHeaderCellDef> Дата </th>

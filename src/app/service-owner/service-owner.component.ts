@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatTable } from '@angular/material';
-import { stations } from '../journal';
+import { stations } from '../mock-data/datasource';
 
 @Component({
   selector: 'app-service-owner',

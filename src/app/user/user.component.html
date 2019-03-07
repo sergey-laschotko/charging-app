@@ -1,30 +1,19 @@
 <div class="container">
   <mat-card class="page-heading">
-    <span class="username"><b>{{username}}</b></span>
+    <span class="username"><b>{{user.name}}</b></span>
   </mat-card>
   <mat-tab-group>
     <mat-tab label="Баланс">
-      <app-balance add="Купить" remove="Продать" [tokens]="tokens" (onAdd)="onBuy($event)" (onRemove)="onSale($event)"></app-balance>
+      <app-balance add="Купить" remove="Продать" [tokens]="user.balance" (onAdd)="onBuy($event)" (onRemove)="onSale($event)"></app-balance>
     </mat-tab>
     <mat-tab label="Зарядка">
       <mat-card class="form">
         <mat-form-field class="form-input" *ngIf="showInput">
           <input type="text" matInput (input)="findVariants()" [(ngModel)]="address" placeholder="Начните вводить адрес" autocomplete="off" />
-          <ul class="variants" *ngIf="variants.length">
-            <li *ngFor="let variant of variants" class="variants-item" (click)="setAddress(variant)">{{variant}}</li>
+          <ul *ngIf="variants.length">
+            <li *ngFor="let variant of variants" class="variants-item" (click)="setAddress(variant)">{{variant.address}}</li>
           </ul>
         </mat-form-field>
-        <mat-form-field *ngIf="!showInput">
-          <mat-select placeholder="Выберите адрес" [(ngModel)]="address">
-            <mat-option *ngFor="let station of stations" [value]="station">
-              {{station}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <p>
-          <button *ngIf="showInput" mat-stroked-button (click)="toggleForm()">выбрать адрес из списка</button>
-          <button *ngIf="!showInput" mat-stroked-button (click)="toggleForm()">ввести адрес вручную</button>
-        </p>
         <p class="time-field">
           Укажите время:
           <input matInput type="time" class="time-input" [(ngModel)]="time" />
@@ -46,9 +35,9 @@
                 <th mat-header-cell *matHeaderCellDef> Дата </th>
                 <td mat-cell *matCellDef="let element"> {{element.date}} </td>
               </ng-container>
-              <ng-container matColumnDef="operation">
+              <ng-container matColumnDef="type">
                 <th mat-header-cell *matHeaderCellDef> Операция </th>
-                <td mat-cell *matCellDef="let element"> {{element.operation}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.type}} </td>
               </ng-container>          
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

@@ -1,3 +1,5 @@
+import { IUser, IOperation } from "./models";
+
 export const stations = [
     "Герасименко, 2",
     "Машиностроителей, 7Б",
@@ -64,7 +66,7 @@ export class DataSource {
     }
 
     generate() {
-        let dataSource: { users: any[], operations: any[] } = {
+        let dataSource: { users: IUser[], operations: IOperation[] } = {
             users: [],
             operations: []
         };
@@ -95,19 +97,21 @@ export class DataSource {
         // add stations to owners
         while (stations.length) {
             let owner = this.stationsOwners[this.getRandom(0, this.stationsOwners.length)];
-            dataSource.users.map((user: any) => {
-                if (user.role === 'owner') {
+            dataSource.users.map((user: IUser) => {
+                if (user.role === 'owner' && stations.length) {
                     user.stations.push({
                         address: stations.splice(0, 1)[0],
-                        balance: this.getRandom(100, 1000)
+                        balance: this.getRandom(100, 1000),
+                        tariffs: []
                     });
                 }
             });            
         }
-
+        
+        
         // add operations
-        operators.forEach((operator: string) => {
-            let startDate = new Date(2019, 0, 1);
+        let startDate = new Date(2018, 3, 1);
+        for (let k = 0; k < 500; k++) {
             let hour = 3600000;
             let day = 86400000;
             let hours = startDate.getHours() < 10 ? "0" + startDate.getHours() : startDate.getHours();
@@ -115,17 +119,14 @@ export class DataSource {
             let date = startDate.getDate() < 10 ? "0" + startDate.getDate() : startDate.getDate();
             let month = (startDate.getMonth() + 1) < 10 ? "0" + (startDate.getMonth() + 1) : startDate.getMonth() + 1;
             let year = startDate.getFullYear();
-
-            for (let i = 0; i < 50; i++) {
-                let operation = this.operations[this.getRandom(0, this.operations.length)];
-                dataSource.operations.push({
-                    type: operation,
-                    operator: operator,
-                    date: `${hours}:${minutes} ${date}.${month}.${year}`
-                });
-                startDate = new Date(Number(startDate) + this.getRandom(hour, day));
-            }
-        });
+            let operation = this.operations[this.getRandom(0, this.operations.length)];
+            dataSource.operations.push({
+                type: operation,
+                operator: operators[this.getRandom(0, operators.length)],
+                date: `${hours}:${minutes} ${date}.${month}.${year}`
+            });
+            startDate = new Date(Number(startDate) + this.getRandom(hour, day));
+        };
 
         return dataSource;
     }
