@@ -1,17 +1,17 @@
 <div class="main-container">
   <mat-toolbar color="primary" class="toolbar-center main-toolbar">
     <span class="menu-buttons">
-      <button mat-icon-button *ngIf="!sidenav._opened" (click)="sidenav.toggle()">
+      <button mat-icon-button *ngIf="!isMenuOpened" (click)="toggleMenu()">
         <mat-icon>menu</mat-icon>
       </button>
-      <button mat-icon-button *ngIf="sidenav._opened" (click)="sidenav.toggle()">
+      <button mat-icon-button *ngIf="isMenuOpened" (click)="toggleMenu()">
         <mat-icon>clear</mat-icon>
       </button>
     </span>
     <span>Зарядка Электромобилей</span>
   </mat-toolbar>
   <mat-sidenav-container hasBackdrop="false">
-    <mat-sidenav #sidenav>
+    <mat-sidenav #sidenav [opened]="isMenuOpened" [mode]="menuMode">
       <ul class="list">
         <li class="list-item"> 
           <a routerLink="/user" class="sidenav-item">
@@ -39,7 +39,7 @@
         </li>
       </ul>
     </mat-sidenav>
-    <mat-sidenav-content>
+    <mat-sidenav-content (click)="sidenav.close()">
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>

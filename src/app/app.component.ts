@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { BreakpointObserver, MediaMatcher } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material';
 
 @Component({
@@ -9,17 +9,38 @@ import { MatSidenav } from '@angular/material';
 })
 export class AppComponent {
   @ViewChild('sidenav') sidenav: MatSidenav;
+  isMobile: boolean = false;
+  isMenuOpened: boolean = true;
+  menuMode: string = 'side';
 
-  constructor(private mediaMatcher: MediaMatcher) {
-    const mediaQueryList = mediaMatcher.matchMedia('(min-width: 555px)');
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private mediaMatcher: MediaMatcher
+  ) {
+    this.isMobile = breakpointObserver.isMatched('(max-width: 550px)');
+    const mediaQueryList = mediaMatcher.matchMedia('(max-width: 550px)');
     mediaQueryList.addEventListener("change", (e: any) => {
       if (e.matches) {
-        this.sidenav.open();
-        this.sidenav.mode = "side";
+        this.isMobile = true;
+        this.menuMode = "over";
+        this.isMenuOpened = false;
       } else {
-        this.sidenav.close();
-        this.sidenav.mode = "over";
+        this.isMobile = false;
+        this.menuMode = "side";
+        this.isMenuOpened = true;
       }
     });
+  }
+
+  ngOnInit() {
+    if (this.isMobile) {
+      this.isMenuOpened = false;
+      this.menuMode = 'over';
+    }
+  }
+
+  toggleMenu() {
+    this.isMenuOpened = !this.isMenuOpened;
+    this.sidenav.toggle();
   }
 }
