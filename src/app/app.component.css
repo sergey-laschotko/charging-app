@@ -1,4 +1,5 @@
 .menu-buttons {
+    display: none;
     position: absolute;
     left: 20px;
 }
@@ -43,4 +44,10 @@ mat-sidenav {
 
 .list-item:hover .sidenav-item {
     color: white;
+}
+
+@media screen and (max-width: 555px) {
+    .menu-buttons {
+        display: block;
+    }
 }

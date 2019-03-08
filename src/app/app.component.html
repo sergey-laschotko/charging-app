@@ -1,9 +1,17 @@
 <div class="main-container">
   <mat-toolbar color="primary" class="toolbar-center main-toolbar">
+    <span class="menu-buttons">
+      <button mat-icon-button *ngIf="!sidenav._opened" (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <button mat-icon-button *ngIf="sidenav._opened" (click)="sidenav.toggle()">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </span>
     <span>Зарядка Электромобилей</span>
   </mat-toolbar>
   <mat-sidenav-container hasBackdrop="false">
-    <mat-sidenav opened="true" mode="side">
+    <mat-sidenav #sidenav>
       <ul class="list">
         <li class="list-item"> 
           <a routerLink="/user" class="sidenav-item">

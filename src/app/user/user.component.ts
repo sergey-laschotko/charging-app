@@ -18,6 +18,7 @@ export class UserComponent implements OnInit {
   operations: IOperation[] = [];
   displayedColumns: string[] = ['date', 'type'];
   dataSource: any;
+  isModalOpened: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -64,6 +65,10 @@ export class UserComponent implements OnInit {
     });
   }
 
+  openReserveDialog() {
+    this.isModalOpened = true;
+  }
+
   reserve() {
     this.bs.reserve(this.user.name, this.address, this.date);
     this.sb.open("Бронирование", "Готово", {
@@ -74,6 +79,10 @@ export class UserComponent implements OnInit {
   }
 
   charge() {
-    console.log("Идет зарядка");
+    
+  }
+
+  closeModal() {
+    this.isModalOpened = false;
   }
 }

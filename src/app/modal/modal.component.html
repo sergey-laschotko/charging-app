@@ -1,0 +1,8 @@
+<div class="modal" (click)="closeModal()" *ngIf="visible">
+  <div class="modal_dialog">
+    <button class="modal_close-button" color="warn" mat-icon-button (click)="closeModal()">
+      <mat-icon>clear</mat-icon>
+    </button>
+    <ng-content></ng-content>
+  </div>
+</div>

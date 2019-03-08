@@ -15,6 +15,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
     imports: [
@@ -34,6 +35,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         MatTableModule,
         MatPaginatorModule,
         MatSnackBarModule,
+        LayoutModule,
     ],
     exports: [
         MatButtonModule,
@@ -52,6 +54,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         MatTableModule,
         MatPaginatorModule,
         MatSnackBarModule,
+        LayoutModule,
     ]
 })
 export class MaterialAppModule {}

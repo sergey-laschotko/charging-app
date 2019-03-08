@@ -23,7 +23,7 @@
         <div class="action-panels_item">
           <mat-card class="reserve-panel">
             <p>
-              <button class="huge-button" mat-raised-button color="accent" (click)="reserve()">Забронировать</button>
+              <button class="huge-button" mat-raised-button color="accent" (click)="openReserveDialog()">Забронировать</button>
             </p>
           </mat-card>
         </div>
@@ -56,3 +56,7 @@
     </mat-tab>
   </mat-tab-group>
 </div>
+<app-modal [visible]="isModalOpened" (shutModal)="closeModal()">
+  <h3>Hello!</h3>
+  <p>Some text here.</p>
+</app-modal>

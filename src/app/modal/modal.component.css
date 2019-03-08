@@ -1,0 +1,28 @@
+.modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 10000;
+}
+
+.modal_dialog {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    top: 50%;
+    left: 50%;
+    margin-top: -160px;
+    margin-left: -160px;
+    background: #eee;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.modal_close-button {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
