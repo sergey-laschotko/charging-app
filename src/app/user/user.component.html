@@ -56,7 +56,21 @@
     </mat-tab>
   </mat-tab-group>
 </div>
-<app-modal [visible]="isModalOpened" (shutModal)="closeModal()">
-  <h3>Hello!</h3>
-  <p>Some text here.</p>
-</app-modal>
+<div class="modal" *ngIf="isModalOpened">
+  <div class="modal_backdrop" (click)="closeModal()"></div>
+  <mat-card class="modal_dialog">
+    <button mat-icon-button class="modal_close-button" color="warn" (click)="closeModal()">
+      <mat-icon>clear</mat-icon>
+    </button>
+    <div class="modal_dialog-content">
+      <h4>Бронирование</h4>
+      <p>Укажите желаемое время и дату:</p>
+      <p>
+      </p>
+    </div>
+    <div class="modal_dialog-footer">
+      <button class="modal_action-button" mat-raised-button color="accent">Забронировать</button>
+      <button class="modal_action-button" mat-raised-button color="warn" (click)="closeModal()">Отмена</button>
+    </div>
+  </mat-card>
+</div>

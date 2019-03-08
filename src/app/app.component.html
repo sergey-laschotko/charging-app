@@ -10,7 +10,7 @@
     </span>
     <span>Зарядка Электромобилей</span>
   </mat-toolbar>
-  <mat-sidenav-container hasBackdrop="false">
+  <mat-sidenav-container [hasBackdrop]="hasBackdrop">
     <mat-sidenav #sidenav [opened]="isMenuOpened" [mode]="menuMode">
       <ul class="list">
         <li class="list-item"> 
@@ -39,7 +39,7 @@
         </li>
       </ul>
     </mat-sidenav>
-    <mat-sidenav-content (click)="sidenav.close()">
+    <mat-sidenav-content>
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>

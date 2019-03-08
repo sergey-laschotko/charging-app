@@ -12,6 +12,7 @@ export class AppComponent {
   isMobile: boolean = false;
   isMenuOpened: boolean = true;
   menuMode: string = 'side';
+  hasBackdrop: boolean = false;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -24,10 +25,12 @@ export class AppComponent {
         this.isMobile = true;
         this.menuMode = "over";
         this.isMenuOpened = false;
+        this.hasBackdrop = true;
       } else {
         this.isMobile = false;
         this.menuMode = "side";
         this.isMenuOpened = true;
+        this.hasBackdrop = false;
       }
     });
   }
@@ -36,6 +39,7 @@ export class AppComponent {
     if (this.isMobile) {
       this.isMenuOpened = false;
       this.menuMode = 'over';
+      this.hasBackdrop = true;
     }
   }
 

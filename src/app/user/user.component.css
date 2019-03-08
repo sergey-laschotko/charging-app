@@ -54,6 +54,57 @@
     padding: 15px;
 }
 
+.modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.modal_backdrop {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.modal_dialog {
+    width: 320px;
+    height: 320px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -160px;
+    margin-left: -160px;
+}
+
+.modal_close-button {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
+
+.modal_dialog-content {
+    height: 230px;
+}
+
+.modal_dialog-footer {
+    height: 40px;
+    text-align: right;
+}
+
+.modal_action-button {
+    margin-right: 10px;
+}
+
+.modal_action-button:last-child {
+    margin-right: 0;
+}
+
 @media screen and (max-width: 725px) {
     .action-panels {
         display: block;

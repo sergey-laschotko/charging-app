@@ -47,6 +47,10 @@ mat-sidenav {
 }
 
 @media screen and (max-width: 555px) {
+    .main-toolbar {
+        font-size: 14px;
+    }
+
     .menu-buttons {
         display: block;
     }

@@ -16,7 +16,7 @@ body {
 }
 
 *::-webkit-scrollbar {
-    width: 0.7em;
+    width: 0.5em;
 }
  
 *::-webkit-scrollbar-track {
@@ -40,6 +40,7 @@ body {
 
 .main-container {
     max-width: 2000px;
+    min-width: 320px;
     margin: 0 auto;
     position: relative;
     height: 100%;
