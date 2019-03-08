@@ -40,7 +40,12 @@ export const users = [
     "Кирилл Новожилов"
 ];
 
-export const operations = ["Зарядка", "Бронь", "Продажа токенов", "Покупка токeнов"];
+const BUYING = "Покупка токенов";
+const SALING = "Продажа токенов";
+const CHARGING = "Зарядка";
+const RESERVE = "Бронь";
+
+export const operations = [BUYING, SALING, CHARGING, RESERVE];
 
 export class DataSource {
     static instance: DataSource = null;
@@ -63,6 +68,16 @@ export class DataSource {
     
     getRandom = (min: number, max: number) => {
         return Math.floor(Math.random() * (max - min) + min);
+    }
+
+    formatDate(date: Date) {
+        let hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        let month = (date.getMonth() + 1) < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        let year = date.getFullYear();
+
+        return { hours, minutes, day, month, year };
     }
 
     generate() {
@@ -114,16 +129,32 @@ export class DataSource {
         for (let k = 0; k < 500; k++) {
             let hour = 3600000;
             let day = 86400000;
-            let hours = startDate.getHours() < 10 ? "0" + startDate.getHours() : startDate.getHours();
-            let minutes = startDate.getMinutes() < 10 ? "0" + startDate.getMinutes() : startDate.getMinutes();
-            let date = startDate.getDate() < 10 ? "0" + startDate.getDate() : startDate.getDate();
-            let month = (startDate.getMonth() + 1) < 10 ? "0" + (startDate.getMonth() + 1) : startDate.getMonth() + 1;
-            let year = startDate.getFullYear();
+            let mockDate = this.formatDate(startDate);
+            let reserveDate = this.formatDate(new Date(Number(startDate) + day));
+            
             let operation = this.operations[this.getRandom(0, this.operations.length)];
+            let data: string;
+            switch (operation) {
+                case SALING:
+                    data = `Продано ${this.getRandom(1, 10)} токенов`;
+                    break;
+                case BUYING:
+                    data = `Куплено ${this.getRandom(1, 10)} токенов`;
+                    break;
+                case RESERVE:
+                    data = `${reserveDate.hours}:${reserveDate.minutes} ${reserveDate.day}.${reserveDate.month}.${reserveDate.year} по адресу ${this.stations[this.getRandom(0, this.stations.length)]}`;
+                    break;
+                case CHARGING:
+                    data = `${mockDate.hours}:${mockDate.minutes} ${mockDate.day}.${mockDate.month}.${mockDate.year} по адресу ${this.stations[this.getRandom(0, this.stations.length)]}`
+                    break;
+                default:
+                    return;
+            }
             dataSource.operations.push({
                 type: operation,
                 operator: operators[this.getRandom(0, operators.length)],
-                date: `${hours}:${minutes} ${date}.${month}.${year}`
+                date: `${mockDate.hours}:${mockDate.minutes} ${mockDate.day}.${mockDate.month}.${mockDate.year}`,
+                data: data
             });
             startDate = new Date(Number(startDate) + this.getRandom(hour, day));
         };

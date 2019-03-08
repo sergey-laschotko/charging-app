@@ -3,6 +3,7 @@ import { DataSource, stations, stationsOwners, users, operations } from './mock-
 import { IOperation, IUser, IStation } from "./mock-data/models";
 
 const data = new DataSource(stations, operations, stationsOwners, users).generate();
+console.log(data);
 
 @Injectable({
   providedIn: 'root'
@@ -72,7 +73,8 @@ export class BaseService {
         data.operations.push({
           type: "Покупка токенов",
           operator: name,
-          date: this.getCurrentDate()
+          date: this.getCurrentDate(),
+          data: `Куплено ${amount} токенов`
         });
       }
     });
@@ -85,9 +87,19 @@ export class BaseService {
         data.operations.push({
           type: "Продажа токенов",
           operator: name,
-          date: this.getCurrentDate()
+          date: this.getCurrentDate(),
+          data: `Продано ${amount} токенов`
         });
       }
+    });
+  }
+
+  reserve(name: string, address: string, reserveDate: string) {
+    data.operations.push({
+      operator: name,
+      type: "Бронь",
+      data: `${reserveDate} по адресу ${address}`,
+      date: this.getCurrentDate()
     });
   }
 }

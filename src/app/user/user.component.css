@@ -1,31 +1,65 @@
+.flex-list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-height: 300px;
+    overflow: auto;
+}
+
+.flex-list mat-list-item {
+    width: 200px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.1s ease-in;
+}
+
+.flex-list mat-list-item:hover {
+    background: #673ab7;
+    color: white;
+    transition: all 0.1s ease-in;
+}
+
 .form-input {
     position: relative;
-    width: 250px;
+    width: 80%;
+    max-width: 250px;
 }
 
-.time-field {
-    padding: 20px 0;
+.action-panels {
+    display: flex;
+    padding: 0 0 10px;
 }
 
-.time-input {
-    font-size: 1.5em;
-    font-weight: bold;
-    width: 30%;
-    position: relative;
-    top: 5px;
+.action-panels_item {
+    width: 50%;
 }
 
-.charge-panel {
-    margin-top: 30px;
+.charge-panel, .reserve-panel {
+    width: 90%;
+    margin: 0 auto;
     padding: 30px;       
 }
 
-.charge-button {
+.huge-button {
     display: block;
     width: 80%;
+    min-width: 146px;
     max-width: 300px;
     margin: 0 auto;
-    font-size: 1.5em;
+    font-size: 1em;
     font-weight: bold;
     padding: 15px;
+}
+
+@media screen and (max-width: 725px) {
+    .action-panels {
+        display: block;
+    }
+
+    .action-panels_item {
+        width: 100%;
+    }
 }

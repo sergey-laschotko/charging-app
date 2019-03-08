@@ -14,6 +14,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
     imports: [
@@ -32,6 +33,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
         MatTabsModule,
         MatTableModule,
         MatPaginatorModule,
+        MatSnackBarModule,
     ],
     exports: [
         MatButtonModule,
@@ -48,7 +50,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
         MatGridListModule,
         MatTabsModule,
         MatTableModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatSnackBarModule,
     ]
 })
 export class MaterialAppModule {}

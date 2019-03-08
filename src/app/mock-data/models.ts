@@ -21,4 +21,5 @@ export interface IOperation {
     type: string;
     operator: string;
     date: string;
+    data: string;
 }

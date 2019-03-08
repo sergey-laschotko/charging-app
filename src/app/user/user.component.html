@@ -8,23 +8,31 @@
     </mat-tab>
     <mat-tab label="Зарядка">
       <mat-card class="form">
-        <mat-form-field class="form-input" *ngIf="showInput">
-          <input type="text" matInput (input)="findVariants()" [(ngModel)]="address" placeholder="Начните вводить адрес" autocomplete="off" />
-          <ul *ngIf="variants.length">
-            <li *ngFor="let variant of variants" class="variants-item" (click)="setAddress(variant)">{{variant.address}}</li>
-          </ul>
-        </mat-form-field>
-        <p class="time-field">
-          Укажите время:
-          <input matInput type="time" class="time-input" [(ngModel)]="time" />
-        </p>
-        <p>
-          <button [disabled]="!validateForm()" mat-raised-button color="primary" (click)="reserve()">Забронировать</button>
-        </p>
+        <mat-card>
+          <mat-form-field class="form-input" *ngIf="showInput">
+            <input type="text" matInput (input)="findVariants()" [(ngModel)]="address" placeholder="Поиск по адресу" autocomplete="off" />
+          </mat-form-field>
+        </mat-card>
+        <mat-card *ngIf="variants.length">
+          <mat-list class="flex-list">
+            <mat-list-item *ngFor="let variant of variants" class="variants-item" (click)="setAddress(variant)">{{variant.address}}</mat-list-item>
+          </mat-list>
+        </mat-card>
       </mat-card>
-      <mat-card class="charge-panel">
-        <button mat-raised-button color="warn" class="charge-button" (click)="charge()">Заряжать</button>
-      </mat-card>
+      <div class="action-panels">
+        <div class="action-panels_item">
+          <mat-card class="reserve-panel">
+            <p>
+              <button class="huge-button" mat-raised-button color="accent" (click)="reserve()">Забронировать</button>
+            </p>
+          </mat-card>
+        </div>
+        <div class="action-panels_item">
+          <mat-card class="charge-panel">
+            <button class="huge-button" mat-raised-button color="warn" (click)="charge()">Заряжать</button>
+          </mat-card>
+        </div>
+      </div>
     </mat-tab>
     <mat-tab label="Операции">
       <mat-card>

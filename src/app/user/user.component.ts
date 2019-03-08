@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
 import { IOperation, IUser, IStation } from '../mock-data/models';
 
@@ -14,14 +14,14 @@ export class UserComponent implements OnInit {
   address: string = "";
   variants: IStation[] = [];
   stations: IStation[] = [];
-  time: string;
+  date: string;
   operations: IOperation[] = [];
   displayedColumns: string[] = ['date', 'type'];
   dataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private bs: BaseService) { 
+  constructor(private bs: BaseService, private sb: MatSnackBar) { 
     this.user = this.bs.getUser();
     this.operations = this.bs.getUsersOperations(this.user.name);
     this.dataSource = new MatTableDataSource(this.operations);
@@ -35,10 +35,16 @@ export class UserComponent implements OnInit {
 
   onBuy(amount: number) {
     this.bs.addTokens(this.user.name, amount);
+    this.sb.open("Покупка токенов", "Готово", {
+      duration: 3000
+    });
   }
 
   onSale(amount: number) {
     this.bs.removeTokens(this.user.name, amount);
+    this.sb.open("Продажа токенов", "Готово", {
+      duration: 3000
+    });
   }
 
   findVariants() {
@@ -46,23 +52,25 @@ export class UserComponent implements OnInit {
       this.variants = this.stations.filter((station: IStation) => {
         return station.address.toLowerCase().indexOf(this.address.toLowerCase()) === 0;
       });
+    } else {
+      this.variants = [...this.stations];
     }
   }
 
-  setAddress(address: string) {
-    this.address = address;
-    this.variants = [];
-  }
-
-  validateForm() {
-    return this.time;
+  setAddress(variant: IStation) {
+    this.address = variant.address;
+    this.sb.open("Выбор станции", "Готово", {
+      duration: 3000
+    });
   }
 
   reserve() {
-    console.log(`Зарядка по адресу ${this.address} в ${this.time}`);
+    this.bs.reserve(this.user.name, this.address, this.date);
+    this.sb.open("Бронирование", "Готово", {
+      duration: 3000
+    });
     this.address = "";
-    this.variants = [];
-    this.time = "00:00";
+    this.date = "00:00";
   }
 
   charge() {
