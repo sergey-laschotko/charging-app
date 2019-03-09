@@ -47,4 +47,11 @@ export class AppComponent {
     this.isMenuOpened = !this.isMenuOpened;
     this.sidenav.toggle();
   }
+
+  closeByLink() {
+    if (this.isMobile) {
+      this.sidenav.close();
+      this.isMenuOpened = false;
+    }
+  }
 }

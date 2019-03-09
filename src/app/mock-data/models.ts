@@ -20,6 +20,7 @@ export interface ITariff {
 export interface IOperation {
     type: string;
     operator: string;
-    date: string;
+    date: Date;
     data: string;
+    location: string;
 }

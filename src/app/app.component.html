@@ -14,25 +14,25 @@
     <mat-sidenav #sidenav [opened]="isMenuOpened" [mode]="menuMode">
       <ul class="list">
         <li class="list-item"> 
-          <a routerLink="/user" class="sidenav-item">
+          <a routerLink="/user" class="sidenav-item" (click)="closeByLink()">
             <mat-icon class="menu-icon">account_circle</mat-icon>
             Пользователь
           </a>
         </li>
         <li class="list-item">
-          <a routerLink="/station-owner" class="sidenav-item">
+          <a routerLink="/station-owner" class="sidenav-item" (click)="closeByLink()">
             <mat-icon class="menu-icon">ev_station</mat-icon>
             Владелец станции
           </a>
         </li>
         <li class="list-item">
-          <a routerLink="/service-owner" class="sidenav-item">
+          <a routerLink="/service-owner" class="sidenav-item" (click)="closeByLink()">
             <mat-icon class="menu-icon">device_hub</mat-icon>
             Диспетчер
           </a>
         </li>
         <li class="list-item">
-          <a routerLink="/settings" class="sidenav-item">
+          <a routerLink="/settings" class="sidenav-item" (click)="closeByLink()">
             <mat-icon class="menu-icon">settings</mat-icon>
             Настройки
           </a>

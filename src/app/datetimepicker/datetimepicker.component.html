@@ -1,0 +1,36 @@
+<p>
+  <span class="digits-input">
+    <span (click)="setCurrentEdit('hour')">{{hour}}</span>
+    <span class="variants" *ngIf="currentEdit === 'hour'">
+      <span class="variants_item" *ngFor="let hoursVar of hourVariants" (click)="setValue('hour', hoursVar)">{{hoursVar}}</span>
+    </span>
+  </span>
+  :
+  <span class="digits-input">
+    <span (click)="setCurrentEdit('minutes')">{{minutes}}</span>
+    <span class="variants" *ngIf="currentEdit === 'minutes'">
+      <span class="variants_item" *ngFor="let minutesVar of minuteVariants" (click)="setValue('minutes', minutesVar)">{{minutesVar}}</span>
+    </span>
+  </span>
+  &nbsp;
+  <span class="digits-input">
+    <span (click)="setCurrentEdit('day')">{{day}}</span>
+    <span class="variants" *ngIf="currentEdit === 'day'">
+      <span class="variants_item" *ngFor="let daysVar of dayVariants" (click)="setValue('day', daysVar)">{{daysVar}}</span>
+    </span>
+  </span>
+  .
+  <span class="digits-input">
+    <span (click)="setCurrentEdit('month')">{{month}}</span>
+    <span class="variants" *ngIf="currentEdit === 'month'">
+      <span class="variants_item" *ngFor="let monthVar of monthVariants" (click)="setValue('month', monthVar)">{{monthVar}}</span>
+    </span>
+  </span>
+  .
+  <span class="digits-input">
+    <span (click)="setCurrentEdit('year')">{{year}}</span>
+    <span class="year-variants" *ngIf="currentEdit === 'year'">
+      <span class="variants_item" *ngFor="let yearVar of yearVariants" (click)="setValue('year', yearVar)">{{yearVar}}</span>
+    </span>
+  </span>
+</p>

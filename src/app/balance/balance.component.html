@@ -1,26 +1,30 @@
 <mat-card>
-    <h4 class="text-center">Баланс</h4>
+    <h4>Баланс</h4>
     <p>
       Сумма: <b>{{tokens}}</b>
     </p>
     <p>
-      <button mat-stroked-button color="primary" (click)="increaseAdding(amountToAdd)">
-        <mat-icon>add</mat-icon>
-      </button>
-      <span class="amount">{{amountToAdd}}</span>
-      <button mat-stroked-button color="warn" (click)="decreaseAdding(amountToAdd)">
-        <mat-icon>remove</mat-icon>
-      </button>
+      <span class="balance-form">
+        <button mat-stroked-button color="primary" (click)="increaseAdding(amountToAdd)">
+          <mat-icon>add</mat-icon>
+        </button>
+        <span class="amount">{{amountToAdd}}</span>
+        <button mat-stroked-button color="warn" (click)="decreaseAdding(amountToAdd)">
+          <mat-icon>remove</mat-icon>
+        </button>
+      </span>
       <button class="balance-action-button" mat-raised-button color="primary" (click)="addTokens()">{{add}}</button>
     </p>
     <p>
-      <button mat-stroked-button color="primary" (click)="increaseRemoving(amountToRemove)">
-        <mat-icon>add</mat-icon>
-      </button>
-      <span class="amount">{{amountToRemove}}</span>
-      <button mat-stroked-button color="warn" (click)="decreaseRemoving(amountToRemove)">
-        <mat-icon>remove</mat-icon>
-      </button>
+      <span class="balance-form">
+        <button mat-stroked-button color="primary" (click)="increaseRemoving(amountToRemove)">
+          <mat-icon>add</mat-icon>
+        </button>
+        <span class="amount">{{amountToRemove}}</span>
+        <button mat-stroked-button color="warn" (click)="decreaseRemoving(amountToRemove)">
+          <mat-icon>remove</mat-icon>
+        </button>
+      </span>
       <button class="balance-action-button" mat-raised-button color="warn" (click)="removeTokens()">{{remove}}</button>
     </p>
   </mat-card>

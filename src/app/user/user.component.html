@@ -9,9 +9,12 @@
     <mat-tab label="Зарядка">
       <mat-card class="form">
         <mat-card>
-          <mat-form-field class="form-input" *ngIf="showInput">
+          <h4>Выберите станцию:</h4>
+          <mat-form-field class="form-input">
             <input type="text" matInput (input)="findVariants()" [(ngModel)]="address" placeholder="Поиск по адресу" autocomplete="off" />
           </mat-form-field>
+                <button class="form_action-button" mat-raised-button color="accent" [disabled]="!validateAddress()" (click)="openReserveDialog()">Забронировать</button>
+                <button class="form_action-button" mat-raised-button color="warn" [disabled]="!validateAddress()" (click)="charge()">Заряжать</button>
         </mat-card>
         <mat-card *ngIf="variants.length">
           <mat-list class="flex-list">
@@ -19,20 +22,6 @@
           </mat-list>
         </mat-card>
       </mat-card>
-      <div class="action-panels">
-        <div class="action-panels_item">
-          <mat-card class="reserve-panel">
-            <p>
-              <button class="huge-button" mat-raised-button color="accent" (click)="openReserveDialog()">Забронировать</button>
-            </p>
-          </mat-card>
-        </div>
-        <div class="action-panels_item">
-          <mat-card class="charge-panel">
-            <button class="huge-button" mat-raised-button color="warn" (click)="charge()">Заряжать</button>
-          </mat-card>
-        </div>
-      </div>
     </mat-tab>
     <mat-tab label="Операции">
       <mat-card>
@@ -41,11 +30,15 @@
             <table class="journal-table" mat-table [dataSource]="dataSource">
               <ng-container matColumnDef="date">
                 <th mat-header-cell *matHeaderCellDef> Дата </th>
-                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                <td mat-cell *matCellDef="let element"> {{formatDate(element.date)}} </td>
               </ng-container>
               <ng-container matColumnDef="type">
                 <th mat-header-cell *matHeaderCellDef> Операция </th>
                 <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+              </ng-container>
+              <ng-container matColumnDef="data">
+                <th mat-header-cell *matHeaderCellDef> Детали </th>
+                <td mat-cell *matCellDef="let element"> {{element.data}} </td>
               </ng-container>          
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -64,12 +57,13 @@
     </button>
     <div class="modal_dialog-content">
       <h4>Бронирование</h4>
-      <p>Укажите желаемое время и дату:</p>
+      <p>Выберите желаемое время и дату:</p>
       <p>
+        <app-datetimepicker (transferDate)="setDate($event)"></app-datetimepicker>
       </p>
     </div>
     <div class="modal_dialog-footer">
-      <button class="modal_action-button" mat-raised-button color="accent">Забронировать</button>
+      <button class="modal_action-button" mat-raised-button color="accent" (click)="reserve()">Забронировать</button>
       <button class="modal_action-button" mat-raised-button color="warn" (click)="closeModal()">Отмена</button>
     </div>
   </mat-card>

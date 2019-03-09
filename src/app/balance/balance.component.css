@@ -6,6 +6,8 @@
     top: 3px;
 }
 
-.balance-action-button {
-    margin-left: 10px;
+.balance-form {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
 }

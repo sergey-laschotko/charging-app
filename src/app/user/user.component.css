@@ -26,32 +26,13 @@
     position: relative;
     width: 80%;
     max-width: 250px;
+    margin-right: 10px;
 }
 
-.action-panels {
-    display: flex;
-    padding: 0 0 10px;
-}
-
-.action-panels_item {
-    width: 50%;
-}
-
-.charge-panel, .reserve-panel {
-    width: 90%;
-    margin: 0 auto;
-    padding: 30px;       
-}
-
-.huge-button {
-    display: block;
-    width: 80%;
-    min-width: 146px;
-    max-width: 300px;
-    margin: 0 auto;
-    font-size: 1em;
-    font-weight: bold;
-    padding: 15px;
+.form_action-button {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    width: 140px;
 }
 
 .modal {

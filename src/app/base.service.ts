@@ -13,16 +13,6 @@ export class BaseService {
 
   }
 
-  getCurrentDate() {
-    let currentDate = new Date();
-    let hours = currentDate.getHours() < 10 ? "0" + currentDate.getHours() : currentDate.getHours();
-    let minutes = currentDate.getMinutes() < 10 ? "0" + currentDate.getMinutes() : currentDate.getMinutes();
-    let date = currentDate.getDate() < 10 ? "0" + currentDate.getDate() : currentDate.getDate();
-    let month = (currentDate.getMonth() + 1) < 10 ? "0" + (currentDate.getMonth() + 1) : currentDate.getMonth() + 1;
-    let year = currentDate.getFullYear();
-    return `${hours}:${minutes} ${date}.${month}.${year}`;
-  }
-
   getUser() {
     for (let user of data.users) {
       if (!user.stations) {
@@ -73,8 +63,9 @@ export class BaseService {
         data.operations.push({
           type: "Покупка токенов",
           operator: name,
-          date: this.getCurrentDate(),
-          data: `Куплено ${amount} токенов`
+          date: new Date(),
+          data: `Куплено ${amount} токенов`,
+          location: ""
         });
       }
     });
@@ -87,8 +78,9 @@ export class BaseService {
         data.operations.push({
           type: "Продажа токенов",
           operator: name,
-          date: this.getCurrentDate(),
-          data: `Продано ${amount} токенов`
+          date: new Date(),
+          data: `Продано ${amount} токенов`,
+          location: ""
         });
       }
     });
@@ -99,7 +91,37 @@ export class BaseService {
       operator: name,
       type: "Бронь",
       data: `${reserveDate} по адресу ${address}`,
-      date: this.getCurrentDate()
+      date: new Date,
+      location: address
+    });
+  }
+
+  charge(name: string, address: string) {
+    data.operations.push({
+      operator: name,
+      type: "Зарядка",
+      data: `Зарядка по адресу ${address}`,
+      date: new Date,
+      location: address
+    });
+  }
+
+  addStation(name: string, address: string) {
+    data.users.map((user: IUser) => {
+      if (user.name === name) {
+        user.stations.push({
+          address: address,
+          balance: 0,
+          tariffs: []
+        });
+        data.operations.push({
+          date: new Date(),
+          type: "Добавление станции",
+          data: `${name} добавил станцию по адресу ${address}`,
+          operator: name,
+          location: ""
+        });
+      }
     });
   }
 }

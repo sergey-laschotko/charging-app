@@ -1,10 +1,10 @@
 <div class="container">
     <mat-card class="page-heading">
-      <span class="username"><b>{{username}}</b></span>
+      <span class="username"><b>{{user.name}}</b></span>
     </mat-card>
     <mat-tab-group>
       <mat-tab label="Баланс">
-          <app-balance [tokens]="tokens" add="Купить" remove="Продать" (onAdd)="buyTokens($event)" (onRemove)="saleTokens($event)"></app-balance>
+          <app-balance [tokens]="user.balance" add="Купить" remove="Продать" (onAdd)="buyTokens($event)" (onRemove)="saleTokens($event)"></app-balance>
       </mat-tab>
       <mat-tab label="Зарегестрированные станции">
         <div class="registered-stations">
@@ -12,12 +12,12 @@
             <h4>Зарегестрированные станции</h4>
             <button mat-raised-button class="inline-item" *ngIf="!adding" color="primary" (click)="toggleAdding()">Добавить станцию</button>
             <mat-form-field *ngIf="adding" class="inline-item">
-              <input matInput class="inline-item" placeholder="Адрес станции" [(ngModel)]="newStation" />
+              <input matInput class="inline-item" placeholder="Адрес станции" autocomplete="off" [(ngModel)]="newStation" />
             </mat-form-field>
-            <button class="inline-item" *ngIf="adding" mat-raised-button color="accent" (click)="addNewStation()">Добавить</button>
+            <button class="inline-item" *ngIf="adding" [disabled]="!validateNewStation()" mat-raised-button color="accent" (click)="addNewStation()">Добавить</button>
             <button mat-raised-button *ngIf="adding" color="warn" (click)="toggleAdding()">Отмена</button>
             <mat-list>
-              <mat-list-item *ngFor="let station of stations">{{station}}</mat-list-item>
+              <mat-list-item *ngFor="let station of stations" style="cursor: pointer" (click)="showTariffs(station)">{{station.address}}</mat-list-item>
             </mat-list>
           </mat-card>
         </div>
@@ -31,11 +31,15 @@
               <table class="journal-table" mat-table [dataSource]="dataSource">
                 <ng-container matColumnDef="date">
                   <th mat-header-cell *matHeaderCellDef> Дата </th>
-                  <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                  <td mat-cell *matCellDef="let element"> {{formatDate(element.date)}} </td>
                 </ng-container>
-                <ng-container matColumnDef="operation">
+                <ng-container matColumnDef="type">
                   <th mat-header-cell *matHeaderCellDef> Операция </th>
-                  <td mat-cell *matCellDef="let element"> {{element.operation}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+                </ng-container>
+                <ng-container matColumnDef="data">
+                  <th mat-header-cell *matHeaderCellDef> Детали </th>
+                  <td mat-cell *matCellDef="let element"> {{element.data}} </td>
                 </ng-container>          
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

@@ -1,4 +1,5 @@
 import { IUser, IOperation } from "./models";
+import { formatDate } from "../../lib/lib";
 
 export const stations = [
     "Герасименко, 2",
@@ -70,16 +71,6 @@ export class DataSource {
         return Math.floor(Math.random() * (max - min) + min);
     }
 
-    formatDate(date: Date) {
-        let hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-        let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-        let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-        let month = (date.getMonth() + 1) < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-        let year = date.getFullYear();
-
-        return { hours, minutes, day, month, year };
-    }
-
     generate() {
         let dataSource: { users: IUser[], operations: IOperation[] } = {
             users: [],
@@ -109,31 +100,32 @@ export class DataSource {
             });
         });
 
+        let stationsCopy = [...stations];
+
         // add stations to owners
-        while (stations.length) {
-            let owner = this.stationsOwners[this.getRandom(0, this.stationsOwners.length)];
+        while (stationsCopy.length) {
             dataSource.users.map((user: IUser) => {
-                if (user.role === 'owner' && stations.length) {
+                if (user.role === 'owner' && stationsCopy.length) {
                     user.stations.push({
-                        address: stations.splice(0, 1)[0],
+                        address: stationsCopy.splice(0, 1)[0],
                         balance: this.getRandom(100, 1000),
                         tariffs: []
                     });
                 }
-            });            
+            });
         }
-        
-        
+
         // add operations
         let startDate = new Date(2018, 3, 1);
         for (let k = 0; k < 500; k++) {
             let hour = 3600000;
             let day = 86400000;
-            let mockDate = this.formatDate(startDate);
-            let reserveDate = this.formatDate(new Date(Number(startDate) + day));
+            let mockDate = formatDate(startDate);
+            let reserveDate = formatDate(new Date(Number(startDate) + day));
             
             let operation = this.operations[this.getRandom(0, this.operations.length)];
             let data: string;
+            let location: string = "";
             switch (operation) {
                 case SALING:
                     data = `Продано ${this.getRandom(1, 10)} токенов`;
@@ -143,9 +135,11 @@ export class DataSource {
                     break;
                 case RESERVE:
                     data = `${reserveDate.hours}:${reserveDate.minutes} ${reserveDate.day}.${reserveDate.month}.${reserveDate.year} по адресу ${this.stations[this.getRandom(0, this.stations.length)]}`;
+                    location = this.stations[this.getRandom(0, this.stations.length)];
                     break;
                 case CHARGING:
-                    data = `${mockDate.hours}:${mockDate.minutes} ${mockDate.day}.${mockDate.month}.${mockDate.year} по адресу ${this.stations[this.getRandom(0, this.stations.length)]}`
+                    data = `${mockDate.hours}:${mockDate.minutes} ${mockDate.day}.${mockDate.month}.${mockDate.year} по адресу ${this.stations[this.getRandom(0, this.stations.length)]}`;
+                    location = this.stations[this.getRandom(0, this.stations.length)];
                     break;
                 default:
                     return;
@@ -153,8 +147,9 @@ export class DataSource {
             dataSource.operations.push({
                 type: operation,
                 operator: operators[this.getRandom(0, operators.length)],
-                date: `${mockDate.hours}:${mockDate.minutes} ${mockDate.day}.${mockDate.month}.${mockDate.year}`,
-                data: data
+                date: startDate,
+                data: data,
+                location: location
             });
             startDate = new Date(Number(startDate) + this.getRandom(hour, day));
         };

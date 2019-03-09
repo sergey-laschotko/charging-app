@@ -1,48 +1,58 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatTableDataSource, MatTable } from '@angular/material';
-import { stations } from '../mock-data/datasource';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { MatPaginator, MatTableDataSource, MatSnackBar } from '@angular/material';
+import { BaseService } from '../base.service';
+import { IUser, IStation, IOperation } from '../mock-data/models';
+import { formatDate } from "../../lib/lib";
 
 @Component({
   selector: 'app-station-owner',
   templateUrl: './station-owner.component.html',
   styleUrls: ['./station-owner.component.css']
 })
-export class StationOwnerComponent implements OnInit {
-  username: string = 'Поставщик услуг сервиса зарядки';
-  tokens: number = 10;
-  stations: string[] = [];
+export class StationOwnerComponent implements OnInit, AfterViewInit {
+  user: IUser;
+  stations: IStation[] = [];
   tariffs: string[] = [];
   newStation: string = "";
   adding: boolean = false;
   newTariffFrom: string = "00:00";
   newTariffTo: string = "00:00";
   newTariffPrice: number = 0;
-  displayedColumns: string[] = ["date", "operation"];
-  dataSource = new MatTableDataSource();
+  operations: IOperation[] = [];
+  displayedColumns: string[] = ["date", "type", "data"];
+  dataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
 
-  constructor() { }
+  constructor(private bs: BaseService, private sb: MatSnackBar) {
+  }
 
   ngOnInit() {
-    this.getStations();
+    this.user = this.bs.getStationOwner();
+    this.stations = this.user.stations;
+    this.operations = this.bs.getUsersOperations(this.user.name).reverse();
+    this.dataSource = new MatTableDataSource(this.operations);
+  }
+
+  ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  formatDate(date: Date) {
+    return formatDate(date).string;
   }
 
   toggleAdding() {
     this.adding = !this.adding;
   }
 
-  getStations() {
-    this.stations = [...(stations.slice(5, 10))];
-  }
-
   addNewStation() {
-    if (this.newStation.length) {
-      this.stations.push(this.newStation);
-      this.tariffs = [];
-    }
+    this.bs.addStation(this.user.name, this.newStation);
+    this.sb.open("Добавление станции", "Готово", {
+      duration: 3000
+    });
+    this.updateJournal();
   }
 
   validateNewStation() {
@@ -58,10 +68,23 @@ export class StationOwnerComponent implements OnInit {
   }
 
   buyTokens(amount: number) {
-    this.tokens += amount;
+    this.bs.addTokens(this.user.name, amount);
+    this.sb.open("Покупка токенов", "Готово", {
+      duration: 3000
+    });
+    this.updateJournal();
   }
 
   saleTokens(amount: number) {
-    this.tokens -= amount;
+    this.bs.removeTokens(this.user.name, amount);
+    this.sb.open("Продажа токенов", "Готово", {
+      duration: 3000
+    });
+    this.updateJournal();
+  }
+
+  updateJournal() {
+    this.operations = this.bs.getUsersOperations(this.user.name).reverse();
+    this.dataSource = new MatTableDataSource(this.operations);
   }
 }

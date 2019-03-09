@@ -1,13 +1,6 @@
 .registered-stations {
-    width: 50%;
-    float: left;
-    padding-right: 15px;
-}
-
-.register-station {
-    width: 50%;
-    float: left;
-    padding-left: 15px;
+    width: 100%;
+    max-width: 320px;
 }
 
 .tariffs {

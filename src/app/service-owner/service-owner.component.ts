@@ -9,7 +9,7 @@ import { stations } from '../mock-data/datasource';
 })
 export class ServiceOwnerComponent implements OnInit {
   username: string = 'Диспетчер';
-  tokens: number = 500;
+  tokens: number = 5000;
   serviceProviders: any[] = [];
   chosen: string = "Никто не выбран";
   isModalOpened: boolean = false;
