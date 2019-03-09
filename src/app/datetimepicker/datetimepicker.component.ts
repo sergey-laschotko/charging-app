@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'app-datetimepicker',
@@ -7,6 +7,11 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class DatetimepickerComponent implements OnInit {
   @Output() transferDate = new EventEmitter();
+  @Input() dateOnly: boolean;
+  @Input() timeOnly: boolean;
+  @Input() default: boolean;
+  showDate: boolean = true;
+  showTime: boolean = true;
   hour: string = "";
   minutes: string = "";
   day: string = "";
@@ -35,6 +40,19 @@ export class DatetimepickerComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.checkOptions();
+  }
+
+  checkOptions() {
+    if (this.dateOnly) {
+      this.showTime = false;
+    } else if (this.timeOnly) {
+      this.showDate = false;
+    }
+    if (this.default) {
+      this.hour = "00";
+      this.minutes = "00";
+    }
   }
 
   setCurrentEdit(field: string) {

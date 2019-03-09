@@ -16,6 +16,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LayoutModule } from '@angular/cdk/layout';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
     imports: [
@@ -36,6 +37,7 @@ import { LayoutModule } from '@angular/cdk/layout';
         MatPaginatorModule,
         MatSnackBarModule,
         LayoutModule,
+        MatExpansionModule,
     ],
     exports: [
         MatButtonModule,
@@ -55,6 +57,7 @@ import { LayoutModule } from '@angular/cdk/layout';
         MatPaginatorModule,
         MatSnackBarModule,
         LayoutModule,
+        MatExpansionModule,
     ]
 })
 export class MaterialAppModule {}

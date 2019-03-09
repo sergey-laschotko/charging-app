@@ -10,15 +10,47 @@
         <div class="registered-stations">
           <mat-card>
             <h4>Зарегестрированные станции</h4>
-            <button mat-raised-button class="inline-item" *ngIf="!adding" color="primary" (click)="toggleAdding()">Добавить станцию</button>
-            <mat-form-field *ngIf="adding" class="inline-item">
-              <input matInput class="inline-item" placeholder="Адрес станции" autocomplete="off" [(ngModel)]="newStation" />
-            </mat-form-field>
-            <button class="inline-item" *ngIf="adding" [disabled]="!validateNewStation()" mat-raised-button color="accent" (click)="addNewStation()">Добавить</button>
-            <button mat-raised-button *ngIf="adding" color="warn" (click)="toggleAdding()">Отмена</button>
-            <mat-list>
-              <mat-list-item *ngFor="let station of stations" style="cursor: pointer" (click)="showTariffs(station)">{{station.address}}</mat-list-item>
-            </mat-list>
+            <span [ngClass]="{ 'add-station-form': true, 'add-station-form__opened': adding }">
+              <button mat-raised-button class="inline-item" color="primary" (click)="toggleAdding()">
+                <span *ngIf="!adding">Добавить станцию</span>
+                <span *ngIf="adding">Спрятать форму</span>
+              </button>
+              <mat-form-field class="inline-item input">
+                <input matInput placeholder="Адрес станции" autocomplete="off" [(ngModel)]="newStation" />
+              </mat-form-field>
+              <button class="inline-item" [disabled]="!validateNewStation()" mat-raised-button color="accent" (click)="addNewStation()">Добавить</button>
+              <button mat-raised-button color="warn" (click)="toggleAdding()">Отмена</button>
+            </span>
+            <mat-accordion>
+              <mat-expansion-panel *ngFor="let station of stations">
+                <mat-expansion-panel-header (click)="clearNewTariff()">
+                  {{station.address}}
+                </mat-expansion-panel-header>
+                <p><b>Тарифы</b></p>
+                <p>
+                  <span [ngClass]="{ 'add-tariff-form': true, 'add-tariff-form__opened': addingTariff }">
+                    <button mat-raised-button color="primary" (click)="toggleAddingTariff()">
+                      <span *ngIf="!addingTariff">Добавить тариф</span>
+                      <span *ngIf="addingTariff">Скрыть форму</span>
+                    </button>
+                    <span class="add-tariff-form_input">
+                      С <app-datetimepicker [default]="true" [timeOnly]="true" (transferDate)="setFromTime($event)"></app-datetimepicker>
+                      до <app-datetimepicker [default]="true" [timeOnly]="true" (transferDate)="setToTime($event)"></app-datetimepicker>
+                      <mat-form-field class="add-tariff-form_price">
+                        <input matInput type="text" placeholder="Цена" (keypress)="checkPriceInput($event)" [(ngModel)]="newTariffPrice" autocomplete="off" />
+                      </mat-form-field>
+                    </span>
+                    <span>
+                      <button class="add-tariff-form_button" mat-raised-button color="accent" [disabled]="!newTariffPrice" (click)="addNewTariff(station.address)">Добавить</button>
+                      <button class="add-tariff-form_button" mat-raised-button color="warn" (click)="toggleAddingTariff()">Отмена</button>
+                    </span>
+                  </span>
+                </p>
+                <mat-list>
+                  <mat-list-item *ngFor="let tariff of station.tariffs">C {{tariff.from}} по {{tariff.to}} цена {{tariff.price}}</mat-list-item>
+                </mat-list>
+              </mat-expansion-panel>
+            </mat-accordion>
           </mat-card>
         </div>
       </mat-tab>

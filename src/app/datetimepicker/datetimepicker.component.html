@@ -1,4 +1,4 @@
-<p>
+<span class="time" *ngIf="showTime">
   <span class="digits-input">
     <span (click)="setCurrentEdit('hour')">{{hour}}</span>
     <span class="variants" *ngIf="currentEdit === 'hour'">
@@ -12,7 +12,8 @@
       <span class="variants_item" *ngFor="let minutesVar of minuteVariants" (click)="setValue('minutes', minutesVar)">{{minutesVar}}</span>
     </span>
   </span>
-  &nbsp;
+</span>
+<span class="date" *ngIf="showDate">
   <span class="digits-input">
     <span (click)="setCurrentEdit('day')">{{day}}</span>
     <span class="variants" *ngIf="currentEdit === 'day'">
@@ -33,4 +34,4 @@
       <span class="variants_item" *ngFor="let yearVar of yearVariants" (click)="setValue('year', yearVar)">{{yearVar}}</span>
     </span>
   </span>
-</p>
+</span>

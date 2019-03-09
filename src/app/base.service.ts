@@ -117,8 +117,31 @@ export class BaseService {
         data.operations.push({
           date: new Date(),
           type: "Добавление станции",
-          data: `${name} добавил станцию по адресу ${address}`,
+          data: `Новая станция по адресу ${address}`,
           operator: name,
+          location: ""
+        });
+      }
+    });
+  }
+
+  addTariff(name: string, address: string, from: string, to: string, price: number ) {
+    data.users.map((user: IUser) => {
+      if (user.name === name) {
+        user.stations.map((station: IStation) => {
+          if (station.address === address) {
+            station.tariffs.push({
+              from,
+              to,
+              price
+            });
+          }
+        });
+        data.operations.push({
+          operator: name,
+          type: "Добавление тарифа",
+          data: `Добавлен тариф на станцию ${address}`,
+          date: new Date(),
           location: ""
         });
       }

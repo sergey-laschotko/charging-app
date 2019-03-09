@@ -15,9 +15,10 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   tariffs: string[] = [];
   newStation: string = "";
   adding: boolean = false;
+  addingTariff: boolean = false;
   newTariffFrom: string = "00:00";
   newTariffTo: string = "00:00";
-  newTariffPrice: number = 0;
+  newTariffPrice: string = "";
   operations: IOperation[] = [];
   displayedColumns: string[] = ["date", "type", "data"];
   dataSource: any;
@@ -47,24 +48,73 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     this.adding = !this.adding;
   }
 
+  toggleAddingTariff() {
+    this.addingTariff = !this.addingTariff;
+  }
+
+  checkPriceInput(e: any) {
+    e = e || event;
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+    let chr = null;
+
+    if (e.which == null) {
+      if (e.keyCode < 32) return null;
+      chr = String.fromCharCode(e.keyCode)
+    }
+    
+    if (e.which != 0 && e.charCode != 0) {
+      if (e.which < 32) return null;
+      chr = String.fromCharCode(e.which)
+    }
+
+    if (chr == null) return;
+
+    if (chr < "0" || chr > "9") return false;
+  }
+
+  setFromTime(date: Date) {
+    let hours = date.getHours() < 10 ? "0" + date.getHours() : String(date.getHours());
+    let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : String(date.getMinutes());
+    this.newTariffFrom = `${hours}:${minutes}`;
+  }
+
+  setToTime(date: Date) {
+    let hours = date.getHours() < 10 ? "0" + date.getHours() : String(date.getHours());
+    let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : String(date.getMinutes());
+    this.newTariffTo = `${hours}:${minutes}`;
+  }
+
+  clearNewTariff() {
+    this.addingTariff = false;
+    this.newTariffFrom = "00:00";
+    this.newTariffTo = "00:00";
+    this.newTariffPrice = "";
+  }
+
   addNewStation() {
     this.bs.addStation(this.user.name, this.newStation);
     this.sb.open("Добавление станции", "Готово", {
       duration: 3000
     });
     this.updateJournal();
+    this.toggleAdding();
   }
 
   validateNewStation() {
     return this.newStation.length > 0;
   }
 
-  addNewTariff() {
-    let newTariff = `С ${this.newTariffFrom} до ${this.newTariffTo} по цене ${this.newTariffPrice}$`;
-    this.tariffs.push(newTariff);
+  addNewTariff(address: string) {
+    this.bs.addTariff(this.user.name, address, this.newTariffFrom, this.newTariffTo, Number(this.newTariffPrice));
+    this.sb.open("Добавление тарифа", "Готово", {
+      duration: 3000
+    });
+    this.updateJournal();
     this.newTariffFrom = "00:00";
     this.newTariffTo = "00:00";
-    this.newTariffPrice = 0
+    this.newTariffPrice = "";
+    this.addingTariff = !this.addingTariff;
   }
 
   buyTokens(amount: number) {
