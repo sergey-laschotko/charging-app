@@ -29,6 +29,10 @@ export class BaseService {
     }
   }
 
+  getStationsOwners() {
+    return data.users.filter((user: IUser) => user.stations);
+  }
+
   getStations() {
     let stations: IStation[] = [];
     for (let user of data.users) {
@@ -54,6 +58,10 @@ export class BaseService {
     }
 
     return results;
+  }
+
+  getOperations() {
+    return data.operations;
   }
 
   addTokens(name: string, amount: number) {

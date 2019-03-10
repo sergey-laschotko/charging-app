@@ -9,31 +9,51 @@
       <mat-tab label="Провайдеры">
         <mat-card>
           <h4>Сервис Провайдеры</h4>
-          <ul class="providers-list">
-            <li class="providers-list_item" *ngFor="let sp of serviceProviders">
-              <span class="aligned-left">{{sp}}</span>
-              <span class="aligned-right"><button mat-raised-button color="accent" (click)="openModel(sp)">Посмотреть данные</button></span>
-            </li>
-          </ul>
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let sp of serviceProviders">
+              <mat-expansion-panel-header>{{sp.name}}</mat-expansion-panel-header>
+              <p>Баланс: <b>{{sp.balance}}</b></p>
+              <p>Станции:</p>
+              <mat-expansion-panel *ngFor="let station of sp.stations">
+              <mat-expansion-panel-header>{{station.address}}</mat-expansion-panel-header>
+              <p>Баланс станции: <b>{{station.balance}}</b></p>
+              <p>
+                Тарифы:
+                <span *ngIf="!station.tariffs.length">На данный момент тарифов нет</span>
+                <mat-list *ngIf="station.tariffs.length">
+                  <mat-list-item *ngFor="let tariff of station.tariffs">C {{tariff.from}} до {{tariff.to}} цена {{tariff.price}}</mat-list-item>
+                </mat-list>
+              </p>
+              </mat-expansion-panel>
+            </mat-expansion-panel>
+          </mat-accordion>
         </mat-card>
       </mat-tab>
       <mat-tab label="Журнал Операций">
         <mat-card>
           <mat-form-field>
-            <mat-select [(ngModel)]="selectedStation" (ngModelChange)="switchStation()">
-              <mat-option *ngFor="let station of stations, let i = index" [value]="i">{{station}}</mat-option>
+            <mat-select [(ngModel)]="selectedStation" (ngModelChange)="showStationJournal()">
+              <mat-option *ngFor="let station of stations" [value]="station.address">{{station.address}}</mat-option>
             </mat-select>
           </mat-form-field>
           <div class="mat-elevation-z8">
             <table class="journal-table" mat-table [dataSource]="dataSource">
               <ng-container matColumnDef="date">
                 <th mat-header-cell *matHeaderCellDef> Дата </th>
-                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                <td mat-cell *matCellDef="let element"> {{formatDate(element.date)}} </td>
               </ng-container>
-              <ng-container matColumnDef="operation">
+              <ng-container matColumnDef="type">
                 <th mat-header-cell *matHeaderCellDef> Операция </th>
-                <td mat-cell *matCellDef="let element"> {{element.operation}} </td>
-              </ng-container>          
+                <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+              </ng-container>
+              <ng-container matColumnDef="operator">
+                <th mat-header-cell *matHeaderCellDef> Исполнитель </th>
+                <td mat-cell *matCellDef="let element"> {{element.operator}} </td>
+              </ng-container>
+              <ng-container matColumnDef="data">
+                <th mat-header-cell *matHeaderCellDef> Детали </th>
+                <td mat-cell *matCellDef="let element"> {{element.data}} </td>
+              </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
@@ -44,9 +64,9 @@
       <mat-tab label="Баланс станций">
         <div class="mat-elevation-z8">
             <table class="journal-table" mat-table [dataSource]="balanceSource">
-              <ng-container matColumnDef="station">
+              <ng-container matColumnDef="address">
                 <th mat-header-cell *matHeaderCellDef> Станция </th>
-                <td mat-cell *matCellDef="let element"> {{element.station}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.address}} </td>
               </ng-container>
               <ng-container matColumnDef="balance">
                 <th mat-header-cell *matHeaderCellDef> Баланс </th>
@@ -59,15 +79,4 @@
           </div>
       </mat-tab>
     </mat-tab-group>
-  </div>
-  <div [ngClass]="{ 'user-data': true, 'show-user-data': isModalOpened }">
-    <div class="container">
-      <mat-card class="user-data_card">
-        <button class="close-button" (click)="closeModal()" mat-icon-button>
-          <mat-icon color="warn">clear</mat-icon>
-        </button>
-        <h4 class="text-center">{{chosen}}</h4>
-        <p>Данные пользователя</p>
-      </mat-card>
-    </div>
   </div>

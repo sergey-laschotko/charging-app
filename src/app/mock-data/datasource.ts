@@ -126,6 +126,7 @@ export class DataSource {
             let operation = this.operations[this.getRandom(0, this.operations.length)];
             let data: string;
             let location: string = "";
+            let randomStation = this.stations[this.getRandom(0, this.stations.length)];
             switch (operation) {
                 case SALING:
                     data = `Продано ${this.getRandom(1, 10)} токенов`;
@@ -134,12 +135,12 @@ export class DataSource {
                     data = `Куплено ${this.getRandom(1, 10)} токенов`;
                     break;
                 case RESERVE:
-                    data = `${reserveDate.hours}:${reserveDate.minutes} ${reserveDate.day}.${reserveDate.month}.${reserveDate.year} по адресу ${this.stations[this.getRandom(0, this.stations.length)]}`;
-                    location = this.stations[this.getRandom(0, this.stations.length)];
+                    data = `${reserveDate.hours}:${reserveDate.minutes} ${reserveDate.day}.${reserveDate.month}.${reserveDate.year} по адресу ${randomStation}`;
+                    location = randomStation;
                     break;
                 case CHARGING:
-                    data = `${mockDate.hours}:${mockDate.minutes} ${mockDate.day}.${mockDate.month}.${mockDate.year} по адресу ${this.stations[this.getRandom(0, this.stations.length)]}`;
-                    location = this.stations[this.getRandom(0, this.stations.length)];
+                    data = `${mockDate.hours}:${mockDate.minutes} ${mockDate.day}.${mockDate.month}.${mockDate.year} по адресу ${randomStation}`;
+                    location = randomStation;
                     break;
                 default:
                     return;

@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatTable } from '@angular/material';
-import { stations } from '../mock-data/datasource';
+import { BaseService } from '../base.service';
+import { IStation, IOperation } from '../mock-data/models';
+import { formatDate } from '../../lib/lib';
 
 @Component({
   selector: 'app-service-owner',
@@ -13,45 +15,45 @@ export class ServiceOwnerComponent implements OnInit {
   serviceProviders: any[] = [];
   chosen: string = "Никто не выбран";
   isModalOpened: boolean = false;
-  stations = stations;
-  operations: string[] = [];
-  selectedStation = 0;
-  displayedColumns: string[] = ["date", "operation"];
-  dataSource: any = [];
-  stationsBalance: string[] = [];
-  balanceColumns: string[] = ["station", "balance"];
-  balanceSource = new MatTableDataSource(this.stationsBalance);
+  operations: IOperation[] = [];
+  selectedStation;
+  displayedColumns: string[] = ["date", "type", "operator", "data"];
+  dataSource: any = null;
+  stations: IStation[] = [];
+  balanceColumns: string[] = ["address", "balance"];
+  balanceSource: any = null;
 
   @ViewChild('opPaginator') opPaginator: MatPaginator;
   @ViewChild('bPaginator') bPaginator: MatPaginator;
 
-  constructor() { }
+  constructor(private bs: BaseService) { 
+    this.serviceProviders = this.bs.getStationsOwners();
+    this.stations = this.bs.getStations();
+    this.balanceSource = new MatTableDataSource(this.stations);
+    this.selectedStation = this.stations[0].address;
+    this.operations = this.bs.getOperations();
+    let selectedStationOperations = this.operations.filter((operation: IOperation) => {
+      return operation.location === this.selectedStation;
+    });
+    this.dataSource = new MatTableDataSource(selectedStationOperations);
+  }
 
   ngOnInit() {
     this.showStationJournal();
     this.balanceSource.paginator = this.bPaginator;
   }
 
+  formatDate(date: Date) {
+    return formatDate(date).string;
+  }
+
   showStationJournal() {
+    console.log(this.selectedStation);
     let newJournal = this.operations.filter((operation: any) => {
-      return operation.station === this.stations[this.selectedStation];
+      return operation.location === this.selectedStation;
     })
     this.dataSource = new MatTableDataSource(newJournal);
     this.dataSource.paginator = this.opPaginator;
-  }
-
-  switchStation() {
-    this.showStationJournal();
-  }
-
-  openModel(sp: any) {
-    this.chosen = sp;
-    this.isModalOpened = true;
-  }
-
-  closeModal() {
-    this.chosen = "Никто не выбран";
-    this.isModalOpened = false;
   }
 
   produceTokens(amount: number) {
