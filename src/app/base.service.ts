@@ -65,14 +65,14 @@ export class BaseService {
     return data.operations;
   }
 
-  addTokens(name: string, amount: number) {
+  addTokens(operator: IUser, amount: number) {
     data.users.map((user: IUser) => {
-      if (user.name === name) {
+      if (user.id === operator.id) {
         user.balance += amount;
         data.operations.push({
           id: genID(),
           type: "Покупка токенов",
-          operator: name,
+          operator: operator.name,
           date: new Date(),
           data: `Куплено ${amount} токенов`,
           location: ""
@@ -81,14 +81,14 @@ export class BaseService {
     });
   }
 
-  removeTokens(name: string, amount: number) {
+  removeTokens(operator: IUser, amount: number) {
     data.users.map((user: IUser) => {
-      if (user.name === name) {
+      if (user.id === operator.id) {
         user.balance -= amount;
         data.operations.push({
           id: genID(),
           type: "Продажа токенов",
-          operator: name,
+          operator: operator.name,
           date: new Date(),
           data: `Продано ${amount} токенов`,
           location: ""
@@ -97,10 +97,10 @@ export class BaseService {
     });
   }
 
-  reserve(name: string, address: string, reserveDate: string) {
+  reserve(operator: IUser, address: string, reserveDate: string) {
     data.operations.push({
       id: genID(),
-      operator: name,
+      operator: operator.name,
       type: "Бронь",
       data: `${reserveDate} по адресу ${address}`,
       date: new Date,
@@ -108,10 +108,10 @@ export class BaseService {
     });
   }
 
-  charge(name: string, address: string) {
+  charge(operator: IUser, address: string) {
     data.operations.push({
       id: genID(),
-      operator: name,
+      operator: operator.name,
       type: "Зарядка",
       data: `Зарядка по адресу ${address}`,
       date: new Date,
@@ -119,9 +119,9 @@ export class BaseService {
     });
   }
 
-  addStation(name: string, address: string) {
+  addStation(operator: IUser, address: string) {
     data.users.map((user: IUser) => {
-      if (user.name === name) {
+      if (user.id === operator.id) {
         user.stations.push({
           id: genID(),
           address: address,
@@ -133,16 +133,53 @@ export class BaseService {
           date: new Date(),
           type: "Добавление станции",
           data: `Новая станция по адресу ${address}`,
-          operator: name,
+          operator: operator.name,
           location: ""
         });
       }
     });
   }
 
-  addTariff(name: string, address: string, from: string, to: string, price: number ) {
+  editStation(operator: IUser, editedStation: IStation) {
     data.users.map((user: IUser) => {
-      if (user.name === name) {
+      if (user.id === operator.id) {
+        user.stations.map((station: IStation) => {
+          let oldAddress = station.address;
+          if (station.id === editedStation.id) {
+            station.address = editedStation.address;
+            data.operations.push({
+              id: genID(),
+              date: new Date(),
+              type: "Редактирование адреса станции",
+              data: `${oldAddress} -> ${station.address}`,
+              operator: operator.name,
+              location: ""
+            });
+          }
+        });
+      }
+    });
+  }
+
+  deleteStation(user: IUser, deletedStation: IStation) {
+    data.users.map((u: IUser) => {
+      if (user.id === u.id) {
+        u.stations = u.stations.filter((station: IStation) => station.id !== deletedStation.id);
+        data.operations.push({
+          id: genID(),
+          date: new Date(),
+          type: "Удаление станции",
+          data: `Удалена станция по адресу ${deletedStation.address}`,
+          operator: user.name,
+          location: ""
+        });
+      }
+    });
+  }
+
+  addTariff(operator: IUser, address: string, from: string, to: string, price: number ) {
+    data.users.map((user: IUser) => {
+      if (user.id === operator.id) {
         user.stations.map((station: IStation) => {
           if (station.address === address) {
             station.tariffs.push({
@@ -151,20 +188,37 @@ export class BaseService {
               to,
               price
             });
-            station.tariffs.sort((a: ITariff, b: ITariff) => {
-              if (`${a.from}${a.to}` > `${b.from}${b.to}`) return 1;
-              else return -1;
+            data.operations.push({
+              id: genID(),
+              operator: operator.name,
+              type: "Добавление тарифа",
+              data: `Добавлен тариф на станцию ${address}`,
+              date: new Date(),
+              location: ""
             });
-            console.log(station.tariffs);
           }
         });
-        data.operations.push({
-          id: genID(),
-          operator: name,
-          type: "Добавление тарифа",
-          data: `Добавлен тариф на станцию ${address}`,
-          date: new Date(),
-          location: ""
+      }
+    });
+  }
+
+  deleteTariff(operator: IUser, currentStation: IStation, currentTariff: ITariff) {
+    data.users.map((user: IUser) => {
+      if (user.id === operator.id) {
+        user.stations.map((station: IStation) => {
+          if (station.id === currentStation.id) {
+            station.tariffs.map((tariff: ITariff) => {
+              station.tariffs = station.tariffs.filter((tariff: ITariff) => tariff.id !== currentTariff.id);
+              data.operations.push({
+                id: genID(),
+                operator: operator.name,
+                type: "Удаление тарифа",
+                data: `Удален тариф с id ${currentTariff.id}`,
+                date: new Date(),
+                location: ""
+              });
+            });
+          }
         });
       }
     });

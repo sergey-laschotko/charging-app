@@ -22,10 +22,32 @@
               <button mat-raised-button color="warn" (click)="toggleAdding()">Отмена</button>
             </span>
             <mat-accordion>
-              <mat-expansion-panel *ngFor="let station of stations">
-                <mat-expansion-panel-header (click)="clearNewTariff()">
-                  {{station.address}}
+              <mat-expansion-panel *ngFor="let station of user.stations">
+                <mat-expansion-panel-header (click)="clearInputs()">
+                  <span *ngIf="!editingStation || currentEditingStation.id !== station.id">{{station.address}}</span>
+                  <span class="edit-station" *ngIf="editingStation && currentEditingStation.id === station.id">
+                    <mat-form-field class="edit-station_input">
+                      <input matInput type="text" [(ngModel)]="currentEditingStation.address" (click)="$event.stopPropagation()" />
+                    </mat-form-field>
+                  </span>
                 </mat-expansion-panel-header>
+                  <span *ngIf="editingStation">
+                    <button mat-raised-button color="primary" class="station-action-button" (click)="finishEditingStation()">
+                      <mat-icon>arrow_back</mat-icon>
+                    </button>
+                    <button mat-raised-button color="warn" class="station-action-button" (click)="editStation()">
+                      <mat-icon>check</mat-icon>
+                    </button>
+                  </span>
+                  <span *ngIf="!editingStation">
+                    <button mat-raised-button class="station-action-button" color="accent" (click)="setEditingStation(station)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-raised-button class="station-action-button" color="warn" (click)="deleteStation(station)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </span>
+                <hr />
                 <p><b>Тарифы</b></p>
                 <p>
                   <span [ngClass]="{ 'add-tariff-form': true, 'add-tariff-form__opened': addingTariff }">
@@ -47,9 +69,14 @@
                   </span>
                 </p>
                 <mat-list class="tariffs-list">
-                  <mat-list-item *ngFor="let tariff of station.tariffs" class="tariffs-list_item">
+                  <mat-list-item *ngFor="let tariff of station.tariffs.sort(sortTariff)" class="tariffs-list_item">
                     <span class="tariffs-list_view">
                       <span>C {{tariff.from}} по {{tariff.to}} цена {{tariff.price}}</span>
+                    </span>
+                    <span>
+                      <button mat-icon-button (click)="deleteTariff(station, tariff)" color="warn">
+                        <mat-icon>delete</mat-icon>
+                      </button>
                     </span>
                   </mat-list-item>
                 </mat-list>

@@ -35,7 +35,7 @@ export class UserComponent implements OnInit {
   }
 
   onBuy(amount: number) {
-    this.bs.addTokens(this.user.name, amount);
+    this.bs.addTokens(this.user, amount);
     this.sb.open("Покупка токенов", "Готово", {
       duration: 3000
     });
@@ -43,7 +43,7 @@ export class UserComponent implements OnInit {
   }
 
   onSale(amount: number) {
-    this.bs.removeTokens(this.user.name, amount);
+    this.bs.removeTokens(this.user, amount);
     this.sb.open("Продажа токенов", "Готово", {
       duration: 3000
     });
@@ -82,7 +82,7 @@ export class UserComponent implements OnInit {
   }
 
   reserve() {
-    this.bs.reserve(this.user.name, this.address, formatDate(this.date).string);
+    this.bs.reserve(this.user, this.address, formatDate(this.date).string);
     this.sb.open("Бронирование", "Готово", {
       duration: 3000
     });
@@ -93,7 +93,7 @@ export class UserComponent implements OnInit {
   }
 
   charge() {
-    this.bs.charge(this.user.name, this.address);
+    this.bs.charge(this.user, this.address);
     this.address = "";
     this.updateJournal();
     this.variants = [...this.stations];

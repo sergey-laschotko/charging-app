@@ -54,6 +54,12 @@
     border-bottom: 1px solid #999;
 }
 
+.station-action-button {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    color: white;
+}
+
 .journal {
     float: left;
     width: 100%;

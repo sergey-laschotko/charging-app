@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
-import { IUser, IStation, IOperation } from '../mock-data/models';
+import { IUser, IStation, IOperation, ITariff } from '../mock-data/models';
 import { formatDate } from "../../lib/lib";
 
 @Component({
@@ -11,11 +11,12 @@ import { formatDate } from "../../lib/lib";
 })
 export class StationOwnerComponent implements OnInit, AfterViewInit {
   user: IUser;
-  stations: IStation[] = [];
   tariffs: string[] = [];
   newStation: string = "";
   adding: boolean = false;
   addingTariff: boolean = false;
+  editingStation: boolean = false;
+  currentEditingStation: IStation;
   newTariffFrom: string = "00:00";
   newTariffTo: string = "00:00";
   newTariffPrice: string = "";
@@ -33,8 +34,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.user = this.bs.getStationOwner();
-    this.stations = this.user.stations;
-    this.stations.forEach((station: IStation) => station.tariffs.sort());
     this.operations = this.bs.getUsersOperations(this.user.name).reverse();
     this.dataSource = new MatTableDataSource(this.operations);
   }
@@ -90,17 +89,24 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     this.newTariffTo = `${hours}:${minutes}`;
   }
 
-  clearNewTariff() {
+  clearInputs() {
     this.addingTariff = false;
     this.newTariffFrom = "00:00";
     this.newTariffTo = "00:00";
     this.newTariffPrice = "";
     this.dtpFrom.resetTime();
     this.dtpTo.resetTime();
+    this.currentEditingStation = null;
+    this.editingStation = false;
+  }
+
+  sortTariff(a: any, b: any) {
+    if (`${a.from}${a.to}` > `${b.from}${b.to}`) return 1;
+    else return -1;
   }
 
   addNewStation() {
-    this.bs.addStation(this.user.name, this.newStation);
+    this.bs.addStation(this.user, this.newStation);
     this.sb.open("Добавление станции", "Готово", {
       duration: 3000
     });
@@ -113,7 +119,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   addNewTariff(address: string) {
-    this.bs.addTariff(this.user.name, address, this.newTariffFrom, this.newTariffTo, Number(this.newTariffPrice));
+    this.bs.addTariff(this.user, address, this.newTariffFrom, this.newTariffTo, Number(this.newTariffPrice));
     this.sb.open("Добавление тарифа", "Готово", {
       duration: 3000
     });
@@ -124,8 +130,43 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     this.addingTariff = !this.addingTariff;
   }
 
+  setEditingStation(station: IStation) {
+    this.currentEditingStation = Object.assign({ ...station });
+    this.editingStation = true;
+  }
+
+  finishEditingStation() {
+    this.currentEditingStation = null;
+    this.editingStation = false;
+  }
+
+  editStation() {
+    this.bs.editStation(this.user, this.currentEditingStation);
+    this.sb.open("Редактирование адреса станции", "Готово", {
+      duration: 3000
+    });
+    this.finishEditingStation();
+    this.updateJournal();
+  }
+
+  deleteStation(station: IStation) {
+    this.bs.deleteStation(this.user, station);
+    this.sb.open("Удаление станции", "Готово", {
+      duration: 3000
+    });
+    this.updateJournal();
+  }
+
+  deleteTariff(station: IStation, tariff: ITariff) {
+    this.bs.deleteTariff(this.user, station, tariff);
+    this.sb.open("Удаление тарифа", "Готово", {
+      duration: 3000
+    });
+    this.updateJournal();
+  }
+
   buyTokens(amount: number) {
-    this.bs.addTokens(this.user.name, amount);
+    this.bs.addTokens(this.user, amount);
     this.sb.open("Покупка токенов", "Готово", {
       duration: 3000
     });
@@ -133,7 +174,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   saleTokens(amount: number) {
-    this.bs.removeTokens(this.user.name, amount);
+    this.bs.removeTokens(this.user, amount);
     this.sb.open("Продажа токенов", "Готово", {
       duration: 3000
     });

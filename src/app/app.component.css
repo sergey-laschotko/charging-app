@@ -16,6 +16,10 @@ mat-sidenav {
     width: 230px;
 }
 
+.mat-drawer.mat-drawer-side {
+    z-index: 1;
+}
+
 .list {
     list-style-type: none;
     padding: 0;
