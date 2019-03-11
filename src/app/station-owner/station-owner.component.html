@@ -34,8 +34,8 @@
                       <span *ngIf="addingTariff">Скрыть форму</span>
                     </button>
                     <span class="add-tariff-form_input">
-                      С <app-datetimepicker [default]="true" [timeOnly]="true" (transferDate)="setFromTime($event)"></app-datetimepicker>
-                      до <app-datetimepicker [default]="true" [timeOnly]="true" (transferDate)="setToTime($event)"></app-datetimepicker>
+                      С <app-datetimepicker #dtpfrom [default]="true" [timeOnly]="true" (transferDate)="setFromTime($event)"></app-datetimepicker>
+                      до <app-datetimepicker #dtpto [default]="true" [timeOnly]="true" (transferDate)="setToTime($event)"></app-datetimepicker>
                       <mat-form-field class="add-tariff-form_price">
                         <input matInput type="text" placeholder="Цена" (keypress)="checkPriceInput($event)" [(ngModel)]="newTariffPrice" autocomplete="off" />
                       </mat-form-field>
@@ -46,8 +46,12 @@
                     </span>
                   </span>
                 </p>
-                <mat-list>
-                  <mat-list-item *ngFor="let tariff of station.tariffs">C {{tariff.from}} по {{tariff.to}} цена {{tariff.price}}</mat-list-item>
+                <mat-list class="tariffs-list">
+                  <mat-list-item *ngFor="let tariff of station.tariffs" class="tariffs-list_item">
+                    <span class="tariffs-list_view">
+                      <span>C {{tariff.from}} по {{tariff.to}} цена {{tariff.price}}</span>
+                    </span>
+                  </mat-list-item>
                 </mat-list>
               </mat-expansion-panel>
             </mat-accordion>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, HostListener, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-datetimepicker',
@@ -9,7 +9,7 @@ export class DatetimepickerComponent implements OnInit {
   @Output() transferDate = new EventEmitter();
   @Input() dateOnly: boolean;
   @Input() timeOnly: boolean;
-  @Input() default: boolean;
+  @Input() default: boolean;  
   showDate: boolean = true;
   showTime: boolean = true;
   hour: string = "";
@@ -25,7 +25,7 @@ export class DatetimepickerComponent implements OnInit {
   currentEdit: string = "";
   resultTimeDate: Date = new Date();
 
-  constructor() {
+  constructor(private _el: ElementRef) {
     let { hours, minutes, date, month, year } = this.getCurrentDate();
     this.hour = hours;
     this.minutes = minutes;
@@ -41,6 +41,14 @@ export class DatetimepickerComponent implements OnInit {
 
   ngOnInit() {
     this.checkOptions();
+  }
+
+  @HostListener("document:click", ['$event'])
+  OutsideClick($event: any) {
+    let clickedInside = this._el.nativeElement.contains($event.target);
+    if (!clickedInside && this.currentEdit) {
+      this.currentEdit = "";
+    }
   }
 
   checkOptions() {
@@ -136,5 +144,10 @@ export class DatetimepickerComponent implements OnInit {
           return this.fillVariants(1, 28);
         }
     }
+  }
+
+  resetTime() {
+    this.hour = "00";
+    this.minutes = "00";
   }
 }

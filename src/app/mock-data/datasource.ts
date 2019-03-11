@@ -1,5 +1,5 @@
 import { IUser, IOperation } from "./models";
-import { formatDate } from "../../lib/lib";
+import { formatDate, genID } from "../../lib/lib";
 
 export const stations = [
     "Герасименко, 2",
@@ -84,6 +84,7 @@ export class DataSource {
         // add users
         this.users.forEach((user: string) => {
             dataSource.users.push({ 
+                id: genID(),
                 name: user, 
                 role: 'user',
                 balance: this.getRandom(5, 100)
@@ -93,6 +94,7 @@ export class DataSource {
         // add owners
         this.stationsOwners.forEach((owner: string) => {
             dataSource.users.push({ 
+                id: genID(),
                 name: owner, 
                 role: 'owner',
                 balance: this.getRandom(5, 100),
@@ -107,9 +109,35 @@ export class DataSource {
             dataSource.users.map((user: IUser) => {
                 if (user.role === 'owner' && stationsCopy.length) {
                     user.stations.push({
+                        id: genID(),
                         address: stationsCopy.splice(0, 1)[0],
                         balance: this.getRandom(100, 1000),
-                        tariffs: []
+                        tariffs: [
+                            {
+                                id: genID(),
+                                from: "00:00",
+                                to: "07:00",
+                                price: this.getRandom(1, 3)
+                            },
+                            {
+                                id: genID(),
+                                from: "07:00",
+                                to: "12:00",
+                                price: this.getRandom(3, 5)
+                            },
+                            {
+                                id: genID(),
+                                from: "12:00",
+                                to: "19:00",
+                                price: this.getRandom(2, 4)
+                            },
+                            {
+                                id: genID(),
+                                from: "19:00",
+                                to: "00:00",
+                                price: this.getRandom(4, 6)
+                            }
+                        ]
                     });
                 }
             });
@@ -135,7 +163,7 @@ export class DataSource {
                     data = `Куплено ${this.getRandom(1, 10)} токенов`;
                     break;
                 case RESERVE:
-                    data = `${reserveDate.hours}:${reserveDate.minutes} ${reserveDate.day}.${reserveDate.month}.${reserveDate.year} по адресу ${randomStation}`;
+                    data = `На ${reserveDate.hours}:${reserveDate.minutes} ${reserveDate.day}.${reserveDate.month}.${reserveDate.year} по адресу ${randomStation}`;
                     location = randomStation;
                     break;
                 case CHARGING:
@@ -146,6 +174,7 @@ export class DataSource {
                     return;
             }
             dataSource.operations.push({
+                id: genID(),
                 type: operation,
                 operator: operators[this.getRandom(0, operators.length)],
                 date: startDate,

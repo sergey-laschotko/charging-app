@@ -32,6 +32,7 @@
 
 .add-tariff-form {
     height: 40px;
+    width: 250px;
 }
 
 .add-tariff-form__opened {
@@ -46,6 +47,11 @@
 .add-tariff-form_button {
     margin-top: 10px;
     margin-right: 10px;
+}
+
+.tariffs-list_item {
+    margin: 10px 0 15px;
+    border-bottom: 1px solid #999;
 }
 
 .journal {

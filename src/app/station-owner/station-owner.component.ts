@@ -24,6 +24,8 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   dataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('dtpfrom') dtpFrom: any;
+  @ViewChild('dtpto') dtpTo: any;
 
 
   constructor(private bs: BaseService, private sb: MatSnackBar) {
@@ -32,6 +34,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.user = this.bs.getStationOwner();
     this.stations = this.user.stations;
+    this.stations.forEach((station: IStation) => station.tariffs.sort());
     this.operations = this.bs.getUsersOperations(this.user.name).reverse();
     this.dataSource = new MatTableDataSource(this.operations);
   }
@@ -50,6 +53,8 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
 
   toggleAddingTariff() {
     this.addingTariff = !this.addingTariff;
+    this.dtpFrom.resetTime();
+    this.dtpTo.resetTime();
   }
 
   checkPriceInput(e: any) {
@@ -90,6 +95,8 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     this.newTariffFrom = "00:00";
     this.newTariffTo = "00:00";
     this.newTariffPrice = "";
+    this.dtpFrom.resetTime();
+    this.dtpTo.resetTime();
   }
 
   addNewStation() {

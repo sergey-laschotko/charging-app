@@ -1,4 +1,3 @@
-
 export function formatDate(date: Date) {
     let hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
     let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
@@ -14,4 +13,15 @@ export function formatDate(date: Date) {
         year,
         string: `${hours}:${minutes} ${day}.${month}.${year}` 
     };
+}
+
+export function genID(): string {
+    function chr4(){
+        return Math.random().toString(16).slice(-4);
+      }
+      return chr4() + chr4() +
+        '-' + chr4() +
+        '-' + chr4() +
+        '-' + chr4() +
+        '-' + chr4() + chr4() + chr4();
 }
