@@ -48,7 +48,6 @@ export class ServiceOwnerComponent implements OnInit {
   }
 
   showStationJournal() {
-    console.log(this.selectedStation);
     let newJournal = this.operations.filter((operation: any) => {
       return operation.location === this.selectedStation;
     })

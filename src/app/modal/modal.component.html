@@ -1,0 +1,15 @@
+<div class="modal" *ngIf="isModalOpened">
+  <div class="modal_backdrop" (click)="closeModal()"></div>
+  <mat-card class="modal_dialog">
+    <button mat-icon-button class="modal_close-button" color="warn" (click)="closeModal()">
+      <mat-icon>clear</mat-icon>
+    </button>
+    <div class="modal_dialog-content">
+      <ng-content></ng-content>
+    </div>
+    <div class="modal_dialog-footer">
+      <button class="modal_action-button" mat-raised-button color="accent" (click)="act()">{{action}}</button>
+      <button class="modal_action-button" mat-raised-button color="warn" (click)="closeModal()">Отмена</button>
+    </div>
+  </mat-card>
+</div>

@@ -13,8 +13,8 @@
           <mat-form-field class="form-input">
             <input type="text" matInput (input)="findVariants()" [(ngModel)]="address" placeholder="Поиск по адресу" autocomplete="off" />
           </mat-form-field>
-                <button class="form_action-button" mat-raised-button color="accent" [disabled]="!validateAddress()" (click)="openReserveDialog()">Забронировать</button>
-                <button class="form_action-button" mat-raised-button color="warn" [disabled]="!validateAddress()" (click)="charge()">Заряжать</button>
+          <button class="form_action-button" mat-raised-button color="accent" [disabled]="!validateAddress()" (click)="openReserveDialog()">Забронировать</button>
+          <button class="form_action-button" mat-raised-button color="warn" [disabled]="!validateAddress()" (click)="charge()">Заряжать</button>
         </mat-card>
         <mat-card *ngIf="variants.length">
           <mat-list class="flex-list">
@@ -49,22 +49,10 @@
     </mat-tab>
   </mat-tab-group>
 </div>
-<div class="modal" *ngIf="isModalOpened">
-  <div class="modal_backdrop" (click)="closeModal()"></div>
-  <mat-card class="modal_dialog">
-    <button mat-icon-button class="modal_close-button" color="warn" (click)="closeModal()">
-      <mat-icon>clear</mat-icon>
-    </button>
-    <div class="modal_dialog-content">
-      <h4>Бронирование</h4>
-      <p>Выберите желаемое время и дату:</p>
-      <p>
-        <app-datetimepicker (transferDate)="setDate($event)"></app-datetimepicker>
-      </p>
-    </div>
-    <div class="modal_dialog-footer">
-      <button class="modal_action-button" mat-raised-button color="accent" (click)="reserve()">Забронировать</button>
-      <button class="modal_action-button" mat-raised-button color="warn" (click)="closeModal()">Отмена</button>
-    </div>
-  </mat-card>
-</div>
+<app-modal action="Забронировать" [isModalOpened]="isModalOpened" (submitAction)="reserve()" (closeAction)="closeModal()">
+  <h4>Бронирование</h4>
+  <p>Выберите желаемое время и дату:</p>
+  <p>
+    <app-datetimepicker (transferDate)="setDate($event)"></app-datetimepicker>
+  </p>
+</app-modal>

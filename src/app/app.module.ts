@@ -13,6 +13,7 @@ import { ServiceOwnerComponent } from './service-owner/service-owner.component';
 import { SettingsComponent } from './settings/settings.component';
 import { BalanceComponent } from './balance/balance.component';
 import { DatetimepickerComponent } from './datetimepicker/datetimepicker.component';
+import { ModalComponent } from './modal/modal.component';
 
 const routes: Routes = [
   { path: "", redirectTo: "/settings", pathMatch: "full" },
@@ -31,6 +32,7 @@ const routes: Routes = [
     SettingsComponent,
     BalanceComponent,
     DatetimepickerComponent,
+    ModalComponent,
   ],
   imports: [
     BrowserModule,

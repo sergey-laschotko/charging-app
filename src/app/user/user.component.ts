@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
 import { IOperation, IUser, IStation } from '../mock-data/models';
