@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { MatPaginator, MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
 import { IUser, IStation, IOperation, ITariff } from '../mock-data/models';
 import { formatDate } from "../../lib/lib";
@@ -22,9 +22,8 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   newTariffPrice: string = "";
   operations: IOperation[] = [];
   displayedColumns: string[] = ["date", "type", "data"];
-  dataSource: any;
+  columnsHeaders: string[] = ["Дата", "Операция", "Детали"];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('dtpfrom') dtpFrom: any;
   @ViewChild('dtpto') dtpTo: any;
 
@@ -35,12 +34,9 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.user = this.bs.getStationOwner();
     this.operations = this.bs.getUsersOperations(this.user.name).reverse();
-    this.dataSource = new MatTableDataSource(this.operations);
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
+  ngAfterViewInit() {}
 
   formatDate(date: Date) {
     return formatDate(date).string;
@@ -183,6 +179,5 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
 
   updateJournal() {
     this.operations = this.bs.getUsersOperations(this.user.name).reverse();
-    this.dataSource = new MatTableDataSource(this.operations);
   }
 }

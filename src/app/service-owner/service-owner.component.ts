@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatTableDataSource, MatTable } from '@angular/material';
 import { BaseService } from '../base.service';
 import { IStation, IOperation } from '../mock-data/models';
 import { formatDate } from '../../lib/lib';
@@ -13,46 +12,29 @@ export class ServiceOwnerComponent implements OnInit {
   username: string = 'Диспетчер';
   tokens: number = 5000;
   serviceProviders: any[] = [];
-  chosen: string = "Никто не выбран";
-  isModalOpened: boolean = false;
   operations: IOperation[] = [];
-  selectedStation;
+  selectedStation: string = "";
   displayedColumns: string[] = ["date", "type", "operator", "data"];
-  dataSource: any = null;
+  columnsHeaders: string[] = ["Дата", "Тип", "Исполнитель", "Детали"];
   stations: IStation[] = [];
   balanceColumns: string[] = ["address", "balance"];
-  balanceSource: any = null;
-
-  @ViewChild('opPaginator') opPaginator: MatPaginator;
-  @ViewChild('bPaginator') bPaginator: MatPaginator;
+  balanceHeaders: string[] = ["Адрес", "Баланс"];
 
   constructor(private bs: BaseService) { 
     this.serviceProviders = this.bs.getStationsOwners();
     this.stations = this.bs.getStations();
-    this.balanceSource = new MatTableDataSource(this.stations);
     this.selectedStation = this.stations[0].address;
     this.operations = this.bs.getOperations();
-    let selectedStationOperations = this.operations.filter((operation: IOperation) => {
-      return operation.location === this.selectedStation;
-    });
-    this.dataSource = new MatTableDataSource(selectedStationOperations);
   }
 
   ngOnInit() {
     this.showStationJournal();
-    this.balanceSource.paginator = this.bPaginator;
-  }
-
-  formatDate(date: Date) {
-    return formatDate(date).string;
   }
 
   showStationJournal() {
-    let newJournal = this.operations.filter((operation: any) => {
+    this.operations = this.bs.getOperations().filter((operation: any) => {
       return operation.location === this.selectedStation;
-    })
-    this.dataSource = new MatTableDataSource(newJournal);
-    this.dataSource.paginator = this.opPaginator;
+    });
   }
 
   produceTokens(amount: number) {

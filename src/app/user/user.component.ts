@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { MatPaginator, MatTableDataSource, MatSnackBar } from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
 import { IOperation, IUser, IStation } from '../mock-data/models';
 import { formatDate } from "../../lib/lib";
@@ -16,23 +16,19 @@ export class UserComponent implements OnInit {
   stations: IStation[] = [];
   date: Date = new Date;
   operations: IOperation[] = [];
-  displayedColumns: string[] = ['date', 'type', 'data'];
+  tableColumns: string[] = ['date', 'type', 'data'];
+  columnsHeaders: string[] = ['Дата', 'Операция', 'Детали'];
   dataSource: any;
   isModalOpened: boolean = false;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private bs: BaseService, private sb: MatSnackBar) { 
     this.user = this.bs.getUser();
     this.operations = this.bs.getUsersOperations(this.user.name).reverse();
-    this.dataSource = new MatTableDataSource(this.operations);
     this.stations = this.bs.getStations();
     this.variants = this.bs.getStations();
   }
 
-  ngOnInit() {
-    this.dataSource.paginator = this.paginator;
-  }
+  ngOnInit() {}
 
   onBuy(amount: number) {
     this.bs.addTokens(this.user, amount);
@@ -105,6 +101,5 @@ export class UserComponent implements OnInit {
 
   updateJournal() {
     this.operations = this.bs.getUsersOperations(this.user.name).reverse();
-    this.dataSource = new MatTableDataSource(this.operations);
   }
 }

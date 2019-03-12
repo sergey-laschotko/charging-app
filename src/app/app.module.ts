@@ -14,6 +14,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { BalanceComponent } from './balance/balance.component';
 import { DatetimepickerComponent } from './datetimepicker/datetimepicker.component';
 import { ModalComponent } from './modal/modal.component';
+import { TableComponent } from './table/table.component';
 
 const routes: Routes = [
   { path: "", redirectTo: "/settings", pathMatch: "full" },
@@ -33,6 +34,7 @@ const routes: Routes = [
     BalanceComponent,
     DatetimepickerComponent,
     ModalComponent,
+    TableComponent,
   ],
   imports: [
     BrowserModule,
