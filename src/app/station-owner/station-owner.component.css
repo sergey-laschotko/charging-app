@@ -7,7 +7,7 @@
 }
 
 .add-station-form__opened {
-    height: 150px;
+    height: 155px;
     transition: all 0.3s ease-in;
 }
 
