@@ -15,6 +15,8 @@ import { BalanceComponent } from './balance/balance.component';
 import { DatetimepickerComponent } from './datetimepicker/datetimepicker.component';
 import { ModalComponent } from './modal/modal.component';
 import { TableComponent } from './table/table.component';
+import { UtilModule } from './util/util.module';
+import { ContrModule } from './ethContr/contr.module'
 
 const routes: Routes = [
   { path: "", redirectTo: "/settings", pathMatch: "full" },
@@ -42,7 +44,9 @@ const routes: Routes = [
     BrowserAnimationsModule,
     MaterialAppModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    UtilModule,
+    ContrModule
   ],
   providers: [],
   bootstrap: [AppComponent]

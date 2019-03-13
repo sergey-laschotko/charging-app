@@ -1,6 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { BreakpointObserver, MediaMatcher } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material';
+import { Web3Service } from './util/web3.service';
+import { RegisterService } from './ethContr/register.service';
+
+
+declare let require: any;
+const registerArtifacts = require('../../build/contracts/Register.json');
 
 @Component({
   selector: 'app-root',
@@ -14,10 +20,17 @@ export class AppComponent {
   menuMode: string = 'side';
   hasBackdrop: boolean = false;
 
+  Register: any;
+
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private mediaMatcher: MediaMatcher
+    private mediaMatcher: MediaMatcher,
+    private web3Service: Web3Service,
+    private rs: RegisterService
   ) {
+
+    rs.showChargers();
+    // console.log((new Date).getTime())
     this.isMobile = breakpointObserver.isMatched('(max-width: 550px)');
     const mediaQueryList = mediaMatcher.matchMedia('(max-width: 550px)');
     mediaQueryList.addEventListener("change", (e: any) => {
