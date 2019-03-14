@@ -23,24 +23,25 @@ export class Web3Service {
 
   public async bootstrapWeb3() {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-    if (typeof window.web3 == 'undefined') {
-      // Use Mist/MetaMask's provider
-      this.web3 = new Web3(window.web3.currentProvider);
-      await window.ethereum['enable']();
+    // if (typeof window.web3 == 'undefined') {
+    //   // Use Mist/MetaMask's provider
+    //   this.web3 = new Web3(window.web3.currentProvider);
+    //   await window.ethereum['enable']();
 
-    } else {
+    // } else {
       console.log('No web3? You should consider trying MetaMask!');
 
       // Hack to provide backwards compatibility for Truffle, which uses web3js 0.20.x
       Web3.providers.HttpProvider.prototype.sendAsync = Web3.providers.HttpProvider.prototype.send;
       // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
       this.web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io/RF12tXeeoCJRZz4txW2Y`));
-    }
+      this.web3.eth.defaultAccount = '0xA59b4fe50dE0841Da51eF381eD317dE11bd79d12';
+    // }
 
     // setInterval(() => this.refreshAccounts(), 100);
   }
 
-  public poshelNahuy() {
+  public giveMeThat() {
     return this.web3;
   }
 
@@ -55,10 +56,10 @@ export class Web3Service {
     let contractAbstraction;
     if(addr) {
       contractAbstraction = new this.web3.eth.Contract(artifacts.abi, addr);
-      console.log('I got an address', addr)
+      // console.log('I got an address', addr)
     } else {
       contractAbstraction = new this.web3.eth.Contract(artifacts.abi, artifacts.networks[netId].address);      
-      console.log('I took and address', artifacts.networks[netId].address)
+      // console.log('I took an address', artifacts.networks[netId].address)
     }
 
     // console.log(this.web3.eth.accounts.wallet.add('0xf0b14d22eedc978abd2b3f64287eb4b7e7b19a3ecfe60cf46d925f0366804b31'));
@@ -76,28 +77,28 @@ export class Web3Service {
 
   }
 
-  private refreshAccounts() {
-    this.web3.eth.getAccounts((err, accs) => {
-      console.log('Refreshing accounts');
-      if (err != null) {
-        console.warn('There was an error fetching your accounts.');
-        return;
-      }
+  // private refreshAccounts() {
+  //   this.web3.eth.getAccounts((err, accs) => {
+  //     console.log('Refreshing accounts');
+  //     if (err != null) {
+  //       console.warn('There was an error fetching your accounts.');
+  //       return;
+  //     }
 
-      // Get the initial account balance so it can be displayed.
-      if (accs.length === 0) {
-        console.warn('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
-        return;
-      }
+  //     // Get the initial account balance so it can be displayed.
+  //     if (accs.length === 0) {
+  //       console.warn('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
+  //       return;
+  //     }
 
-      if (!this.accounts || this.accounts.length !== accs.length || this.accounts[0] !== accs[0]) {
-        console.log('Observed new accounts');
+  //     if (!this.accounts || this.accounts.length !== accs.length || this.accounts[0] !== accs[0]) {
+  //       console.log('Observed new accounts');
 
-        this.accountsObservable.next(accs);
-        this.accounts = accs;
-      }
+  //       this.accountsObservable.next(accs);
+  //       this.accounts = accs;
+  //     }
 
-      this.ready = true;
-    });
-  }
+  //     this.ready = true;
+  //   });
+  // }
 }
