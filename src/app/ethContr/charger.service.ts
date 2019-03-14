@@ -39,43 +39,37 @@ export class ChargerService {
     await this.init(addr);
     // Nu po idee doljno uspet
     console.log('Approving tokens to', this.Charger.address);
-    // const id = setInterval(async () => {
-    //   if(this.erc20TokenService.approveTokens(this.Charger.address, 150)) {
-    //     clearInterval(id)
-    //     return
-    //   }
-    // },100)
-    // const rec = await this.erc20TokenService.approveTokens(this.Charger.address, 150);
-    // //
-    // console.log('Rec',rec)
+    const rec = await this.erc20TokenService.approveTokens(this.Charger.address, 150);
+    //
+    console.log('Rec',rec)
 
     const netId = await this.web3.eth.net.getId();
     // Vikin
     const pk = 'f0b14d22eedc978abd2b3f64287eb4b7e7b19a3ecfe60cf46d925f0366804b31';
     const nonce = await this.web3.eth.getTransactionCount(this.web3.eth.defaultAccount)
-    // const gas = await this.Charger.methods.startCharging().estimateGas({from: this.web3.eth.defaultAccount})
-    const gas = await this.Charger.methods.startCharging().estimateGas()
+    // const gas = await this.Charger.methods.startCharging().estimateGas({from: this.web3.eth.defaultAccount, value: 0})
 
-    // const funcAbi = {
-    //   nonce,
-    //   gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('47', 'gwei')),
-    //   gas,
-    //   to: chargerArtifacts.networks[netId].address,
-    //   data: this.Charger.methods.startCharging().encodeABI(),
-    // };
-    // const transaction = new EthereumTx(funcAbi);
-    // transaction.sign(Buffer.from(pk, 'hex'))
-    // var rawdata = '0x' + transaction.serialize().toString('hex');
+    const funcAbi = {
+      nonce,
+      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('47', 'gwei')),
+      gas: 500000,
+      to: this.Charger.address,
+      data: this.Charger.methods.startCharging().encodeABI(),
+    };
+    const transaction = new EthereumTx(funcAbi);
+    transaction.sign(Buffer.from(pk, 'hex'))
+    var rawdata = '0x' + transaction.serialize().toString('hex');
 
-    // this.web3.eth.sendSignedTransaction(rawdata)
-    // .on('receipt', function(receipt){
-    //     console.log(['Receipt:', receipt]);
-    //     return 'Success';
-    // })
-    // .on('error', console.error);
+    this.web3.eth.sendSignedTransaction(rawdata)
+    .on('receipt', function(receipt){
+        console.log(['Receipt:', receipt]);
+        return 'Success';
+    })
+    .on('error', console.error);
   }
 
-  public async addRate(from: string,to: string,newRate: number) {
+  public async addRate(addr,from: string,to: string,newRate: number) {
+    await this.init(addr)
     const netId = await this.web3.eth.net.getId();
     // Vikin
     const pk = 'f0b14d22eedc978abd2b3f64287eb4b7e7b19a3ecfe60cf46d925f0366804b31';
@@ -85,7 +79,7 @@ export class ChargerService {
       nonce,
       gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('47', 'gwei')),
       gas,
-      to: chargerArtifacts.networks[netId].address,
+      to: this.Charger.address,
       data: this.Charger.methods.addRate(from,to,newRate).encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
