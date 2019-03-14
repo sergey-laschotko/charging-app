@@ -10,29 +10,23 @@ const erc20TokenArtifacts = require('../../../build/contracts/ERC20Token.json');
 
 @Injectable()
 export class ERC20TokenService {
-  private accounts: string[];
   public ready = false;
   private web3: any;
   ERC20Token: any;
 
   public accountsObservable = new Subject<string[]>();
 
-  model = {
-    amount: 5,
-    receiver: '',
-    balance: 0,
-    account: ''
-  };
-
-  status = '';
-
   constructor(private web3Service: Web3Service) {
-    this.init()
+    this.init();
   }
 
-  init(): void {
-    console.log(this);
-    this.web3 = this.web3Service.poshelNahuy();
+  // Test One
+  // E14386F7BE3AF18B07222E1124494A92498934B548C05DA8DC17DE3EE1427AB9
+  // 0xa4D16e43473412c360BBB1D1dF3a3eDf1Bd7CF4A
+
+  async init() {
+    this.web3Service.bootstrapWeb3();
+    this.web3 =  await this.web3Service.giveMeThat();
     this.web3Service.artifactsToContract(erc20TokenArtifacts).then(async v => {
       this.ERC20Token = v;
     });
@@ -43,7 +37,7 @@ export class ERC20TokenService {
     // Vikin
     const pk = 'f0b14d22eedc978abd2b3f64287eb4b7e7b19a3ecfe60cf46d925f0366804b31';
     // Toje
-    this.web3.eth.defaultAccount = '0xA59b4fe50dE0841Da51eF381eD317dE11bd79d12';
+    // this.web3.eth.defaultAccount = '0xA59b4fe50dE0841Da51eF381eD317dE11bd79d12';
     const nonce = await this.web3.eth.getTransactionCount(this.web3.eth.defaultAccount)
     const gas = erc20TokenArtifacts.methods.buyTokens(v).estimateGas({from: this.web3.eth.defaultAccount, value: v})
     const funcAbi = {
@@ -65,29 +59,12 @@ export class ERC20TokenService {
     })
     .on('error', console.error);
   }
-  public async showFreeChargers() {
-    return await this.ERC20Token.methods.counter().call()
+
+  public getBalance(address: string) {
+    return this.ERC20Token.methods.balanceOf(address).call()
   }
 
-  public async balance(address: string) {
-    return await this.ERC20Token.methods.balanceOf(address).call()
+  public getUser() {
+    return this.web3.eth.defaultAccount;
   }
-  // public async bootstrapWeb3() {
-  //   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-  //   if (typeof window.web3 !== 'undefined') {
-  //     // Use Mist/MetaMask's provider
-  //     this.web3 = new Web3(window.web3.currentProvider);
-  //     await window.ethereum['enable']();
-
-  //   } else {
-  //     console.log('No web3? You should consider trying MetaMask!');
-
-  //     // Hack to provide backwards compatibility for Truffle, which uses web3js 0.20.x
-  //     Web3.providers.HttpProvider.prototype.sendAsync = Web3.providers.HttpProvider.prototype.send;
-  //     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-  //     this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-  //   }
-
-  //   // setInterval(() => this.refreshAccounts(), 100);
-  // }
 }
