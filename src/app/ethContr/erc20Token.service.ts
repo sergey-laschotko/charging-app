@@ -25,7 +25,7 @@ export class ERC20TokenService {
   // 0xa4D16e43473412c360BBB1D1dF3a3eDf1Bd7CF4A
 
   async init() {
-    this.web3 =  await this.web3Service.giveMeThat();
+    this.web3 = await this.web3Service.giveMeThat();
     const netId = await this.web3.eth.net.getId();
     
     this.ERC20Token = new this.web3.eth.Contract(erc20TokenArtifacts.abi, erc20TokenArtifacts.networks[netId].address);
