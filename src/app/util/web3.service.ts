@@ -41,7 +41,7 @@ export class Web3Service {
     // setInterval(() => this.refreshAccounts(), 100);
   }
 
-  public giveMeThat() {
+  public getInstance() {
     return this.web3;
   }
 

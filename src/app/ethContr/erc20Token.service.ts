@@ -25,11 +25,19 @@ export class ERC20TokenService {
   // 0xa4D16e43473412c360BBB1D1dF3a3eDf1Bd7CF4A
 
   async init() {
-    this.web3 =  await this.web3Service.giveMeThat();
-    const netId = await this.web3.eth.net.getId();
+    this.web3 =  this.web3Service.getInstance();
+    // const netId = await this.web3.eth.net.getId();
     
-    this.ERC20Token = new this.web3.eth.Contract(erc20TokenArtifacts.abi, erc20TokenArtifacts.networks[netId].address);
-    return new this.web3.eth.Contract(erc20TokenArtifacts.abi, erc20TokenArtifacts.networks[netId].address);
+    console.log('ready?',this.isReady())
+    this.web3Service.artifactsToContract(erc20TokenArtifacts).then(async v => {
+      this.ERC20Token = v;
+    });
+    // this.ERC20Token = new this.web3.eth.Contract(erc20TokenArtifacts.abi, erc20TokenArtifacts.networks[netId].address);
+    // return new this.web3.eth.Contract(erc20TokenArtifacts.abi, erc20TokenArtifacts.networks[netId].address);
+  }
+
+  public isReady():boolean {
+    return this.ERC20Token ? true : false;
   }
 
   public async buyTokens(v:number) {
