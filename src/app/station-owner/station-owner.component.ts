@@ -179,11 +179,28 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     });
     this.updateJournal();
   }
+  
+  getBalance() {
+    this.e20ts.getBalance(this.user)
+      .then((balance: number) => {
+      this.balance = balance;
+    });
+  }
 
   buyTokens(amount: number) {
-    this.sb.open("Покупка токенов", "Готово", {
-      duration: 3000
-    });
+    this.e20ts.buyTokens(amount)
+      .then((status: any) => {
+        if (status) {
+          this.sb.open("Покупка токенов", "Готово", {
+            duration: 3000
+          });
+          this.getBalance();
+        } else {
+          this.sb.open("Покупка не удалась", "Ошибка", {
+            duration: 3000
+          })
+        }
+      });
     this.updateJournal();
   }
 

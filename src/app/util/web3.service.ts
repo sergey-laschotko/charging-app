@@ -23,11 +23,12 @@ export class Web3Service {
   public async artifactsToContract(artifacts, addr?) {
     const netId = await this.eth.net.getId();
     let contractAbstraction;
-    if(addr) {
+    if(addr) {  
       contractAbstraction = new this.web3.eth.Contract(artifacts.abi, addr);
     } else {
       contractAbstraction = new this.web3.eth.Contract(artifacts.abi, artifacts.networks[netId].address); 
     }
+    
     return contractAbstraction;
   }
 }

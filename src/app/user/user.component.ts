@@ -58,11 +58,27 @@ export class UserComponent implements OnInit {
   ngOnInit() {
   }
 
-  onBuy(amount: number) {
-    this.bs.addTokens(this.user, amount);
-    this.sb.open("Покупка токенов", "Готово", {
-      duration: 3000
+  getBalance() {
+    this.e20ts.getBalance(this.user)
+      .then((balance: number) => {
+      this.balance = balance;
     });
+  }
+
+  onBuy(amount: number) {
+    this.e20ts.buyTokens(amount)
+      .then((status: any) => {
+        if (status) {
+          this.sb.open("Покупка токенов", "Готово", {
+            duration: 3000
+          });
+          this.getBalance();
+        } else {
+          this.sb.open("Покупка не удалась", "Ошибка", {
+            duration: 3000
+          })
+        }
+      });
     this.updateJournal();
   }
 
@@ -117,6 +133,12 @@ export class UserComponent implements OnInit {
   }
 
   charge() {
+    if (this.balance < 150) {
+      this.sb.open("Недостаточно токенов", "Нужно не менее 150", {
+        duration: 3000
+      })
+      return;
+    }
     this.bs.charge(this.user, this.address);
     this.address = "";
     this.updateJournal();
