@@ -3,6 +3,8 @@ import { MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
 import { IUser, IStation, IOperation, ITariff } from '../mock-data/models';
 import { formatDate } from "../../lib/lib";
+import { RegisterService } from "../ethContr/register.service";
+import { ERC20TokenService } from "../ethContr/erc20Token.service";
 
 @Component({
   selector: 'app-station-owner',
@@ -10,7 +12,8 @@ import { formatDate } from "../../lib/lib";
   styleUrls: ['./station-owner.component.css']
 })
 export class StationOwnerComponent implements OnInit, AfterViewInit {
-  user: IUser;
+  user: string;
+  balance: number;
   tariffs: string[] = [];
   newStation: string = "";
   adding: boolean = false;
@@ -28,16 +31,37 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   @ViewChild('dtpto') dtpTo: any;
 
 
-  constructor(private bs: BaseService, private sb: MatSnackBar) {
+  constructor(
+    private bs: BaseService,
+    private rs: RegisterService,
+    private e20ts: ERC20TokenService, 
+    private sb: MatSnackBar
+  ) {
   }
 
   ngOnInit() {
-    this.user = this.bs.getStationOwner();
-    this.operations = this.bs.getUsersOperations(this.user.name).reverse();
+    this.user = this.e20ts.getUser();
+    let tryGetBalance = (stopper: any) => {
+      if (!this.e20ts.isReady) {
+        setTimeout(() => {
+          tryGetBalance(stopper);
+        }, 1000);
+      } else {
+        clearInterval(stopper);
+        this.e20ts.getBalance(this.user)
+          .then((balance: number) => {
+          this.balance = balance;
+        })
+      }
+    };
+    let reconnect = setInterval(() => {
+      tryGetBalance(reconnect)
+    }, 1000);
   }
-
+  
   ngAfterViewInit() {}
 
+  
   formatDate(date: Date) {
     return formatDate(date).string;
   }
@@ -102,7 +126,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   addNewStation() {
-    this.bs.addStation(this.user, this.newStation);
     this.sb.open("Добавление станции", "Готово", {
       duration: 3000
     });
@@ -115,7 +138,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   addNewTariff(address: string) {
-    this.bs.addTariff(this.user, address, this.newTariffFrom, this.newTariffTo, Number(this.newTariffPrice));
     this.sb.open("Добавление тарифа", "Готово", {
       duration: 3000
     });
@@ -137,7 +159,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   editStation() {
-    this.bs.editStation(this.user, this.currentEditingStation);
     this.sb.open("Редактирование адреса станции", "Готово", {
       duration: 3000
     });
@@ -146,7 +167,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   deleteStation(station: IStation) {
-    this.bs.deleteStation(this.user, station);
     this.sb.open("Удаление станции", "Готово", {
       duration: 3000
     });
@@ -154,7 +174,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   deleteTariff(station: IStation, tariff: ITariff) {
-    this.bs.deleteTariff(this.user, station, tariff);
     this.sb.open("Удаление тарифа", "Готово", {
       duration: 3000
     });
@@ -162,7 +181,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   buyTokens(amount: number) {
-    this.bs.addTokens(this.user, amount);
     this.sb.open("Покупка токенов", "Готово", {
       duration: 3000
     });
@@ -170,7 +188,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   saleTokens(amount: number) {
-    this.bs.removeTokens(this.user, amount);
     this.sb.open("Продажа токенов", "Готово", {
       duration: 3000
     });
@@ -178,6 +195,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   updateJournal() {
-    this.operations = this.bs.getUsersOperations(this.user.name).reverse();
+    // this.operations = this.bs.getUsersOperations(this.user.name).reverse();
   }
 }

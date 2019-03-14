@@ -36,7 +36,7 @@ export class RegisterService {
 
   async init() {
     // this.watchAccount();
-    this.web3 = this.web3Service.giveMeThat();
+    this.web3 = this.web3Service.web3;
     await this.web3Service.artifactsToContract(registerArtifacts).then(async v => {
       this.Register = v;
     });

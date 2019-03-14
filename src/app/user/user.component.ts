@@ -12,7 +12,8 @@ import { ERC20TokenService } from "../ethContr/erc20Token.service";
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  user: any = null;
+  user: any;
+  balance: number;
   address: string = "";
   variants: IStation[] = [];
   stations: IStation[] = [];
@@ -28,24 +29,34 @@ export class UserComponent implements OnInit {
     private sb: MatSnackBar, 
     private rs: RegisterService,
     private e20ts: ERC20TokenService
-  ) { 
+  ) {
     this.user = this.e20ts.getUser();
-    console.log(this.user);
-    this.e20ts.getBalance(this.user)
-      .then((balance: any) => {
-        console.log("BALANCE: " + balance);
-      });
-    this.operations = this.bs.getUsersOperations(this.user.name).reverse();
+    let tryGetBalance = (stopper: any) => {
+      if (!this.e20ts.isReady) {
+        setTimeout(() => {
+          tryGetBalance(stopper);
+        }, 1000);
+      } else {
+        clearInterval(stopper);
+        this.e20ts.getBalance(this.user)
+          .then((balance: number) => {
+          this.balance = balance;
+        })
+      }
+    };
+    let reconnect = setInterval(() => {
+      tryGetBalance(reconnect)
+    }, 1000);
+    this.operations = this.bs.getOperations().reverse();
     this.rs.showChargers()
     .then((stations: IStation[]) => {
-      console.log(stations);
-      console.log(stations.length);
       this.stations = stations;
       this.variants = stations;
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   onBuy(amount: number) {
     this.bs.addTokens(this.user, amount);

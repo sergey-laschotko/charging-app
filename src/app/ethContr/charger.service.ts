@@ -23,7 +23,7 @@ export class ChargerService {
   }
 
   public async init(addr?) {
-    this.web3 = await this.web3Service.giveMeThat();
+    this.web3 = await this.web3Service.web3;
     // this.web3Service.artifactsToContract(chargerArtifacts,addr).then(async v => {
     //   this.Charger = v;
     //   // console.log(await this.Charger.methods.counter().call());
