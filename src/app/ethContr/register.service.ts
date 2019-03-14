@@ -80,8 +80,8 @@ export class RegisterService {
     // console.log('Chargers incoming sir')
     const address: string[] = await this.Register.methods.showChargers().call()
     let chargers = [];
-    await address.forEach(async v => {
-      console.log('charger', v)
+    address.forEach(async (v: any, i: number) => {
+      console.log('charger', v);
       let inst = await this.chargerService.init(v);
       // this.Charger = new this.web3.eth.Contract(chargerArtifacts.abi, addr);
       let address = await inst.methods.geo().call();
@@ -110,8 +110,8 @@ export class RegisterService {
       //}
 
       chargers.push(charger);
-
     })
+    
     console.log('Charged sir',chargers);
     return chargers;
   }

@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
 import { IOperation, IUser, IStation } from '../mock-data/models';
 import { formatDate } from "../../lib/lib";
+import { RegisterService } from "../ethContr/register.service";
 
 @Component({
   selector: 'app-user',
@@ -21,11 +22,16 @@ export class UserComponent implements OnInit {
   dataSource: any;
   isModalOpened: boolean = false;
 
-  constructor(private bs: BaseService, private sb: MatSnackBar) { 
+  constructor(private bs: BaseService, private sb: MatSnackBar, private rs: RegisterService) { 
     this.user = this.bs.getUser();
     this.operations = this.bs.getUsersOperations(this.user.name).reverse();
-    this.stations = this.bs.getStations();
-    this.variants = this.bs.getStations();
+      this.rs.showChargers()
+      .then((stations: IStation[]) => {
+        console.log(stations);
+        console.log(stations.length);
+        this.stations = stations;
+        this.variants = stations;
+      });
   }
 
   ngOnInit() {}
