@@ -4,6 +4,7 @@ import { BaseService } from '../base.service';
 import { IOperation, IUser, IStation } from '../mock-data/models';
 import { formatDate } from "../../lib/lib";
 import { RegisterService } from "../ethContr/register.service";
+import { ERC20TokenService } from "../ethContr/erc20Token.service";
 
 @Component({
   selector: 'app-user',
@@ -11,7 +12,7 @@ import { RegisterService } from "../ethContr/register.service";
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  user: IUser = null;
+  user: any = null;
   address: string = "";
   variants: IStation[] = [];
   stations: IStation[] = [];
@@ -22,16 +23,26 @@ export class UserComponent implements OnInit {
   dataSource: any;
   isModalOpened: boolean = false;
 
-  constructor(private bs: BaseService, private sb: MatSnackBar, private rs: RegisterService) { 
-    this.user = this.bs.getUser();
-    this.operations = this.bs.getUsersOperations(this.user.name).reverse();
-      this.rs.showChargers()
-      .then((stations: IStation[]) => {
-        console.log(stations);
-        console.log(stations.length);
-        this.stations = stations;
-        this.variants = stations;
+  constructor(
+    private bs: BaseService, 
+    private sb: MatSnackBar, 
+    private rs: RegisterService,
+    private e20ts: ERC20TokenService
+  ) { 
+    this.user = this.e20ts.getUser();
+    console.log(this.user);
+    this.e20ts.getBalance(this.user)
+      .then((balance: any) => {
+        console.log("BALANCE: " + balance);
       });
+    this.operations = this.bs.getUsersOperations(this.user.name).reverse();
+    this.rs.showChargers()
+    .then((stations: IStation[]) => {
+      console.log(stations);
+      console.log(stations.length);
+      this.stations = stations;
+      this.variants = stations;
+    });
   }
 
   ngOnInit() {}

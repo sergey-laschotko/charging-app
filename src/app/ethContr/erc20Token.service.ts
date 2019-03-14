@@ -61,7 +61,7 @@ export class ERC20TokenService {
   }
 
   public getBalance(address: string) {
-    return this.ERC20Token.methods.balanceOf(address).call()
+    return this.ERC20Token.methods.balanceOf(address).call();
   }
 
   public getUser() {
