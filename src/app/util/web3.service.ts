@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 declare let require: any;
 const Web3 = require('web3');
-const EthereumTx = require('ethereumjs-tx')
 
 declare let window: any;
 
@@ -16,12 +15,10 @@ export class Web3Service {
   public accountsObservable = new Subject<string[]>();
 
   constructor() {
-    window.addEventListener('load', (event) => {
       this.bootstrapWeb3();
-    });
   }
 
-  public async bootstrapWeb3() {
+  public bootstrapWeb3() {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     // if (typeof window.web3 == 'undefined') {
     //   // Use Mist/MetaMask's provider
@@ -54,23 +51,13 @@ export class Web3Service {
 
     const netId = await this.web3.eth.net.getId();
     let contractAbstraction;
-    if(addr) {
+    if(addr) {  
       contractAbstraction = new this.web3.eth.Contract(artifacts.abi, addr);
       // console.log('I got an address', addr)
     } else {
       contractAbstraction = new this.web3.eth.Contract(artifacts.abi, artifacts.networks[netId].address);      
       // console.log('I took an address', artifacts.networks[netId].address)
     }
-
-    // console.log(this.web3.eth.accounts.wallet.add('0xf0b14d22eedc978abd2b3f64287eb4b7e7b19a3ecfe60cf46d925f0366804b31'));
-
-    // console.log('Meth',await contractAbstraction.methods.counter().call())
-    // console.log(await this.web3.eth.personal.getAccounts())
-    // this.web3.eth.sendTransaction({
-    //   // from: "0xA59b4fe50dE0841Da51eF381eD317dE11bd79d12",
-    //   to: "0x9de88e0a9Fa6d30dF271eec31C55eE0358E8f7f9",
-    //   value: '10000'
-    // })
 
     // contractAbstraction.setProvider(this.web3.currentProvider);
     return contractAbstraction;
