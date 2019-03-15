@@ -1,30 +1,21 @@
-<mat-card>
-    <h4>Баланс</h4>
-    <p>
-      Сумма: <b>{{tokens}}</b>
-    </p>
-    <p>
-      <span class="balance-form">
-        <button mat-stroked-button color="warn" (click)="decreaseAdding(amountToAdd)">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <span class="amount">{{amountToAdd}}</span>
-        <button mat-stroked-button color="primary" (click)="increaseAdding(amountToAdd)">
-          <mat-icon>add</mat-icon>
-        </button>
+<mat-card class="balance">
+  <h4>Баланс</h4>
+  <p>
+    Сумма: <b>{{tokens}}</b>
+  </p>
+  <p>
+    <span class="balance_form">
+      <span [ngClass]="{ 'balance_input-row': true, 'balance_input-row__opened': isInputOpened }">
+        <mat-form-field class="balance_amount-input">
+          <input matInput type="text" autocomplete="off" placeholder="Количество" #amountInput />
+        </mat-form-field>
       </span>
-      <button class="balance-action-button" mat-raised-button color="primary" (click)="addTokens()">{{add}}</button>
-    </p>
-    <p>
-      <span class="balance-form">
-        <button mat-stroked-button color="warn" (click)="decreaseRemoving(amountToRemove)">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <span class="amount">{{amountToRemove}}</span>
-        <button mat-stroked-button color="primary" (click)="increaseRemoving(amountToRemove)">
-          <mat-icon>add</mat-icon>
-        </button>
+      <button class="balance_action-button" *ngIf="!buyingProcess" mat-raised-button color="primary" (click)="addTokens()">
+        {{ add }}
+      </button>
+      <span>
+        <mat-spinner class="spinner-center" [diameter]="27" *ngIf="buyingProcess"></mat-spinner>
       </span>
-      <button class="balance-action-button" mat-raised-button color="warn" (click)="removeTokens()">{{remove}}</button>
-    </p>
-  </mat-card>
+    </span>
+  </p>
+</mat-card>

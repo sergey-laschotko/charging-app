@@ -1,10 +1,12 @@
 <div class="container">
   <mat-card class="page-heading">
-    <span class="username"><b>{{user}}</b></span>
+    <div>
+      <span class="username"><b>{{user}}</b></span>
+    </div>
   </mat-card>
   <mat-tab-group>
     <mat-tab label="Баланс">
-      <app-balance add="Купить" remove="Продать" [tokens]="balance" (onAdd)="onBuy($event)" (onRemove)="onSale($event)"></app-balance>
+      <app-balance add="Купить" remove="Продать" [tokens]="balance" [buyingProcess]="buyingProcess" (onAdd)="onBuy($event)"></app-balance>
     </mat-tab>
     <mat-tab label="Зарядка">
       <mat-card class="form">

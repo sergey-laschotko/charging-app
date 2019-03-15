@@ -1,17 +1,35 @@
-.amount {
-    display: inline-block;
-    width: 60px;
-    text-align: center;
-    position: relative;
-    top: 3px;
+.balance_input-row {
+    display: block;
+    height: 0;
+    overflow: hidden;
+    transition: height 0.3s ease-in-out;
 }
 
-.balance-form {
+.balance_input-row__opened {
+    height: 70px;
+    transition: height 0.3s ease-in-out;
+}
+
+.balance_amount-input {
+    display: inline-block;
+    width: 105px;
+}
+
+.balance_form {
     display: inline-block;
     margin-right: 10px;
     margin-bottom: 10px;
 }
 
-.balance-action-button {
+.balance_action-button {
     width: 105px;
+    margin-right: 10px;
+}
+
+.balance_action-button:last-child, .balance_amount-input:last-child {
+    margin-right: 0;
+}
+
+.spinner-center {
+    margin: 0 auto;
 }

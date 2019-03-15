@@ -23,6 +23,7 @@ export class UserComponent implements OnInit {
   columnsHeaders: string[] = ['Дата', 'Операция', 'Детали'];
   dataSource: any;
   isModalOpened: boolean = false;
+  buyingProcess: boolean = false;
 
   constructor(
     private bs: BaseService, 
@@ -51,6 +52,7 @@ export class UserComponent implements OnInit {
   }
 
   onBuy(amount: number) {
+    this.buyingProcess = true;
     this.e20ts.buyTokens(amount)
       .then((status: any) => {
         if (status) {
@@ -58,20 +60,14 @@ export class UserComponent implements OnInit {
             duration: 3000
           });
           this.getBalance();
+          this.buyingProcess = false;
         } else {
           this.sb.open("Покупка не удалась", "Ошибка", {
             duration: 3000
           })
+          this.buyingProcess = false;
         }
       });
-    this.updateJournal();
-  }
-
-  onSale(amount: number) {
-    this.bs.removeTokens(this.user, amount);
-    this.sb.open("Продажа токенов", "Готово", {
-      duration: 3000
-    });
     this.updateJournal();
   }
 

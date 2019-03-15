@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-balance',
@@ -9,45 +9,30 @@ export class BalanceComponent implements OnInit {
   @Input() add: string;
   @Input() remove: string;
   @Input() tokens: number;
+  @Input() buyingProcess: boolean = false;
   @Output() onAdd = new EventEmitter<number>();
   @Output() onRemove = new EventEmitter<number>();
   amountToAdd: number = 0;
-  amountToRemove: number = 0;
+  isInputOpened: boolean = false;
+
+  @ViewChild('amountInput') amountInput: ElementRef;
 
   constructor() { }
 
-  ngOnInit() {
-  }
-
-  increaseAdding() {
-    this.amountToAdd += 1;
-  }
-
-  decreaseAdding() {
-    if (this.amountToAdd === 0) {
-      return;
-    }
-    this.amountToAdd -= 1;
-  }
-
-  increaseRemoving() {
-    this.amountToRemove += 1;
-  }
-
-  decreaseRemoving() {
-    if (this.amountToRemove === 0) {
-      return;
-    }
-    this.amountToRemove -= 1;
-  }
+  ngOnInit() {}
 
   addTokens() {
+    if (!this.isInputOpened) {
+      this.isInputOpened = true;
+      this.amountInput.nativeElement.focus();
+      return;
+    }
+    if (!this.amountToAdd) {
+      this.isInputOpened = false;
+      return;
+    }
     this.onAdd.emit(this.amountToAdd);
     this.amountToAdd = 0;
-  }
-
-  removeTokens() {
-    this.onRemove.emit(this.amountToRemove);
-    this.amountToRemove = 0;
+    this.isInputOpened = false;
   }
 }
