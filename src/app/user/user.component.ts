@@ -26,13 +26,13 @@ export class UserComponent implements OnInit {
   dataSource: any;
   isModalOpened: boolean = false;
   buyingProcess: boolean = false;
+  chargingProcess: boolean = false;
 
   constructor(
     private bs: BaseService, 
     private sb: MatSnackBar, 
     private rs: RegisterService,
     private e20ts: ERC20TokenService,
-    private chs: ChargerService
   ) {
     this.user = this.e20ts.getUser();
     this.getBalance();
@@ -123,10 +123,10 @@ export class UserComponent implements OnInit {
       })
       return;
     }
-    this.bs.charge(this.user, this.address);
-    this.address = "";
-    this.updateJournal();
-    this.variants = [...this.stations];
+    this.chargingProcess = true;
+    setInterval(() => {
+      this.chargingProcess = false;
+    }, 12000);
   }
 
   closeModal() {
