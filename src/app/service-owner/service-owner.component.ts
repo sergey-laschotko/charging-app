@@ -33,6 +33,7 @@ export class ServiceOwnerComponent implements OnInit {
     this.rs.showChargers()
       .then((stations: IStation[]) => {
         this.stations = stations;
+        this.selectedStation = this.stations[0].address;
       });
     this.operations = this.bs.getOperations();
   }

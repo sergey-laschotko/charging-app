@@ -77,7 +77,7 @@ export class RegisterService {
     }
     const address: string[] = await this.Register.methods.showChargers().call()
     let chargers = [];
-    await address.forEach(async v => {
+    let promises = address.map(async v => {
       let inst = await this.chargerService.init(v);
       let address = await inst.methods.geo().call();
       let balance = await this.erc20TokenService.getBalance(v);
@@ -101,7 +101,9 @@ export class RegisterService {
         owner,
         tariff: prices
       });
-    })
+    });
+
+    await Promise.all(promises);
     
     console.log('Charged sir',chargers);
     return chargers;
