@@ -30,14 +30,8 @@ export class UserComponent implements OnInit {
     private rs: RegisterService,
     private e20ts: ERC20TokenService
   ) {
-    this.e20ts.getUser()
-      .then((user: string) => {
-        this.user = user;
-        this.e20ts.getBalance(this.user)
-          .then((balance: number) => {
-            this.balance = balance;
-          })
-      });
+    this.user = this.e20ts.getUser();
+    this.getBalance();
     this.operations = this.bs.getOperations().reverse();
     this.rs.showChargers()
     .then((stations: IStation[]) => {

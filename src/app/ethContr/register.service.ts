@@ -72,7 +72,9 @@ export class RegisterService {
   }
 
   public async showChargers() {
-    await this.init();
+    if (!this.Register) {
+      await this.init();
+    }
     const address: string[] = await this.Register.methods.showChargers().call()
     let chargers = [];
     await address.forEach(async v => {

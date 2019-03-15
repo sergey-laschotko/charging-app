@@ -9,21 +9,26 @@ const EthereumTx = require('ethereumjs-tx');
 declare const Buffer;
 const erc20TokenArtifacts = require('../../../build/contracts/ERC20Token.json');
 
-
 @Injectable()
 export class ERC20TokenService {
+  ready: Promise<any>;
   ERC20Token: any;
 
   public accountsObservable = new Subject<string[]>();
 
   constructor(private web3Service: Web3Service) {
+    this.ready = new Promise((resolve, reject) => {
+      this.web3Service.artifactsToContract(erc20TokenArtifacts).then(v => {
+        this.ERC20Token = v;
+        resolve(true);
+      });
+    });
+  }
+  
+  init() {
     this.web3Service.artifactsToContract(erc20TokenArtifacts).then(v => {
       this.ERC20Token = v;
     });
-  }
-
-  isReady() {
-    return this.ERC20Token ? true : false;
   }
 
   public async buyTokens(v:number) {
@@ -76,14 +81,13 @@ export class ERC20TokenService {
   }
 
   async getBalance(address: string) {
-    return await this.ERC20Token.methods.balanceOf(address).call();
+    return this.ready
+      .then(async () => {
+        return await this.ERC20Token.methods.balanceOf(address).call();
+      });
   }
 
   getUser() {
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        res(this.web3Service.defaultAccount);
-      }, 1000);
-    });
+    return this.web3Service.defaultAccount;
   }
 }

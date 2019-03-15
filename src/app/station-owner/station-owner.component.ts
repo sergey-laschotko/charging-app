@@ -37,29 +37,53 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     private rs: RegisterService,
     private e20ts: ERC20TokenService, 
     private sb: MatSnackBar
-  ) {
-    this.e20ts.getUser()
-      .then((user: string) => {
-        this.user = user;
-        this.e20ts.getBalance(this.user)
-          .then((balance: number) => {
-            this.balance = balance;
-          });
-        this.rs.showChargers()
-          .then((stations: IStation[]) => {
-            this.stations = stations;
-          });
+    ) {
+      this.user = this.e20ts.getUser();
+      this.getBalance();
+      this.rs.showChargers()
+        .then((stations: IStation[]) => {
+          this.stations = stations;
+        });
+    }
+    
+    ngOnInit() {}
+    
+    ngAfterViewInit() {}
+    
+    getBalance() {
+      this.e20ts.getBalance(this.user)
+        .then((balance: number) => {
+        this.balance = balance;
       });
-  }
-
-  ngOnInit() {}
+    }
   
-  ngAfterViewInit() {}
-
+    buyTokens(amount: number) {
+      this.e20ts.buyTokens(amount)
+        .then((status: any) => {
+          if (status) {
+            this.sb.open("Покупка токенов", "Готово", {
+              duration: 3000
+            });
+            this.getBalance();
+          } else {
+            this.sb.open("Покупка не удалась", "Ошибка", {
+              duration: 3000
+            })
+          }
+        });
+      this.updateJournal();
+    }
   
-  formatDate(date: Date) {
-    return formatDate(date).string;
-  }
+    saleTokens(amount: number) {
+      this.sb.open("Продажа токенов", "Готово", {
+        duration: 3000
+      });
+      this.updateJournal();
+    }
+    
+    formatDate(date: Date) {
+      return formatDate(date).string;
+    }
 
   toggleAdding() {
     this.adding = !this.adding;
@@ -170,37 +194,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
 
   deleteTariff(station: IStation, tariff: ITariff) {
     this.sb.open("Удаление тарифа", "Готово", {
-      duration: 3000
-    });
-    this.updateJournal();
-  }
-  
-  getBalance() {
-    this.e20ts.getBalance(this.user)
-      .then((balance: number) => {
-      this.balance = balance;
-    });
-  }
-
-  buyTokens(amount: number) {
-    this.e20ts.buyTokens(amount)
-      .then((status: any) => {
-        if (status) {
-          this.sb.open("Покупка токенов", "Готово", {
-            duration: 3000
-          });
-          this.getBalance();
-        } else {
-          this.sb.open("Покупка не удалась", "Ошибка", {
-            duration: 3000
-          })
-        }
-      });
-    this.updateJournal();
-  }
-
-  saleTokens(amount: number) {
-    this.sb.open("Продажа токенов", "Готово", {
       duration: 3000
     });
     this.updateJournal();
