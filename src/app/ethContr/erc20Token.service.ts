@@ -24,12 +24,6 @@ export class ERC20TokenService {
       });
     });
   }
-  
-  init() {
-    this.web3Service.artifactsToContract(erc20TokenArtifacts).then(v => {
-      this.ERC20Token = v;
-    });
-  }
 
   public async buyTokens(v:number) {
     const netId = await this.web3Service.web3.eth.net.getId();

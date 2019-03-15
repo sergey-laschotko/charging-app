@@ -62,8 +62,12 @@ export class RegisterService {
     })
     .on('error', console.error);
   }
+
   public async showFreeChargers() {
-    return await this.Register.methods.counter().call()
+    return this.ready
+      .then(async () => {
+        return await this.Register.methods.counter().call()
+      });
   }
 
   public async showChargers() {

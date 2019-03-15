@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
-import { IOperation, IUser, IStation } from '../mock-data/models';
+import { IOperation, IUser, IStation, ITariff } from '../mock-data/models';
 import { formatDate } from "../../lib/lib";
 import { RegisterService } from "../ethContr/register.service";
 import { ERC20TokenService } from "../ethContr/erc20Token.service";
+import { ChargerService } from "../ethContr/charger.service";
 
 @Component({
   selector: 'app-user',
@@ -15,6 +16,7 @@ export class UserComponent implements OnInit {
   user: any;
   balance: number;
   address: string = "";
+  currentTariff: number = 0;
   variants: IStation[] = [];
   stations: IStation[] = [];
   date: Date = new Date;
@@ -29,7 +31,8 @@ export class UserComponent implements OnInit {
     private bs: BaseService, 
     private sb: MatSnackBar, 
     private rs: RegisterService,
-    private e20ts: ERC20TokenService
+    private e20ts: ERC20TokenService,
+    private chs: ChargerService
   ) {
     this.user = this.e20ts.getUser();
     this.getBalance();
