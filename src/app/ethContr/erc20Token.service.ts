@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Web3Service} from '../util/web3.service';
 import {Subject, Observable} from 'rxjs';
 import { setTNodeAndViewData } from '@angular/core/src/render3/state';
-import { async } from 'q';
+import { async, resolve } from 'q';
 declare let require: any;
 const EthereumTx = require('ethereumjs-tx');
 
@@ -17,7 +17,7 @@ export class ERC20TokenService {
   public accountsObservable = new Subject<string[]>();
 
   constructor(private web3Service: Web3Service) {
-    this.web3Service.artifactsToContract(erc20TokenArtifacts).then(async v => {
+    this.web3Service.artifactsToContract(erc20TokenArtifacts).then(v => {
       this.ERC20Token = v;
     });
   }
@@ -80,6 +80,10 @@ export class ERC20TokenService {
   }
 
   getUser() {
-    return this.web3Service.defaultAccount;
+    return new Promise((res, rej) => {
+      setTimeout(() => {
+        res(this.web3Service.defaultAccount);
+      }, 1000);
+    });
   }
 }

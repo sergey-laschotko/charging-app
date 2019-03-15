@@ -37,27 +37,17 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     private e20ts: ERC20TokenService, 
     private sb: MatSnackBar
   ) {
-  }
-
-  ngOnInit() {
-    this.user = this.e20ts.getUser();
-    let tryGetBalance = (stopper: any) => {
-      if (!this.e20ts.isReady) {
-        setTimeout(() => {
-          tryGetBalance(stopper);
-        }, 1000);
-      } else {
-        clearInterval(stopper);
+    this.e20ts.getUser()
+      .then((user: string) => {
+        this.user = user;
         this.e20ts.getBalance(this.user)
           .then((balance: number) => {
-          this.balance = balance;
-        })
-      }
-    };
-    let reconnect = setInterval(() => {
-      tryGetBalance(reconnect)
-    }, 1000);
+            this.balance = balance;
+          })
+      });
   }
+
+  ngOnInit() {}
   
   ngAfterViewInit() {}
 
