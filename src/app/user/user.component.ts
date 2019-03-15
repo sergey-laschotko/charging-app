@@ -4,6 +4,7 @@ import { BaseService } from '../base.service';
 import { IOperation, IUser, IStation } from '../mock-data/models';
 import { formatDate } from "../../lib/lib";
 import { RegisterService } from "../ethContr/register.service";
+import { ERC20TokenService } from "../ethContr/erc20Token.service";
 
 @Component({
   selector: 'app-user',
@@ -11,7 +12,8 @@ import { RegisterService } from "../ethContr/register.service";
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  user: IUser = null;
+  user: any;
+  balance: number;
   address: string = "";
   variants: IStation[] = [];
   stations: IStation[] = [];
@@ -22,25 +24,46 @@ export class UserComponent implements OnInit {
   dataSource: any;
   isModalOpened: boolean = false;
 
-  constructor(private bs: BaseService, private sb: MatSnackBar, private rs: RegisterService) { 
-    this.user = this.bs.getUser();
-    this.operations = this.bs.getUsersOperations(this.user.name).reverse();
-      this.rs.showChargers()
-      .then((stations: IStation[]) => {
-        console.log(stations);
-        console.log(stations.length);
-        this.stations = stations;
-        this.variants = stations;
-      });
+  constructor(
+    private bs: BaseService, 
+    private sb: MatSnackBar, 
+    private rs: RegisterService,
+    private e20ts: ERC20TokenService
+  ) {
+    this.user = this.e20ts.getUser();
+    this.getBalance();
+    this.operations = this.bs.getOperations().reverse();
+    this.rs.showChargers()
+    .then((stations: IStation[]) => {
+      this.stations = stations;
+      this.variants = stations;
+    });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
+
+  getBalance() {
+    this.e20ts.getBalance(this.user)
+      .then((balance: number) => {
+      this.balance = balance;
+    });
+  }
 
   onBuy(amount: number) {
-    this.bs.addTokens(this.user, amount);
-    this.sb.open("Покупка токенов", "Готово", {
-      duration: 3000
-    });
+    this.e20ts.buyTokens(amount)
+      .then((status: any) => {
+        if (status) {
+          this.sb.open("Покупка токенов", "Готово", {
+            duration: 3000
+          });
+          this.getBalance();
+        } else {
+          this.sb.open("Покупка не удалась", "Ошибка", {
+            duration: 3000
+          })
+        }
+      });
     this.updateJournal();
   }
 
@@ -95,6 +118,12 @@ export class UserComponent implements OnInit {
   }
 
   charge() {
+    if (this.balance < 150) {
+      this.sb.open("Недостаточно токенов", "Нужно не менее 150", {
+        duration: 3000
+      })
+      return;
+    }
     this.bs.charge(this.user, this.address);
     this.address = "";
     this.updateJournal();

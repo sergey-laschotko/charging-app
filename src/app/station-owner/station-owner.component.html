@@ -1,10 +1,10 @@
 <div class="container">
     <mat-card class="page-heading">
-      <span class="username"><b>{{user.name}}</b></span>
+      <span class="username"><b>{{user}}</b></span>
     </mat-card>
     <mat-tab-group>
       <mat-tab label="Баланс">
-          <app-balance [tokens]="user.balance" add="Купить" remove="Продать" (onAdd)="buyTokens($event)" (onRemove)="saleTokens($event)"></app-balance>
+          <app-balance [tokens]="balance" add="Купить" remove="Продать" (onAdd)="buyTokens($event)" (onRemove)="saleTokens($event)"></app-balance>
       </mat-tab>
       <mat-tab label="Зарегестрированные станции">
         <div class="registered-stations">
@@ -22,7 +22,7 @@
               <button mat-raised-button color="warn" (click)="toggleAdding()">Отмена</button>
             </span>
             <mat-accordion>
-              <mat-expansion-panel *ngFor="let station of user.stations">
+              <mat-expansion-panel *ngFor="let station of stations">
                 <mat-expansion-panel-header (click)="clearInputs()">
                   <span *ngIf="!editingStation || currentEditingStation.id !== station.id">{{station.address}}</span>
                   <span class="edit-station" *ngIf="editingStation && currentEditingStation.id === station.id">
@@ -69,7 +69,7 @@
                   </span>
                 </p>
                 <mat-list class="tariffs-list">
-                  <mat-list-item *ngFor="let tariff of station.tariffs.sort(sortTariff)" class="tariffs-list_item">
+                  <mat-list-item *ngFor="let tariff of station.tariff.sort(sortTariff)" class="tariffs-list_item">
                     <span class="tariffs-list_view">
                       <span>C {{tariff.from}} по {{tariff.to}} цена {{tariff.price}}</span>
                     </span>
