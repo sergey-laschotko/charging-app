@@ -14,6 +14,7 @@ import { ERC20TokenService } from "../ethContr/erc20Token.service";
 export class StationOwnerComponent implements OnInit, AfterViewInit {
   user: string;
   balance: number;
+  stations: IStation[] = [];
   tariffs: string[] = [];
   newStation: string = "";
   adding: boolean = false;
@@ -43,7 +44,11 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
         this.e20ts.getBalance(this.user)
           .then((balance: number) => {
             this.balance = balance;
-          })
+          });
+        this.rs.showChargers()
+          .then((stations: IStation[]) => {
+            this.stations = stations;
+          });
       });
   }
 
