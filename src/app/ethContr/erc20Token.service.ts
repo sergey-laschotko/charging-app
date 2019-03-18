@@ -81,6 +81,14 @@ export class ERC20TokenService {
     return this.web3Service.defaultAccount;
   }
 
+  getStationOwner() {
+    return this.web3Service.stationOwner;
+  }
+
+  getServiceOwner() {
+    return this.web3Service.admin;
+  }
+
   public async totalSupply() {
     return this.ready
       .then(async () => {
