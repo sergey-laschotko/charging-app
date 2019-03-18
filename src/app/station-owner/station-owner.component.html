@@ -8,10 +8,10 @@
       <mat-tab label="Баланс">
           <app-balance [tokens]="balance" add="Купить" remove="Продать" (onAdd)="buyTokens($event)" (onRemove)="saleTokens($event)"></app-balance>
       </mat-tab>
-      <mat-tab label="Зарегестрированные станции">
+      <mat-tab label="Зарегистрированные станции">
         <div class="registered-stations">
           <mat-card>
-            <h4>Зарегестрированные станции</h4>
+            <h4>Зарегистрированные станции</h4>
             <span [ngClass]="{ 'add-station-form': true, 'add-station-form__opened': adding }">
               <button mat-raised-button class="inline-item" color="primary" (click)="toggleAdding()">
                 <span *ngIf="!adding">Добавить станцию</span>

@@ -41,15 +41,7 @@ export class UserComponent implements OnInit {
   ) {
     this.user = this.e20ts.getUser();
     this.getBalance();
-    this.hs.getHistory()
-      .subscribe((result: any) => {
-        result.result.forEach((op: any) => {
-          op.timeStamp = new Date(Number(op.timeStamp));
-        });
-        this.operations = result.result.filter((op: any) => {
-          return op.from === this.user.toLowerCase();
-        });;
-      });
+    this.updateJournal();
     this.rs.showChargers()
       .then((stations: IStation[]) => {
         this.stations = stations;
@@ -159,6 +151,14 @@ export class UserComponent implements OnInit {
   }
 
   updateJournal() {
-    this.operations = this.bs.getUsersOperations(this.user.name).reverse();
+    this.hs.getHistory()
+      .subscribe((result: any) => {
+        result.result.forEach((op: any) => {
+          op.timeStamp = new Date(Number(op.timeStamp));
+        });
+        this.operations = result.result.filter((op: any) => {
+          return op.from === this.user.toLowerCase();
+        });;
+      });
   }
 }

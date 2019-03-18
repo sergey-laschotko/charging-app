@@ -6,6 +6,7 @@ import { IStation, IOperation, ITariff } from '../mock-data/models';
 import { formatDate, onlyDigits } from "../../lib/lib";
 import { RegisterService } from "../ethContr/register.service";
 import { ERC20TokenService } from "../ethContr/erc20Token.service";
+import { FactoryService } from "../ethContr/factory.service";
 
 @Component({
   selector: 'app-station-owner',
@@ -39,6 +40,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     private rs: RegisterService,
     private e20ts: ERC20TokenService,
     private hs: HistoryService, 
+    private fs: FactoryService,
     private sb: MatSnackBar
     ) {
       this.user = this.e20ts.getUser();
@@ -47,55 +49,47 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
         .then((stations: IStation[]) => {
           this.stations = stations;
         });
-      this.hs.getHistory()
-        .subscribe((result: any) => {
-          result.result.forEach((op: any) => {
-            op.timeStamp = new Date(Number(op.timeStamp));
-          });
-          this.operations = result.result.filter((op: any) => {
-            return op.from === this.user.toLowerCase();
-          });
-        });
-    }
-    
-    ngOnInit() {}
-    
-    ngAfterViewInit() {}
-    
-    getBalance() {
-      this.e20ts.getBalance(this.user)
-        .then((balance: number) => {
-        this.balance = balance;
-      });
-    }
-  
-    buyTokens(amount: number) {
-      this.e20ts.buyTokens(amount)
-        .then((status: any) => {
-          if (status) {
-            this.sb.open("Покупка токенов", "Готово", {
-              duration: 3000
-            });
-            this.getBalance();
-          } else {
-            this.sb.open("Покупка не удалась", "Ошибка", {
-              duration: 3000
-            })
-          }
-        });
-      this.updateJournal();
-    }
-  
-    saleTokens(amount: number) {
-      this.sb.open("Продажа токенов", "Готово", {
-        duration: 3000
-      });
       this.updateJournal();
     }
     
-    formatDate(date: Date) {
-      return formatDate(date).string;
-    }
+  ngOnInit() {}
+    
+  ngAfterViewInit() {}
+    
+  getBalance() {
+    this.e20ts.getBalance(this.user)
+      .then((balance: number) => {
+      this.balance = balance;
+    });
+  }
+  
+  buyTokens(amount: number) {
+    this.e20ts.buyTokens(amount)
+      .then((status: any) => {
+        if (status) {
+          this.sb.open("Покупка токенов", "Готово", {
+            duration: 3000
+          });
+          this.getBalance();
+          this.updateJournal();
+        } else {
+          this.sb.open("Покупка не удалась", "Ошибка", {
+            duration: 3000
+          })
+        }
+      });
+  }
+  
+  saleTokens(amount: number) {
+    this.sb.open("Продажа токенов", "Готово", {
+      duration: 3000
+    });
+    this.updateJournal();
+  }
+  
+  formatDate(date: Date) {
+    return formatDate(date).string;
+  }
 
   toggleAdding() {
     this.adding = !this.adding;
@@ -145,10 +139,17 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   addNewStation() {
-    this.sb.open("Добавление станции", "Готово", {
-      duration: 3000
-    });
-    this.updateJournal();
+    if (!this.newStation) {
+      return;
+    }
+    this.fs.createCharger(this.newStation, this.newStation, this.user)
+      .then((result) => {
+        console.log(result);
+        this.sb.open("Добавление станции", "Готово", {
+          duration: 3000
+        });
+        this.updateJournal();
+      });
     this.toggleAdding();
   }
 
@@ -200,6 +201,14 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   updateJournal() {
-    // this.operations = this.bs.getUsersOperations(this.user.name).reverse();
+    this.hs.getHistory()
+        .subscribe((result: any) => {
+          result.result.forEach((op: any) => {
+            op.timeStamp = new Date(Number(op.timeStamp));
+          });
+          this.operations = result.result.filter((op: any) => {
+            return op.from === this.user.toLowerCase();
+          });
+        });
   }
 }

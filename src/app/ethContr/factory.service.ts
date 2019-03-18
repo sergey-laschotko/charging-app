@@ -10,7 +10,9 @@ declare const Buffer;
 const factoryArtifacts = require('../../../build/contracts/Factory.json');
 
 
-@Injectable()
+@Injectable({
+  providedIn: "root"
+})
 export class FactoryService {
   public ready: Promise<any>;
   private web3: any;
@@ -39,13 +41,13 @@ export class FactoryService {
   }
 
   public async createCharger(geo: string,name: string,owner: string) {
-    const netId = await this.web3.eth.net.getId();
+    const netId = await this.web3Service.web3.eth.net.getId();
     const pk = 'f0b14d22eedc978abd2b3f64287eb4b7e7b19a3ecfe60cf46d925f0366804b31';
-    const nonce = await this.web3.eth.getTransactionCount(this.web3.eth.defaultAccount)
+    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
     const gas = await this.Factory.methods.createCharger(geo,name,owner).estimateGas()
     const funcAbi = {
       nonce,
-      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('47', 'gwei')),
+      gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
       gas,
       to: factoryArtifacts.networks[netId].address,
       value: 0,
@@ -55,7 +57,7 @@ export class FactoryService {
     transaction.sign(Buffer.from(pk, 'hex'))
     var rawdata = '0x' + transaction.serialize().toString('hex');
 
-    this.web3.eth.sendSignedTransaction(rawdata)
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){
         console.log(['Receipt:', receipt]);
     })
