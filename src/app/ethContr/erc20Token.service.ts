@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Web3Service} from '../util/web3.service';
 import {Subject} from 'rxjs';
+import env from '../../../config/env';
 declare let require: any;
 const EthereumTx = require('ethereumjs-tx');
 
@@ -25,7 +26,6 @@ export class ERC20TokenService {
 
   public async buyTokens(v:number) {
     const netId = await this.web3Service.web3.eth.net.getId();
-    const pk = 'f0b14d22eedc978abd2b3f64287eb4b7e7b19a3ecfe60cf46d925f0366804b31';
     console.log(this.web3Service.defaultAccount);
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
     const gas = await this.ERC20Token.methods.buyTokens(v).estimateGas({from: this.web3Service.defaultAccount, value: v})
@@ -38,7 +38,7 @@ export class ERC20TokenService {
       data: this.ERC20Token.methods.buyTokens(v).encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(pk, 'hex'))
+    transaction.sign(Buffer.from(env.user, 'hex'))
     var rawdata = '0x' + transaction.serialize().toString('hex');
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
@@ -50,7 +50,6 @@ export class ERC20TokenService {
 
   public async approveTokens(spender:string, v:number) {
     const netId = await this.web3Service.web3.eth.net.getId();
-    const pk = 'f0b14d22eedc978abd2b3f64287eb4b7e7b19a3ecfe60cf46d925f0366804b31';
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
     // const gas = this.ERC20Token.methods.approve(spender,v).estimateGas({from: this.web3Service.defaultAccount, value: v})
     const funcAbi = {
@@ -61,7 +60,7 @@ export class ERC20TokenService {
       data: this.ERC20Token.methods.approve(spender,v).encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(pk, 'hex'))
+    transaction.sign(Buffer.from(env.user, 'hex'))
     var rawdata = '0x' + transaction.serialize().toString('hex');
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
@@ -80,5 +79,54 @@ export class ERC20TokenService {
 
   getUser() {
     return this.web3Service.defaultAccount;
+  }
+
+  public async totalSupply() {
+    return this.ready
+      .then(async () => {
+        return await this.ERC20Token.methods.totalSupply().call();
+      });
+  }
+  public async mint() {
+    const netId = await this.web3Service.web3.eth.net.getId();
+    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
+    // const gas = this.ERC20Token.methods.approve(spender,v).estimateGas({from: this.web3Service.defaultAccount, value: v})
+    const funcAbi = {
+      nonce,
+      gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
+      gas: 500000,
+      to: erc20TokenArtifacts.networks[netId].address,
+      data: this.ERC20Token.methods.mint().encodeABI(),
+    };
+    const transaction = new EthereumTx(funcAbi);
+    transaction.sign(Buffer.from(env.admin, 'hex'))
+    var rawdata = '0x' + transaction.serialize().toString('hex');
+
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
+    .on('receipt', function(receipt){
+        console.log(['Receipt:', receipt]);
+    })
+    .on('error', console.error);
+  }
+  public async burn() {
+    const netId = await this.web3Service.web3.eth.net.getId();
+    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
+    // const gas = this.ERC20Token.methods.approve(spender,v).estimateGas({from: this.web3Service.defaultAccount, value: v})
+    const funcAbi = {
+      nonce,
+      gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
+      gas: 500000,
+      to: erc20TokenArtifacts.networks[netId].address,
+      data: this.ERC20Token.methods.burn().encodeABI(),
+    };
+    const transaction = new EthereumTx(funcAbi);
+    transaction.sign(Buffer.from(env.admin, 'hex'))
+    var rawdata = '0x' + transaction.serialize().toString('hex');
+
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
+    .on('receipt', function(receipt){
+        console.log(['Receipt:', receipt]);
+    })
+    .on('error', console.error);
   }
 }

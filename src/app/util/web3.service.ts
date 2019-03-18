@@ -9,6 +9,8 @@ declare let window: any;
 @Injectable()
 export class Web3Service {
   defaultAccount = '0xA59b4fe50dE0841Da51eF381eD317dE11bd79d12';
+  stationOwner = '0x727B07eCcB35770725477Bf3B5350fc1B0E38Ebc';
+  admin = '0xa4D16e43473412c360BBB1D1dF3a3eDf1Bd7CF4A';
   web3: any;
   eth: any;
 
