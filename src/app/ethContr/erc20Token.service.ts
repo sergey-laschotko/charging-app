@@ -53,21 +53,20 @@ export class ERC20TokenService {
   public async approveTokens(spender:string, v:number) {
     const netId = await this.web3Service.web3.eth.net.getId();
     const pk = 'f0b14d22eedc978abd2b3f64287eb4b7e7b19a3ecfe60cf46d925f0366804b31';
-    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.web3.eth.defaultAccount)
-    const gas = erc20TokenArtifacts.methods.approve(spender,v).estimateGas({from: this.web3Service.web3.eth.defaultAccount, value: v})
+    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
+    // const gas = this.ERC20Token.methods.approve(spender,v).estimateGas({from: this.web3Service.defaultAccount, value: v})
     const funcAbi = {
       nonce,
       gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
-      gas,
+      gas: 500000,
       to: erc20TokenArtifacts.networks[netId].address,
-      value: 0,
       data: this.ERC20Token.methods.approve(spender,v).encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
     transaction.sign(Buffer.from(pk, 'hex'))
     var rawdata = '0x' + transaction.serialize().toString('hex');
 
-    this.web3Service.web3.eth.sendSignedTransaction(rawdata)
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){
         console.log(['Receipt:', receipt]);
     })

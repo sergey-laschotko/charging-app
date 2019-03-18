@@ -66,7 +66,7 @@ export class RegisterService {
   public async showFreeChargers() {
     return this.ready
       .then(async () => {
-        return await this.Register.methods.counter().call()
+        return await this.Register.methods.showFreeChargers().call()
       });
   }
 
