@@ -3,6 +3,7 @@ import {Web3Service} from '../util/web3.service';
 import {Subject} from 'rxjs';
 import { ChargerService } from './charger.service';
 import { ERC20TokenService } from './erc20Token.service';
+import env from '../../../config/env';
 declare let require: any;
 const EthereumTx = require('ethereumjs-tx');
 
@@ -32,7 +33,6 @@ export class RegisterService {
 
   public async register() {
     const netId = await this.web3.eth.net.getId();
-    const pk = 'f0b14d22eedc978abd2b3f64287eb4b7e7b19a3ecfe60cf46d925f0366804b31';
     const nonce = await this.web3.eth.getTransactionCount(this.web3.eth.defaultAccount)
     const funcAbi = {
       nonce,
@@ -43,7 +43,7 @@ export class RegisterService {
       data: this.Register.methods.register().encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(pk, 'hex'))
+    transaction.sign(Buffer.from(env.stationOwner, 'hex'))
     var rawdata = '0x' + transaction.serialize().toString('hex');
 
     this.web3.eth.sendSignedTransaction(rawdata)

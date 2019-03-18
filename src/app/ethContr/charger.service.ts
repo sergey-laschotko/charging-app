@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Web3Service} from '../util/web3.service';
 import {Subject} from 'rxjs';
 import { ERC20TokenService } from './erc20Token.service';
+import env from '../../../config/env';
 declare let require: any;
 const EthereumTx = require('ethereumjs-tx');
 
@@ -32,7 +33,6 @@ export class ChargerService {
     console.log('Rec',rec)
 
     const netId = await this.web3Service.web3.eth.net.getId();
-    const pk = 'f0b14d22eedc978abd2b3f64287eb4b7e7b19a3ecfe60cf46d925f0366804b31';
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
     // const gas = await this.Charger.methods.startCharging().estimateGas()
 
@@ -44,7 +44,7 @@ export class ChargerService {
       data: this.Charger.methods.startCharging().encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(pk, 'hex'))
+    transaction.sign(Buffer.from(env.user, 'hex'))
     var rawdata = '0x' + transaction.serialize().toString('hex');
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
@@ -56,7 +56,6 @@ export class ChargerService {
 
   public async addRate(from: string,to: string,newRate: number) {
     const netId = await this.web3Service.web3.eth.net.getId();
-    const pk = 'f0b14d22eedc978abd2b3f64287eb4b7e7b19a3ecfe60cf46d925f0366804b31';
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.web3.eth.defaultAccount)
     const gas = await this.Charger.methods.addRate(from,to,newRate).estimateGas({from: this.web3Service.web3.eth.defaultAccount})
     const funcAbi = {
@@ -67,7 +66,7 @@ export class ChargerService {
       data: this.Charger.methods.addRate(from,to,newRate).encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(pk, 'hex'))
+    transaction.sign(Buffer.from(env.stationOwner, 'hex'))
     var rawdata = '0x' + transaction.serialize().toString('hex');
 
     this.web3Service.web3.eth.sendSignedTransaction(rawdata)
