@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Web3Service} from '../util/web3.service';
 import {Subject} from 'rxjs';
-import { ChargerService } from './charger.service';
-import { ERC20TokenService } from './erc20Token.service';
 declare let require: any;
 const EthereumTx = require('ethereumjs-tx');
 
@@ -17,16 +15,6 @@ export class FactoryService {
   Factory: any;
 
   public accountsObservable = new Subject<string[]>();
-
-
-  model = {
-    amount: 5,
-    receiver: '',
-    balance: 0,
-    account: ''
-  };
-
-  status = '';
 
   constructor(
     private web3Service: Web3Service) {
