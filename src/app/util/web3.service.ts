@@ -8,84 +8,27 @@ declare let window: any;
 
 @Injectable()
 export class Web3Service {
-  private web3: any;
-  private accounts: string[];
-  public ready = false;
+  defaultAccount = '0xA59b4fe50dE0841Da51eF381eD317dE11bd79d12';
+  web3: any;
+  eth: any;
 
   public accountsObservable = new Subject<string[]>();
 
   constructor() {
-      this.bootstrapWeb3();
-  }
-
-  public bootstrapWeb3() {
-    // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-    // if (typeof window.web3 == 'undefined') {
-    //   // Use Mist/MetaMask's provider
-    //   this.web3 = new Web3(window.web3.currentProvider);
-    //   await window.ethereum['enable']();
-
-    // } else {
-      console.log('No web3? You should consider trying MetaMask!');
-
-      // Hack to provide backwards compatibility for Truffle, which uses web3js 0.20.x
-      Web3.providers.HttpProvider.prototype.sendAsync = Web3.providers.HttpProvider.prototype.send;
-      // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-      this.web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io/RF12tXeeoCJRZz4txW2Y`));
-      this.web3.eth.defaultAccount = '0xA59b4fe50dE0841Da51eF381eD317dE11bd79d12';
-    // }
-
-    // setInterval(() => this.refreshAccounts(), 100);
-  }
-
-  public getInstance() {
-    return this.web3;
+    Web3.providers.HttpProvider.prototype.sendAsync = Web3.providers.HttpProvider.prototype.send;
+    this.web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io/RF12tXeeoCJRZz4txW2Y`));
+    this.eth = this.web3.eth;
   }
 
   public async artifactsToContract(artifacts, addr?) {
-    if (!this.web3) {
-      const delay = new Promise(resolve => setTimeout(resolve, 100));
-      await delay;
-      return await this.artifactsToContract(artifacts);
-    }
-
-    const netId = await this.web3.eth.net.getId();
+    const netId = await this.eth.net.getId();
     let contractAbstraction;
     if(addr) {  
       contractAbstraction = new this.web3.eth.Contract(artifacts.abi, addr);
-      // console.log('I got an address', addr)
     } else {
-      contractAbstraction = new this.web3.eth.Contract(artifacts.abi, artifacts.networks[netId].address);      
-      // console.log('I took an address', artifacts.networks[netId].address)
+      contractAbstraction = new this.web3.eth.Contract(artifacts.abi, artifacts.networks[netId].address); 
     }
-
-    // contractAbstraction.setProvider(this.web3.currentProvider);
+    
     return contractAbstraction;
-
   }
-
-  // private refreshAccounts() {
-  //   this.web3.eth.getAccounts((err, accs) => {
-  //     console.log('Refreshing accounts');
-  //     if (err != null) {
-  //       console.warn('There was an error fetching your accounts.');
-  //       return;
-  //     }
-
-  //     // Get the initial account balance so it can be displayed.
-  //     if (accs.length === 0) {
-  //       console.warn('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
-  //       return;
-  //     }
-
-  //     if (!this.accounts || this.accounts.length !== accs.length || this.accounts[0] !== accs[0]) {
-  //       console.log('Observed new accounts');
-
-  //       this.accountsObservable.next(accs);
-  //       this.accounts = accs;
-  //     }
-
-  //     this.ready = true;
-  //   });
-  // }
 }

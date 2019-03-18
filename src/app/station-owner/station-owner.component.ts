@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
-import { IUser, IStation, IOperation, ITariff } from '../mock-data/models';
-import { formatDate } from "../../lib/lib";
+import { IStation, IOperation, ITariff } from '../mock-data/models';
+import { formatDate, onlyDigits } from "../../lib/lib";
+import { RegisterService } from "../ethContr/register.service";
+import { ERC20TokenService } from "../ethContr/erc20Token.service";
 
 @Component({
   selector: 'app-station-owner',
@@ -10,7 +12,9 @@ import { formatDate } from "../../lib/lib";
   styleUrls: ['./station-owner.component.css']
 })
 export class StationOwnerComponent implements OnInit, AfterViewInit {
-  user: IUser;
+  user: string;
+  balance: number;
+  stations: IStation[] = [];
   tariffs: string[] = [];
   newStation: string = "";
   adding: boolean = false;
@@ -19,28 +23,68 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   currentEditingStation: IStation;
   newTariffFrom: string = "00:00";
   newTariffTo: string = "00:00";
-  newTariffPrice: string = "";
+  newTariffPrice: number = 0;
   operations: IOperation[] = [];
   displayedColumns: string[] = ["date", "type", "data"];
   columnsHeaders: string[] = ["Дата", "Операция", "Детали"];
 
   @ViewChild('dtpfrom') dtpFrom: any;
   @ViewChild('dtpto') dtpTo: any;
+  @ViewChild('priceInput') priceInput: any;
 
 
-  constructor(private bs: BaseService, private sb: MatSnackBar) {
-  }
-
-  ngOnInit() {
-    this.user = this.bs.getStationOwner();
-    this.operations = this.bs.getUsersOperations(this.user.name).reverse();
-  }
-
-  ngAfterViewInit() {}
-
-  formatDate(date: Date) {
-    return formatDate(date).string;
-  }
+  constructor(
+    private bs: BaseService,
+    private rs: RegisterService,
+    private e20ts: ERC20TokenService, 
+    private sb: MatSnackBar
+    ) {
+      this.user = this.e20ts.getUser();
+      this.getBalance();
+      this.rs.showChargers()
+        .then((stations: IStation[]) => {
+          this.stations = stations;
+        });
+    }
+    
+    ngOnInit() {}
+    
+    ngAfterViewInit() {}
+    
+    getBalance() {
+      this.e20ts.getBalance(this.user)
+        .then((balance: number) => {
+        this.balance = balance;
+      });
+    }
+  
+    buyTokens(amount: number) {
+      this.e20ts.buyTokens(amount)
+        .then((status: any) => {
+          if (status) {
+            this.sb.open("Покупка токенов", "Готово", {
+              duration: 3000
+            });
+            this.getBalance();
+          } else {
+            this.sb.open("Покупка не удалась", "Ошибка", {
+              duration: 3000
+            })
+          }
+        });
+      this.updateJournal();
+    }
+  
+    saleTokens(amount: number) {
+      this.sb.open("Продажа токенов", "Готово", {
+        duration: 3000
+      });
+      this.updateJournal();
+    }
+    
+    formatDate(date: Date) {
+      return formatDate(date).string;
+    }
 
   toggleAdding() {
     this.adding = !this.adding;
@@ -53,24 +97,13 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   checkPriceInput(e: any) {
-    e = e || event;
-    if (e.ctrlKey || e.altKey || e.metaKey) return;
+    return onlyDigits(e);
+  }
 
-    let chr = null;
-
-    if (e.which == null) {
-      if (e.keyCode < 32) return null;
-      chr = String.fromCharCode(e.keyCode)
-    }
-    
-    if (e.which != 0 && e.charCode != 0) {
-      if (e.which < 32) return null;
-      chr = String.fromCharCode(e.which)
-    }
-
-    if (chr == null) return;
-
-    if (chr < "0" || chr > "9") return false;
+  priceToNumber(e: any) {
+    console.log(e);
+    this.newTariffPrice *= 1;
+    this.priceInput.nativeElement.value = this.newTariffPrice;
   }
 
   setFromTime(date: Date) {
@@ -89,7 +122,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     this.addingTariff = false;
     this.newTariffFrom = "00:00";
     this.newTariffTo = "00:00";
-    this.newTariffPrice = "";
+    this.newTariffPrice = 0;
     this.dtpFrom.resetTime();
     this.dtpTo.resetTime();
     this.currentEditingStation = null;
@@ -102,7 +135,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   addNewStation() {
-    this.bs.addStation(this.user, this.newStation);
     this.sb.open("Добавление станции", "Готово", {
       duration: 3000
     });
@@ -115,14 +147,13 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   addNewTariff(address: string) {
-    this.bs.addTariff(this.user, address, this.newTariffFrom, this.newTariffTo, Number(this.newTariffPrice));
     this.sb.open("Добавление тарифа", "Готово", {
       duration: 3000
     });
     this.updateJournal();
     this.newTariffFrom = "00:00";
     this.newTariffTo = "00:00";
-    this.newTariffPrice = "";
+    this.newTariffPrice = 0;
     this.addingTariff = !this.addingTariff;
   }
 
@@ -137,7 +168,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   editStation() {
-    this.bs.editStation(this.user, this.currentEditingStation);
     this.sb.open("Редактирование адреса станции", "Готово", {
       duration: 3000
     });
@@ -146,7 +176,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   deleteStation(station: IStation) {
-    this.bs.deleteStation(this.user, station);
     this.sb.open("Удаление станции", "Готово", {
       duration: 3000
     });
@@ -154,30 +183,13 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   deleteTariff(station: IStation, tariff: ITariff) {
-    this.bs.deleteTariff(this.user, station, tariff);
     this.sb.open("Удаление тарифа", "Готово", {
       duration: 3000
     });
     this.updateJournal();
   }
 
-  buyTokens(amount: number) {
-    this.bs.addTokens(this.user, amount);
-    this.sb.open("Покупка токенов", "Готово", {
-      duration: 3000
-    });
-    this.updateJournal();
-  }
-
-  saleTokens(amount: number) {
-    this.bs.removeTokens(this.user, amount);
-    this.sb.open("Продажа токенов", "Готово", {
-      duration: 3000
-    });
-    this.updateJournal();
-  }
-
   updateJournal() {
-    this.operations = this.bs.getUsersOperations(this.user.name).reverse();
+    // this.operations = this.bs.getUsersOperations(this.user.name).reverse();
   }
 }

@@ -25,3 +25,24 @@ export function genID(): string {
         '-' + chr4() +
         '-' + chr4() + chr4() + chr4();
 }
+
+export function onlyDigits(e: any) {
+    e = e || event;
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+    let chr = null;
+
+    if (e.which == null) {
+      if (e.keyCode < 32) return null;
+      chr = String.fromCharCode(e.keyCode)
+    }
+    
+    if (e.which != 0 && e.charCode != 0) {
+      if (e.which < 32) return null;
+      chr = String.fromCharCode(e.which)
+    }
+
+    if (chr == null) return;
+
+    if (chr < "0" || chr > "9") return false;
+}

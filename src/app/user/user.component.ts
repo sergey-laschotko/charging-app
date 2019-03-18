@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
-import { IOperation, IUser, IStation } from '../mock-data/models';
+import { IOperation, IUser, IStation, ITariff } from '../mock-data/models';
 import { formatDate } from "../../lib/lib";
+import { RegisterService } from "../ethContr/register.service";
+import { ERC20TokenService } from "../ethContr/erc20Token.service";
+import { ChargerService } from "../ethContr/charger.service";
 
 @Component({
   selector: 'app-user',
@@ -10,8 +13,10 @@ import { formatDate } from "../../lib/lib";
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  user: IUser = null;
+  user: any;
+  balance: number;
   address: string = "";
+  currentTariff: number = 0;
   variants: IStation[] = [];
   stations: IStation[] = [];
   date: Date = new Date;
@@ -20,29 +25,53 @@ export class UserComponent implements OnInit {
   columnsHeaders: string[] = ['Дата', 'Операция', 'Детали'];
   dataSource: any;
   isModalOpened: boolean = false;
+  buyingProcess: boolean = false;
+  chargingProcess: boolean = false;
 
-  constructor(private bs: BaseService, private sb: MatSnackBar) { 
-    this.user = this.bs.getUser();
-    this.operations = this.bs.getUsersOperations(this.user.name).reverse();
-    this.stations = this.bs.getStations();
-    this.variants = this.bs.getStations();
+  constructor(
+    private bs: BaseService, 
+    private sb: MatSnackBar, 
+    private rs: RegisterService,
+    private e20ts: ERC20TokenService,
+    private chs: ChargerService,
+  ) {
+    this.user = this.e20ts.getUser();
+    this.getBalance();
+    this.operations = this.bs.getOperations().reverse();
+    this.rs.showChargers()
+      .then((stations: IStation[]) => {
+        this.stations = stations;
+        this.variants = stations;
+      });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
+
+  getBalance() {
+    this.e20ts.getBalance(this.user)
+      .then((balance: number) => {
+      this.balance = balance;
+    });
+  }
 
   onBuy(amount: number) {
-    this.bs.addTokens(this.user, amount);
-    this.sb.open("Покупка токенов", "Готово", {
-      duration: 3000
-    });
-    this.updateJournal();
-  }
-
-  onSale(amount: number) {
-    this.bs.removeTokens(this.user, amount);
-    this.sb.open("Продажа токенов", "Готово", {
-      duration: 3000
-    });
+    this.buyingProcess = true;
+    this.e20ts.buyTokens(amount)
+      .then((status: any) => {
+        if (status) {
+          this.sb.open("Покупка токенов", "Готово", {
+            duration: 3000
+          });
+          this.getBalance();
+          this.buyingProcess = false;
+        } else {
+          this.sb.open("Покупка не удалась", "Ошибка", {
+            duration: 3000
+          })
+          this.buyingProcess = false;
+        }
+      });
     this.updateJournal();
   }
 
@@ -89,10 +118,18 @@ export class UserComponent implements OnInit {
   }
 
   charge() {
-    this.bs.charge(this.user, this.address);
-    this.address = "";
-    this.updateJournal();
-    this.variants = [...this.stations];
+    if (this.balance < 150) {
+      this.sb.open("Недостаточно токенов", "Нужно не менее 150", {
+        duration: 3000
+      })
+      return;
+    }
+    // this.chs.startCharging(this.user);
+    this.chargingProcess = true;
+    setTimeout(() => {
+      this.chargingProcess = false;
+      this.address = "";
+    }, 12000);
   }
 
   closeModal() {

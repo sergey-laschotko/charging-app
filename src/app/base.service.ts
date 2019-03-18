@@ -4,7 +4,6 @@ import { IOperation, IUser, IStation, ITariff } from "./mock-data/models";
 import { genID } from "../lib/lib";
 
 const data = new DataSource(stations, operations, stationsOwners, users).generate();
-console.log(data);
 
 @Injectable({
   providedIn: 'root'

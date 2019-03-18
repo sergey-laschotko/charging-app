@@ -18,6 +18,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
     imports: [
@@ -40,6 +41,7 @@ import { MatDividerModule } from '@angular/material/divider';
         LayoutModule,
         MatExpansionModule,
         MatDividerModule,
+        MatProgressSpinnerModule,
     ],
     exports: [
         MatButtonModule,
@@ -61,6 +63,7 @@ import { MatDividerModule } from '@angular/material/divider';
         LayoutModule,
         MatExpansionModule,
         MatDividerModule,
+        MatProgressSpinnerModule,
     ]
 })
 export class MaterialAppModule {}
