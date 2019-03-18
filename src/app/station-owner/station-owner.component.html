@@ -91,7 +91,7 @@
         <div class="journal">
           <mat-card>
             <h4 class="text-center">Журнал</h4>
-            <p *ngIf="!dataSource">На данный момент записей в журнале нет</p>
+            <p *ngIf="!operations">На данный момент записей в журнале нет</p>
             <app-table [data]="operations" [displayedColumns]="displayedColumns" [columnsHeaders]="columnsHeaders"></app-table>
           </mat-card>
         </div>

@@ -46,7 +46,9 @@ export class UserComponent implements OnInit {
         result.result.forEach((op: any) => {
           op.timeStamp = new Date(Number(op.timeStamp));
         });
-        this.operations = result.result;
+        this.operations = result.result.filter((op: any) => {
+          return op.from === this.user.toLowerCase();
+        });;
       });
     this.rs.showChargers()
       .then((stations: IStation[]) => {
