@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { onlyDigits } from 'src/lib/lib';
 
 @Component({
   selector: 'app-balance',
@@ -31,8 +32,17 @@ export class BalanceComponent implements OnInit {
       this.isInputOpened = false;
       return;
     }
-    this.onAdd.emit(this.amountToAdd);
+    this.onAdd.emit(Number(this.amountToAdd));
     this.amountToAdd = 0;
     this.isInputOpened = false;
+  }
+
+  checkInput(e: any) {
+    return onlyDigits(e);
+  }
+
+  amountToNumber() {
+    this.amountToAdd *= 1;
+    this.amountInput.nativeElement.value = this.amountToAdd;
   }
 }

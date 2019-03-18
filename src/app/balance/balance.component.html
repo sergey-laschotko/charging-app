@@ -7,11 +7,12 @@
     <span class="balance_form">
       <span [ngClass]="{ 'balance_input-row': true, 'balance_input-row__opened': isInputOpened }">
         <mat-form-field class="balance_amount-input">
-          <input matInput type="text" autocomplete="off" placeholder="Количество" #amountInput />
+          <input matInput type="text" autocomplete="off" placeholder="Количество" #amountInput [(ngModel)]="amountToAdd" (keypress)="checkInput($event)" (ngModelChange)="amountToNumber()" />
         </mat-form-field>
       </span>
       <button class="balance_action-button" *ngIf="!buyingProcess" mat-raised-button color="primary" (click)="addTokens()">
-        {{ add }}
+        <span *ngIf="!isInputOpened || amountToAdd">{{ add }}</span>
+        <span *ngIf="isInputOpened && !amountToAdd">Отмена</span>
       </button>
       <span>
         <mat-spinner class="spinner-center" [diameter]="27" *ngIf="buyingProcess"></mat-spinner>

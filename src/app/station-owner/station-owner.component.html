@@ -61,7 +61,7 @@
                       С <app-datetimepicker #dtpfrom [default]="true" [timeOnly]="true" (transferDate)="setFromTime($event)"></app-datetimepicker>
                       до <app-datetimepicker #dtpto [default]="true" [timeOnly]="true" (transferDate)="setToTime($event)"></app-datetimepicker>
                       <mat-form-field class="add-tariff-form_price">
-                        <input matInput type="text" placeholder="Цена" (keypress)="checkPriceInput($event)" [(ngModel)]="newTariffPrice" autocomplete="off" />
+                        <input matInput type="text" #priceInput placeholder="Цена" (keypress)="checkPriceInput($event)" [(ngModel)]="newTariffPrice" autocomplete="off" (ngModelChange)="priceToNumber($event)" />
                       </mat-form-field>
                     </span>
                     <span>

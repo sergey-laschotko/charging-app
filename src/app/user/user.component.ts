@@ -33,15 +33,16 @@ export class UserComponent implements OnInit {
     private sb: MatSnackBar, 
     private rs: RegisterService,
     private e20ts: ERC20TokenService,
+    private chs: ChargerService,
   ) {
     this.user = this.e20ts.getUser();
     this.getBalance();
     this.operations = this.bs.getOperations().reverse();
     this.rs.showChargers()
-    .then((stations: IStation[]) => {
-      this.stations = stations;
-      this.variants = stations;
-    });
+      .then((stations: IStation[]) => {
+        this.stations = stations;
+        this.variants = stations;
+      });
   }
 
   ngOnInit() {
@@ -123,9 +124,11 @@ export class UserComponent implements OnInit {
       })
       return;
     }
+    // this.chs.startCharging(this.user);
     this.chargingProcess = true;
-    setInterval(() => {
+    setTimeout(() => {
       this.chargingProcess = false;
+      this.address = "";
     }, 12000);
   }
 

@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
-import { IUser, IStation, IOperation, ITariff } from '../mock-data/models';
-import { formatDate } from "../../lib/lib";
+import { IStation, IOperation, ITariff } from '../mock-data/models';
+import { formatDate, onlyDigits } from "../../lib/lib";
 import { RegisterService } from "../ethContr/register.service";
 import { ERC20TokenService } from "../ethContr/erc20Token.service";
 
@@ -23,13 +23,14 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   currentEditingStation: IStation;
   newTariffFrom: string = "00:00";
   newTariffTo: string = "00:00";
-  newTariffPrice: string = "";
+  newTariffPrice: number = 0;
   operations: IOperation[] = [];
   displayedColumns: string[] = ["date", "type", "data"];
   columnsHeaders: string[] = ["Дата", "Операция", "Детали"];
 
   @ViewChild('dtpfrom') dtpFrom: any;
   @ViewChild('dtpto') dtpTo: any;
+  @ViewChild('priceInput') priceInput: any;
 
 
   constructor(
@@ -96,24 +97,13 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   checkPriceInput(e: any) {
-    e = e || event;
-    if (e.ctrlKey || e.altKey || e.metaKey) return;
+    return onlyDigits(e);
+  }
 
-    let chr = null;
-
-    if (e.which == null) {
-      if (e.keyCode < 32) return null;
-      chr = String.fromCharCode(e.keyCode)
-    }
-    
-    if (e.which != 0 && e.charCode != 0) {
-      if (e.which < 32) return null;
-      chr = String.fromCharCode(e.which)
-    }
-
-    if (chr == null) return;
-
-    if (chr < "0" || chr > "9") return false;
+  priceToNumber(e: any) {
+    console.log(e);
+    this.newTariffPrice *= 1;
+    this.priceInput.nativeElement.value = this.newTariffPrice;
   }
 
   setFromTime(date: Date) {
@@ -132,7 +122,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     this.addingTariff = false;
     this.newTariffFrom = "00:00";
     this.newTariffTo = "00:00";
-    this.newTariffPrice = "";
+    this.newTariffPrice = 0;
     this.dtpFrom.resetTime();
     this.dtpTo.resetTime();
     this.currentEditingStation = null;
@@ -163,7 +153,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     this.updateJournal();
     this.newTariffFrom = "00:00";
     this.newTariffTo = "00:00";
-    this.newTariffPrice = "";
+    this.newTariffPrice = 0;
     this.addingTariff = !this.addingTariff;
   }
 
