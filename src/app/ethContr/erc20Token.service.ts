@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Web3Service} from '../util/web3.service';
-import {Subject, Observable} from 'rxjs';
-import { setTNodeAndViewData } from '@angular/core/src/render3/state';
-import { async, resolve } from 'q';
+import {Subject} from 'rxjs';
 declare let require: any;
 const EthereumTx = require('ethereumjs-tx');
 

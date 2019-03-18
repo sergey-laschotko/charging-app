@@ -11,7 +11,6 @@ const chargerArtifacts = require('../../../build/contracts/Charger.json');
 
 @Injectable()
 export class ChargerService {
-  private accounts: string[];
   Charger: any;
 
   public accountsObservable = new Subject<string[]>();
