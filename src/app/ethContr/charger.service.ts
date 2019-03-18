@@ -48,10 +48,9 @@ export class ChargerService {
     transaction.sign(Buffer.from(pk, 'hex'))
     var rawdata = '0x' + transaction.serialize().toString('hex');
 
-    this.web3Service.web3.eth.sendSignedTransaction(rawdata)
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){
         console.log(['Receipt:', receipt]);
-        return 'Success';
     })
     .on('error', console.error);
   }

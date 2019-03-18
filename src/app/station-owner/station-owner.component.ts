@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
+import { HistoryService } from '../util/history.service';
 import { IStation, IOperation, ITariff } from '../mock-data/models';
 import { formatDate, onlyDigits } from "../../lib/lib";
 import { RegisterService } from "../ethContr/register.service";
@@ -25,8 +26,8 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   newTariffTo: string = "00:00";
   newTariffPrice: number = 0;
   operations: IOperation[] = [];
-  displayedColumns: string[] = ["date", "type", "data"];
-  columnsHeaders: string[] = ["Дата", "Операция", "Детали"];
+  displayedColumns: string[] = ["timeStamp", "from", "to"];
+  columnsHeaders: string[] = ["Дата", "Отправитель", "Получатель"];
 
   @ViewChild('dtpfrom') dtpFrom: any;
   @ViewChild('dtpto') dtpTo: any;
@@ -36,7 +37,8 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   constructor(
     private bs: BaseService,
     private rs: RegisterService,
-    private e20ts: ERC20TokenService, 
+    private e20ts: ERC20TokenService,
+    private hs: HistoryService, 
     private sb: MatSnackBar
     ) {
       this.user = this.e20ts.getUser();
@@ -44,6 +46,13 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
       this.rs.showChargers()
         .then((stations: IStation[]) => {
           this.stations = stations;
+        });
+      this.hs.getHistory()
+        .subscribe((result: any) => {
+          result.result.forEach((op: any) => {
+            op.timeStamp = new Date(Number(op.timeStamp));
+          });
+          this.operations = result.result;
         });
     }
     
@@ -101,7 +110,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   priceToNumber(e: any) {
-    console.log(e);
     this.newTariffPrice *= 1;
     this.priceInput.nativeElement.value = this.newTariffPrice;
   }

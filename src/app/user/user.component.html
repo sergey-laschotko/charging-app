@@ -15,8 +15,11 @@
           <mat-form-field class="form-input">
             <input type="text" matInput (input)="findVariants()" [(ngModel)]="address" placeholder="Поиск по адресу" autocomplete="off" />
           </mat-form-field>
-          <button class="form_action-button" mat-raised-button color="accent" [disabled]="!validateAddress() || chargingProcess" (click)="openReserveDialog()">Забронировать</button>
-          <button class="form_action-button" *ngIf="!chargingProcess" mat-raised-button color="warn" [disabled]="!validateAddress()" (click)="charge()">Заряжать (150)</button>
+          <button class="form_action-button" mat-raised-button color="accent" [disabled]="!validateAddress() || chargingProcess || paymentProcess" (click)="openReserveDialog()">Забронировать</button>
+          <button class="form_action-button" *ngIf="!chargingProcess && !paymentProcess" mat-raised-button color="warn" [disabled]="!validateAddress()" (click)="charge()">Заряжать (150)</button>
+          <span class="payment-spinner" *ngIf="paymentProcess">
+            <mat-spinner class="spinner-center" [diameter]="27"></mat-spinner>
+          </span>
           <span class="charging" *ngIf="chargingProcess"><span class="charging-inner">Готово</span></span>
         </mat-card>
         <mat-card *ngIf="variants.length">

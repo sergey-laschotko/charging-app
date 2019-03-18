@@ -6,6 +6,7 @@ import { formatDate } from "../../lib/lib";
 import { RegisterService } from "../ethContr/register.service";
 import { ERC20TokenService } from "../ethContr/erc20Token.service";
 import { ChargerService } from "../ethContr/charger.service";
+import { HistoryService } from "../util/history.service";
 
 @Component({
   selector: 'app-user',
@@ -21,12 +22,14 @@ export class UserComponent implements OnInit {
   stations: IStation[] = [];
   date: Date = new Date;
   operations: IOperation[] = [];
-  tableColumns: string[] = ['date', 'type', 'data'];
-  columnsHeaders: string[] = ['Дата', 'Операция', 'Детали'];
+  tableColumns: string[] = ['timeStamp', 'from', 'to'];
+  columnsHeaders: string[] = ['Дата', 'Отправитель', 'Получатель'];
   dataSource: any;
   isModalOpened: boolean = false;
   buyingProcess: boolean = false;
+  paymentProcess: boolean = false;
   chargingProcess: boolean = false;
+  isLoading: boolean = true;
 
   constructor(
     private bs: BaseService, 
@@ -34,10 +37,17 @@ export class UserComponent implements OnInit {
     private rs: RegisterService,
     private e20ts: ERC20TokenService,
     private chs: ChargerService,
+    private hs: HistoryService,
   ) {
     this.user = this.e20ts.getUser();
     this.getBalance();
-    this.operations = this.bs.getOperations().reverse();
+    this.hs.getHistory()
+      .subscribe((result: any) => {
+        result.result.forEach((op: any) => {
+          op.timeStamp = new Date(Number(op.timeStamp));
+        });
+        this.operations = result.result;
+      });
     this.rs.showChargers()
       .then((stations: IStation[]) => {
         this.stations = stations;
@@ -124,12 +134,22 @@ export class UserComponent implements OnInit {
       })
       return;
     }
-    // this.chs.startCharging(this.user);
-    this.chargingProcess = true;
-    setTimeout(() => {
-      this.chargingProcess = false;
-      this.address = "";
-    }, 12000);
+    let charger: IStation = null; 
+    this.stations.map((station: IStation) => {
+      if (station.address === this.address){
+        charger = station;
+      }
+    });
+    this.paymentProcess = true;
+    this.chs.startCharging(charger.id)
+      .then(() => {
+          this.chargingProcess = true;
+          this.paymentProcess = false;
+          setTimeout(() => {
+            this.chargingProcess = false;
+            this.address = "";
+          }, 12000);
+      });
   }
 
   closeModal() {

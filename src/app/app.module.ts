@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { Routes, RouterModule } from '@angular/router';
+import { HttpClientModule } from "@angular/common/http";
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialAppModule } from './material.module';
@@ -16,7 +17,7 @@ import { DatetimepickerComponent } from './datetimepicker/datetimepicker.compone
 import { ModalComponent } from './modal/modal.component';
 import { TableComponent } from './table/table.component';
 import { UtilModule } from './util/util.module';
-import { ContrModule } from './ethContr/contr.module'
+import { ContrModule } from './ethContr/contr.module';
 
 const routes: Routes = [
   { path: "", redirectTo: "/settings", pathMatch: "full" },
@@ -41,12 +42,13 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     MaterialAppModule,
     FormsModule,
     RouterModule.forRoot(routes),
     UtilModule,
-    ContrModule
+    ContrModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -38,7 +38,7 @@
               <mat-option *ngFor="let station of stations" [value]="station.address">{{station.address}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <app-table [data]="operations" [displayedColumns]="displayedColumns" [columnsHeaders]="columnsHeaders"></app-table>
+          <app-table [data]="operationsCopy" [displayedColumns]="displayedColumns" [columnsHeaders]="columnsHeaders"></app-table>
         </mat-card>
       </mat-tab>
       <mat-tab label="Баланс станций">

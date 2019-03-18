@@ -84,6 +84,17 @@
     animation: complete-charging 10.3s linear forwards;
 }
 
+.payment-spinner {
+    display: inline-block;
+    width: 140px;
+    position: relative;
+    top: 10px;
+}
+
+.spinner-center {
+    margin: 0 auto;
+}
+
 @media screen and (max-width: 725px) {
     .action-panels {
         display: block;
