@@ -18,16 +18,6 @@ export class RegisterService {
 
   public accountsObservable = new Subject<string[]>();
 
-
-  model = {
-    amount: 5,
-    receiver: '',
-    balance: 0,
-    account: ''
-  };
-
-  status = '';
-
   constructor(
     private web3Service: Web3Service, 
     private chargerService: ChargerService,
@@ -50,7 +40,7 @@ export class RegisterService {
       gas: 300000,
       to: registerArtifacts.networks[netId].address,
       value: 0,
-      data: this.Register.methods.createCharger().encodeABI(),
+      data: this.Register.methods.register().encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
     transaction.sign(Buffer.from(pk, 'hex'))
