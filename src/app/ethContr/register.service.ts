@@ -50,7 +50,7 @@ export class RegisterService {
       gas: 300000,
       to: registerArtifacts.networks[netId].address,
       value: 0,
-      data: this.Register.methods.count().encodeABI(),
+      data: this.Register.methods.createCharger().encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
     transaction.sign(Buffer.from(pk, 'hex'))
