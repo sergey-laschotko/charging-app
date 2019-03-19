@@ -64,7 +64,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
   
   buyTokens(amount: number) {
-    this.e20ts.buyTokens(amount)
+    this.e20ts.buyTokens(amount, this.user)
       .then((status: any) => {
         if (status) {
           this.sb.open("Покупка токенов", "Готово", {
@@ -78,13 +78,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
           })
         }
       });
-  }
-  
-  saleTokens(amount: number) {
-    this.sb.open("Продажа токенов", "Готово", {
-      duration: 3000
-    });
-    this.updateJournal();
   }
   
   formatDate(date: Date) {

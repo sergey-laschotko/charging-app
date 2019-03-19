@@ -104,7 +104,7 @@ export class ERC20TokenService {
       gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
       gas: 500000,
       to: erc20TokenArtifacts.networks[netId].address,
-      data: this.ERC20Token.methods.mint(amount, this.web3Service.admin).encodeABI(),
+      data: this.ERC20Token.methods.mint(this.web3Service.admin, amount).encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
     transaction.sign(Buffer.from(env.admin, 'hex'))

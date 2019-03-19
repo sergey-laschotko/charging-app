@@ -61,7 +61,7 @@ export class UserComponent implements OnInit {
 
   onBuy(amount: number) {
     this.buyingProcess = true;
-    this.e20ts.buyTokens(amount)
+    this.e20ts.buyTokens(amount, this.user)
       .then((status: any) => {
         if (status) {
           this.sb.open("Покупка токенов", "Готово", {

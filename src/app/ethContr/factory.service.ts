@@ -30,8 +30,8 @@ export class FactoryService {
   }
 
   public async createCharger(geo: string,name: string,owner: string) {
-    const netId = await this.web3.eth.net.getId();
-    const nonce = await this.web3.eth.getTransactionCount(this.web3.eth.defaultAccount)
+    const netId = await this.web3Service.web3.eth.net.getId();
+    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
     const gas = await this.Factory.methods.createCharger(geo,name,owner).estimateGas()
     const funcAbi = {
       nonce,
