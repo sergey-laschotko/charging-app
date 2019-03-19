@@ -43,4 +43,18 @@
   <p>
     <app-datetimepicker (transferDate)="setDate($event)"></app-datetimepicker>
   </p>
+  <div>
+    <span class="reserve-minutes">
+      <span class="forward"></span>
+      {{reserveMinutes}}
+      <span class="increase-minutes" (click)="increaseReserveMinutes()">
+        <span class="forward"></span>
+        <mat-icon>arrow_drop_up</mat-icon>
+      </span>
+      <span class="decrease-minutes" (click)="decreaseReserveMinutes()">
+        <span class="forward"></span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </span>
+    </span>
+  </div>
 </app-modal>

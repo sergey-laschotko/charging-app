@@ -25,6 +25,7 @@ export class UserComponent implements OnInit {
   tableColumns: string[] = ['timeStamp', 'from', 'to'];
   columnsHeaders: string[] = ['Дата', 'Отправитель', 'Получатель'];
   dataSource: any;
+  reserveMinutes: number = 30;
   isModalOpened: boolean = false;
   buyingProcess: boolean = false;
   paymentProcess: boolean = false;
@@ -110,14 +111,27 @@ export class UserComponent implements OnInit {
     this.date = date;
   }
 
+  increaseReserveMinutes() {
+    this.reserveMinutes += 10;
+  }
+
+  decreaseReserveMinutes() {
+    if (this.reserveMinutes === 30) {
+      return;
+    }
+    this.reserveMinutes -= 10;
+  }
+
   reserve() {
-    this.bs.reserve(this.user, this.address, formatDate(this.date).string);
+    let reserveFinish = this.reserveMinutes * 60000;
+    console.log(this.date.valueOf(), reserveFinish);
+    // this.bs.reserve(this.user, this.address, formatDate(this.date).string);
     this.sb.open("Бронирование", "Готово", {
       duration: 3000
     });
     this.address = "";
     this.closeModal();
-    this.updateJournal();
+    // this.updateJournal();
     this.variants = [...this.stations];
   }
 

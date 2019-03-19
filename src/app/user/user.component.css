@@ -95,6 +95,55 @@
     margin: 0 auto;
 }
 
+.reserve-minutes {
+    display: block;
+    width: 50px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 2em;
+    border: 2px solid #999;
+    border-radius: 7px;
+    padding: 4px;
+    position: relative;
+}
+
+.increase-minutes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -2px;
+    right: -30px;
+    cursor: pointer;
+    border: 2px solid #999;
+    border-radius: 5px;
+    height: 24px;
+    width: 24px;
+}
+
+.decrease-minutes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: -2px;
+    right: -30px;
+    height: 24px;
+    width: 24px;
+    border: 2px solid #999;
+    border-radius: 5px;
+}
+
+.forward {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+}
+
 @media screen and (max-width: 725px) {
     .action-panels {
         display: block;
