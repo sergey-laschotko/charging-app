@@ -30,9 +30,9 @@
               <p>Баланс станции: <b>{{station.balance}}</b></p>
               <p>
                 Тарифы:
-                <span *ngIf="!station.tariffs.length">На данный момент тарифов нет</span>
-                <mat-list *ngIf="station.tariffs.length">
-                  <mat-list-item *ngFor="let tariff of station.tariffs">C {{tariff.from}} до {{tariff.to}} цена {{tariff.price}}</mat-list-item>
+                <span *ngIf="!station.tariff.length">На данный момент тарифов нет</span>
+                <mat-list *ngIf="station.tariff.length">
+                  <mat-list-item *ngFor="let tariff of stations.tariff">C {{tariff.from}} до {{tariff.to}} цена {{tariff.price}}</mat-list-item>
                 </mat-list>
               </p>
               </mat-expansion-panel>

@@ -5,6 +5,7 @@ import { RegisterService } from "../ethContr/register.service";
 import { ERC20TokenService } from "../ethContr/erc20Token.service";
 import { HistoryService } from '../util/history.service';
 import { MatSnackBar } from '@angular/material';
+import { stringify } from '@angular/core/src/util';
 
 @Component({
   selector: 'app-service-owner',
@@ -36,12 +37,23 @@ export class ServiceOwnerComponent implements OnInit {
   ) { 
     this.user = this.e20ts.getServiceOwner();
     this.getBalance();
-    this.serviceProviders = this.bs.getStationsOwners();
     this.rs.showChargers()
       .then((stations: IStation[]) => {
         this.stations = stations;
         this.selectedStation = this.stations[0].address;
         this.showStationJournal();
+        let serviceProvider = {
+          name: "",
+          balance: 0,
+          stations: []
+        };
+        serviceProvider.name = this.e20ts.getStationOwner();
+        this.e20ts.getBalance(serviceProvider.name)
+          .then((balance: number) => {
+            serviceProvider.balance = balance;
+          });
+        serviceProvider.stations = [...this.stations];
+        this.serviceProviders.push(serviceProvider);
       });
     this.hs.getHistory()
       .subscribe((result: any) => {
