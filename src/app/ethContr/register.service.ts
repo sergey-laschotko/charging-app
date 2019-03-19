@@ -32,13 +32,12 @@ export class RegisterService {
   }
 
   public async register() {
-    const netId = await this.web3.eth.net.getId();
     const nonce = await this.web3.eth.getTransactionCount(this.web3.eth.defaultAccount)
     const funcAbi = {
       nonce,
       gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('47', 'gwei')),
       gas: 300000,
-      to: registerArtifacts.networks[netId].address,
+      to: this.Register.address,
       value: 0,
       data: this.Register.methods.register().encodeABI(),
     };
