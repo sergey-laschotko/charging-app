@@ -91,6 +91,7 @@ export class ServiceOwnerComponent implements OnInit {
         this.sb.open("Выпущено токенов: ", `${amount}`, {
           duration: 3000
         });
+        this.getBalance();
       });
   }
 
@@ -102,6 +103,7 @@ export class ServiceOwnerComponent implements OnInit {
         this.sb.open("Сожжено токенов: ", `${amount}`, {
           duration: 3000
         });
+        this.getBalance();
       });
   }
 }
