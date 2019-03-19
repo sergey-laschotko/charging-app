@@ -24,21 +24,29 @@ export class ERC20TokenService {
     });
   }
 
-  public async buyTokens(v:number) {
-    const netId = await this.web3Service.web3.eth.net.getId();
-    console.log(this.web3Service.defaultAccount);
-    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
-    const gas = await this.ERC20Token.methods.buyTokens(v).estimateGas({from: this.web3Service.defaultAccount, value: v})
+  public async buyTokens(v:number, address: string) {
+    const nonce = await this.web3Service.web3.eth.getTransactionCount(address);
+    const gas = await this.ERC20Token.methods.buyTokens(v).estimateGas({from: address, value: v});
     const funcAbi = {
       nonce,
       gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
       gas,
-      to: erc20TokenArtifacts.networks[netId].address,
+      to: this.ERC20Token.address,
       value: v,
       data: this.ERC20Token.methods.buyTokens(v).encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(env.user, 'hex'))
+    let pk;
+    for (const key in env) {
+      if(env[key].address === address) 
+        pk = env[key].pk
+    }
+    // const pk = env.filter(v => {
+    //   return v.address === address
+    // })[0].pk;
+    console.log(address)
+    console.log(pk)
+    transaction.sign(Buffer.from(pk, 'hex'));
     var rawdata = '0x' + transaction.serialize().toString('hex');
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
@@ -49,14 +57,13 @@ export class ERC20TokenService {
   }
 
   public async approveTokens(spender:string, v:number) {
-    const netId = await this.web3Service.web3.eth.net.getId();
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
     // const gas = this.ERC20Token.methods.approve(spender,v).estimateGas({from: this.web3Service.defaultAccount, value: v})
     const funcAbi = {
       nonce,
       gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
       gas: 500000,
-      to: erc20TokenArtifacts.networks[netId].address,
+      to: this.ERC20Token.address,
       data: this.ERC20Token.methods.approve(spender,v).encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
@@ -96,15 +103,14 @@ export class ERC20TokenService {
       });
   }
   public async mint(amount: number) {
-    const netId = await this.web3Service.web3.eth.net.getId();
-    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
+    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.admin)
     // const gas = this.ERC20Token.methods.approve(spender,v).estimateGas({from: this.web3Service.defaultAccount, value: v})
     const funcAbi = {
       nonce,
       gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
       gas: 500000,
-      to: erc20TokenArtifacts.networks[netId].address,
-      data: this.ERC20Token.methods.mint(amount, this.web3Service.admin).encodeABI(),
+      to: this.ERC20Token.address,
+      data: this.ERC20Token.methods.mint(this.web3Service.admin,amount).encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
     transaction.sign(Buffer.from(env.admin, 'hex'))
@@ -117,14 +123,13 @@ export class ERC20TokenService {
     .on('error', console.error);
   }
   public async burn(amount: number) {
-    const netId = await this.web3Service.web3.eth.net.getId();
-    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
+    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.admin)
     // const gas = this.ERC20Token.methods.approve(spender,v).estimateGas({from: this.web3Service.defaultAccount, value: v})
     const funcAbi = {
       nonce,
       gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
       gas: 500000,
-      to: erc20TokenArtifacts.networks[netId].address,
+      to: this.ERC20Token.address,
       data: this.ERC20Token.methods.burn(amount).encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);

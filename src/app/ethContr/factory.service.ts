@@ -30,14 +30,13 @@ export class FactoryService {
   }
 
   public async createCharger(geo: string,name: string,owner: string) {
-    const netId = await this.web3.eth.net.getId();
-    const nonce = await this.web3.eth.getTransactionCount(this.web3.eth.defaultAccount)
+    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.stationOwner)
     const gas = await this.Factory.methods.createCharger(geo,name,owner).estimateGas()
     const funcAbi = {
       nonce,
       gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
       gas,
-      to: factoryArtifacts.networks[netId].address,
+      to: this.Factory.address,
       value: 0,
       data: this.Factory.methods.createCharger(geo,name,owner).encodeABI(),
     };
