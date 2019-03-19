@@ -1,0 +1,34 @@
+<mat-card class="balance">
+  <h4>Баланс</h4>
+  <p>
+    Сумма: <b>{{tokens}}</b>
+  </p>
+  <p>
+    <span class="balance_form">
+      <span [ngClass]="{ 'balance_input-row': true, 'balance_input-row__opened': isAddOpened }">
+        <mat-form-field class="balance_amount-input">
+          <input matInput type="text" autocomplete="off" placeholder="Количество" #addInput [(ngModel)]="amountToAdd" (keypress)="checkInput($event)" (ngModelChange)="amountToNumber()" />
+        </mat-form-field>
+      </span>
+      <span [ngClass]="{ 'balance_input-row': true, 'balance_input-row__opened': isRemoveOpened }">
+        <mat-form-field class="balance_amount-input">
+          <input matInput type="text" autocomplete="off" placeholder="Количество" #removeInput [(ngModel)]="amountToRemove" (keypress)="checkInput($event)" (ngModelChange)="amountToNumber()" />
+        </mat-form-field>
+      </span>
+      <button class="balance_action-button" *ngIf="!addingProcess" mat-raised-button color="primary" (click)="addTokens()">
+        <span *ngIf="!isAddOpened || amountToAdd">{{ add }}</span>
+        <span *ngIf="isAddOpened && !amountToAdd">Отмена</span>
+      </button>
+      <span class="balance-spinner" *ngIf="addingProcess">
+        <mat-spinner class="spinner-center" [diameter]="27"></mat-spinner>
+      </span>
+      <button class="balance_action-button" *ngIf="!removingProcess" mat-raised-button color="warn" (click)="removeTokens()">
+        <span *ngIf="!isRemoveOpened || amountToRemove">{{ remove }}</span>
+        <span *ngIf="isRemoveOpened && !amountToRemove">Отмена</span>
+      </button>
+      <span class="balance-spinner" *ngIf="removingProcess">
+        <mat-spinner class="spinner-center" [diameter]="27"></mat-spinner>
+      </span>
+    </span>
+  </p>
+</mat-card>

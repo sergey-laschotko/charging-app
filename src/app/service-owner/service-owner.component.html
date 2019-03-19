@@ -6,7 +6,16 @@
     </mat-card>
     <mat-tab-group>
       <mat-tab label="Токены">
-        <app-balance [tokens]="balance" add="Выпустить" remove="Сжечь" (onAdd)="produceTokens($event)" (onRemove)="removeTokens($event)"></app-balance>
+        <app-owner-balance 
+          [tokens]="balance" 
+          add="Выпустить" 
+          remove="Сжечь" 
+          (onAdd)="produceTokens($event)" 
+          (onRemove)="removeTokens($event)" 
+          [addingProcess]="producingProcess" 
+          [removingProcess]="removingProcess"
+        >
+        </app-owner-balance>
       </mat-tab>
       <mat-tab label="Провайдеры">
         <mat-card>

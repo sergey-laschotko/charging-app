@@ -18,6 +18,7 @@ import { ModalComponent } from './modal/modal.component';
 import { TableComponent } from './table/table.component';
 import { UtilModule } from './util/util.module';
 import { ContrModule } from './ethContr/contr.module';
+import { OwnerBalanceComponent } from './owner-balance/owner-balance.component';
 
 const routes: Routes = [
   { path: "", redirectTo: "/settings", pathMatch: "full" },
@@ -38,6 +39,7 @@ const routes: Routes = [
     DatetimepickerComponent,
     ModalComponent,
     TableComponent,
+    OwnerBalanceComponent,
   ],
   imports: [
     BrowserModule,

@@ -43,7 +43,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     private fs: FactoryService,
     private sb: MatSnackBar
     ) {
-      this.user = this.e20ts.getUser();
+      this.user = this.e20ts.getStationOwner();
       this.getBalance();
       this.rs.showChargers()
         .then((stations: IStation[]) => {

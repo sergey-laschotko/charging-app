@@ -95,7 +95,7 @@ export class ERC20TokenService {
         return await this.ERC20Token.methods.totalSupply().call();
       });
   }
-  public async mint() {
+  public async mint(amount: number) {
     const netId = await this.web3Service.web3.eth.net.getId();
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
     // const gas = this.ERC20Token.methods.approve(spender,v).estimateGas({from: this.web3Service.defaultAccount, value: v})
@@ -104,7 +104,7 @@ export class ERC20TokenService {
       gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
       gas: 500000,
       to: erc20TokenArtifacts.networks[netId].address,
-      data: this.ERC20Token.methods.mint().encodeABI(),
+      data: this.ERC20Token.methods.mint(amount, this.web3Service.admin).encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
     transaction.sign(Buffer.from(env.admin, 'hex'))
@@ -116,7 +116,7 @@ export class ERC20TokenService {
     })
     .on('error', console.error);
   }
-  public async burn() {
+  public async burn(amount: number) {
     const netId = await this.web3Service.web3.eth.net.getId();
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
     // const gas = this.ERC20Token.methods.approve(spender,v).estimateGas({from: this.web3Service.defaultAccount, value: v})
@@ -125,7 +125,7 @@ export class ERC20TokenService {
       gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
       gas: 500000,
       to: erc20TokenArtifacts.networks[netId].address,
-      data: this.ERC20Token.methods.burn().encodeABI(),
+      data: this.ERC20Token.methods.burn(amount).encodeABI(),
     };
     const transaction = new EthereumTx(funcAbi);
     transaction.sign(Buffer.from(env.admin, 'hex'))
