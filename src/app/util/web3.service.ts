@@ -3,8 +3,6 @@ import {Subject} from 'rxjs';
 declare let require: any;
 const Web3 = require('web3');
 
-declare let window: any;
-
 
 @Injectable()
 export class Web3Service {

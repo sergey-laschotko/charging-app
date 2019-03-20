@@ -32,7 +32,6 @@ export class ChargerService {
     const rec = await this.erc20TokenService.approveTokens(this.Charger.address, 150);
     console.log('Rec',rec)
 
-    const netId = await this.web3Service.web3.eth.net.getId();
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
     // const gas = await this.Charger.methods.startCharging().estimateGas()
 
@@ -54,8 +53,9 @@ export class ChargerService {
     .on('error', console.error);
   }
 
-  public async addRate(from: string,to: string,newRate: number) {
-    const netId = await this.web3Service.web3.eth.net.getId();
+  public async addRate(from: number,to: number,newRate: number) {
+    // await this.init(addr);
+
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.web3.eth.defaultAccount)
     const gas = await this.Charger.methods.addRate(from,to,newRate).estimateGas({from: this.web3Service.web3.eth.defaultAccount})
     const funcAbi = {
@@ -69,11 +69,46 @@ export class ChargerService {
     transaction.sign(Buffer.from(env.stationOwner, 'hex'))
     var rawdata = '0x' + transaction.serialize().toString('hex');
 
-    this.web3Service.web3.eth.sendSignedTransaction(rawdata)
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){
         console.log(['Receipt:', receipt]);
-        return 'Success';
     })
     .on('error', console.error);
+  }
+
+  public async reserve(from: number,to: number) {
+    // Here we have init again, gotta correct
+    // await this.init(addr);
+
+    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.web3.eth.defaultAccount)
+    const gas = await this.Charger.methods.reserve(from,to).estimateGas({from: this.web3Service.web3.eth.defaultAccount})
+    const funcAbi = {
+      nonce,
+      gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
+      gas,
+      to: this.Charger.address,
+      data: this.Charger.methods.reserve(from,to).encodeABI(),
+    };
+    const transaction = new EthereumTx(funcAbi);
+    transaction.sign(Buffer.from(env.stationOwner, 'hex'))
+    var rawdata = '0x' + transaction.serialize().toString('hex');
+
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
+    .on('receipt', function(receipt){
+        console.log(['Receipt:', receipt]);
+    })
+    .on('error', console.error);
+  }
+  async getReservations(addr,address: string) {
+    await this.init(addr);
+
+    // Returns indexes user owns for the next method
+    return await this.Charger.methods.getReservations(address).call();
+  }
+
+  async reservationsTime(addr,index: number) {
+    await this.init(addr);
+
+    return await this.Charger.methods.reservationsTime(index).call();
   }
 }
