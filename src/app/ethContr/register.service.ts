@@ -5,9 +5,7 @@ import { ChargerService } from './charger.service';
 import { ERC20TokenService } from './erc20Token.service';
 import env from '../../../config/env';
 declare let require: any;
-const EthereumTx = require('ethereumjs-tx');
 
-declare const Buffer;
 const registerArtifacts = require('../../../build/contracts/Register.json');
 
 
@@ -41,9 +39,7 @@ export class RegisterService {
       value: 0,
       data: this.Register.methods.register().encodeABI(),
     };
-    const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(env.stationOwner, 'hex'))
-    var rawdata = '0x' + transaction.serialize().toString('hex');
+    const rawdata = this.web3Service.generateRaw(funcAbi,env.stationOwner.pk);
 
     this.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){

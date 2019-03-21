@@ -3,9 +3,7 @@ import {Web3Service} from '../util/web3.service';
 import {Subject} from 'rxjs';
 import env from '../../../config/env';
 declare let require: any;
-const EthereumTx = require('ethereumjs-tx');
 
-declare const Buffer;
 const factoryArtifacts = require('../../../build/contracts/Factory.json');
 
 
@@ -40,9 +38,7 @@ export class FactoryService {
       value: 0,
       data: this.Factory.methods.createCharger(geo,name,owner).encodeABI(),
     };
-    const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(env.stationOwner, 'hex'))
-    var rawdata = '0x' + transaction.serialize().toString('hex');
+    const rawdata = this.web3Service.generateRaw(funcAbi,env.stationOwner.pk);
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){

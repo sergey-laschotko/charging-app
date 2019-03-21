@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 declare let require: any;
 const Web3 = require('web3');
+const EthereumTx = require('ethereumjs-tx');
+declare const Buffer;
 
 
 @Injectable()
@@ -30,5 +32,11 @@ export class Web3Service {
     }
     
     return contractAbstraction;
+  }
+
+  public generateRaw(funcAbi,pk) {
+    const transaction = new EthereumTx(funcAbi);
+    transaction.sign(Buffer.from(pk, 'hex'))
+    return '0x' + transaction.serialize().toString('hex');
   }
 }

@@ -4,9 +4,7 @@ import {Subject} from 'rxjs';
 import { ERC20TokenService } from './erc20Token.service';
 import env from '../../../config/env';
 declare let require: any;
-const EthereumTx = require('ethereumjs-tx');
 
-declare const Buffer;
 const chargerArtifacts = require('../../../build/contracts/Charger.json');
 
 
@@ -42,9 +40,8 @@ export class ChargerService {
       to: this.Charger.address,
       data: this.Charger.methods.startCharging().encodeABI(),
     };
-    const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(env.user, 'hex'))
-    var rawdata = '0x' + transaction.serialize().toString('hex');
+    console.log(this.Charger.address)
+    const rawdata = this.web3Service.generateRaw(funcAbi,env.user.pk);
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){
@@ -65,9 +62,7 @@ export class ChargerService {
       to: this.Charger.address,
       data: this.Charger.methods.addRate(from,to,newRate).encodeABI(),
     };
-    const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(env.stationOwner, 'hex'))
-    var rawdata = '0x' + transaction.serialize().toString('hex');
+    const rawdata = this.web3Service.generateRaw(funcAbi,env.stationOwner.pk);
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){
@@ -89,10 +84,7 @@ export class ChargerService {
       to: this.Charger.address,
       data: this.Charger.methods.reserve(from,to).encodeABI(),
     };
-    const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(env.stationOwner, 'hex'))
-    var rawdata = '0x' + transaction.serialize().toString('hex');
-
+    const rawdata = this.web3Service.generateRaw(funcAbi,env.stationOwner.pk);
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){
         console.log(['Receipt:', receipt]);

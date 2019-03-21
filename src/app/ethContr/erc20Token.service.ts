@@ -3,9 +3,7 @@ import {Web3Service} from '../util/web3.service';
 import {Subject} from 'rxjs';
 import env from '../../../config/env';
 declare let require: any;
-const EthereumTx = require('ethereumjs-tx');
 
-declare const Buffer;
 const erc20TokenArtifacts = require('../../../build/contracts/ERC20Token.json');
 
 @Injectable()
@@ -35,7 +33,6 @@ export class ERC20TokenService {
       value: v,
       data: this.ERC20Token.methods.buyTokens(v).encodeABI(),
     };
-    const transaction = new EthereumTx(funcAbi);
     let pk;
     for (const key in env) {
       if(env[key].address === address) 
@@ -44,10 +41,7 @@ export class ERC20TokenService {
     // const pk = env.filter(v => {
     //   return v.address === address
     // })[0].pk;
-    console.log(address)
-    console.log(pk)
-    transaction.sign(Buffer.from(pk, 'hex'));
-    var rawdata = '0x' + transaction.serialize().toString('hex');
+    const rawdata = this.web3Service.generateRaw(funcAbi,pk);
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){
@@ -66,9 +60,7 @@ export class ERC20TokenService {
       to: this.ERC20Token.address,
       data: this.ERC20Token.methods.approve(spender,v).encodeABI(),
     };
-    const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(env.user, 'hex'))
-    var rawdata = '0x' + transaction.serialize().toString('hex');
+    const rawdata = this.web3Service.generateRaw(funcAbi,env.user.pk);
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){
@@ -112,10 +104,7 @@ export class ERC20TokenService {
       to: this.ERC20Token.address,
       data: this.ERC20Token.methods.mint(this.web3Service.admin,amount).encodeABI(),
     };
-    const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(env.admin, 'hex'))
-    var rawdata = '0x' + transaction.serialize().toString('hex');
-
+    const rawdata = this.web3Service.generateRaw(funcAbi,env.admin.pk);
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){
         console.log(['Receipt:', receipt]);
@@ -132,9 +121,7 @@ export class ERC20TokenService {
       to: this.ERC20Token.address,
       data: this.ERC20Token.methods.burn(amount).encodeABI(),
     };
-    const transaction = new EthereumTx(funcAbi);
-    transaction.sign(Buffer.from(env.admin, 'hex'))
-    var rawdata = '0x' + transaction.serialize().toString('hex');
+    const rawdata = this.web3Service.generateRaw(funcAbi,env.admin.pk);
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){
