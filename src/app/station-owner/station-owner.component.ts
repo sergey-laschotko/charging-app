@@ -64,6 +64,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {}
 
   onTabChange() {
+    this.adding = false;
     this.clearInputs();
     this.expansionPanels.forEach((panel: any) => {
       panel.close();
