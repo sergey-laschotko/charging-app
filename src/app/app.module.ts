@@ -19,6 +19,7 @@ import { TableComponent } from './table/table.component';
 import { UtilModule } from './util/util.module';
 import { ContrModule } from './ethContr/contr.module';
 import { OwnerBalanceComponent } from './owner-balance/owner-balance.component';
+import { PageLoaderComponent } from './page-loader/page-loader.component';
 
 const routes: Routes = [
   { path: "", redirectTo: "/settings", pathMatch: "full" },
@@ -40,6 +41,7 @@ const routes: Routes = [
     ModalComponent,
     TableComponent,
     OwnerBalanceComponent,
+    PageLoaderComponent,
   ],
   imports: [
     BrowserModule,

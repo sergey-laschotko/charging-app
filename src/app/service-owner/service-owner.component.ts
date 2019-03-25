@@ -27,6 +27,7 @@ export class ServiceOwnerComponent implements OnInit {
   selectedStation: string = "";
   balanceColumns: string[] = ["address", "balance"];
   balanceHeaders: string[] = ["Адрес", "Баланс"];
+  isLoading: boolean = false;
 
   constructor(
     private bs: BaseService,
@@ -35,6 +36,7 @@ export class ServiceOwnerComponent implements OnInit {
     private hs: HistoryService,
     private sb: MatSnackBar
   ) { 
+    this.isLoading = true;
     this.user = this.e20ts.getServiceOwner();
     this.getBalance();
     this.rs.showChargers()
@@ -61,6 +63,7 @@ export class ServiceOwnerComponent implements OnInit {
           op.timeStamp = new Date(Number(op.timeStamp));
         });
         this.operations = result.result;
+        this.isLoading = false;
       });
   }
 
@@ -80,6 +83,9 @@ export class ServiceOwnerComponent implements OnInit {
       })[0].id;
       this.operationsCopy = this.operationsCopy.filter((op: any) => {
         return op.to == id.toLowerCase();
+      });
+      this.operationsCopy.map((op: any) => {
+        console.log(op);
       });
   }
 

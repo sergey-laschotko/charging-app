@@ -29,6 +29,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   operations: IOperation[] = [];
   displayedColumns: string[] = ["timeStamp", "from", "to"];
   columnsHeaders: string[] = ["Дата", "Отправитель", "Получатель"];
+  isLoading: boolean = false;
 
   @ViewChild('dtpfrom') dtpFrom: any;
   @ViewChild('dtpto') dtpTo: any;
@@ -43,11 +44,13 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     private fs: FactoryService,
     private sb: MatSnackBar
     ) {
+      this.isLoading = true;
       this.user = this.e20ts.getStationOwner();
       this.getBalance();
       this.rs.showChargers()
         .then((stations: IStation[]) => {
           this.stations = stations;
+          this.isLoading = false;
         });
       this.updateJournal();
     }

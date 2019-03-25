@@ -30,7 +30,7 @@ export class UserComponent implements OnInit {
   buyingProcess: boolean = false;
   paymentProcess: boolean = false;
   chargingProcess: boolean = false;
-  isLoading: boolean = true;
+  isLoading: boolean = false;
 
   constructor(
     private bs: BaseService, 
@@ -40,6 +40,7 @@ export class UserComponent implements OnInit {
     private chs: ChargerService,
     private hs: HistoryService,
   ) {
+    this.isLoading = true;
     this.user = this.e20ts.getUser();
     this.getBalance();
     this.updateJournal();
@@ -47,6 +48,7 @@ export class UserComponent implements OnInit {
       .then((stations: IStation[]) => {
         this.stations = stations;
         this.variants = stations;
+        this.isLoading = false;
       });
   }
 
