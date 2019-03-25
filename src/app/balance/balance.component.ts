@@ -45,4 +45,9 @@ export class BalanceComponent implements OnInit {
     this.amountToAdd *= 1;
     this.amountInput.nativeElement.value = this.amountToAdd;
   }
+
+  resetInput() {
+    this.amountToAdd = 0;
+    this.isInputOpened = false;
+  }
 }

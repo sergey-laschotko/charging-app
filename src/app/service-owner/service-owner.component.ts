@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { OwnerBalanceComponent } from '../owner-balance/owner-balance.component';
+import { MatExpansionPanel } from '@angular/material';
 import { BaseService } from '../base.service';
 import { IStation, IOperation } from '../mock-data/models';
 import { RegisterService } from "../ethContr/register.service";
 import { ERC20TokenService } from "../ethContr/erc20Token.service";
 import { HistoryService } from '../util/history.service';
 import { MatSnackBar } from '@angular/material';
-import { stringify } from '@angular/core/src/util';
 
 @Component({
   selector: 'app-service-owner',
@@ -28,6 +29,9 @@ export class ServiceOwnerComponent implements OnInit {
   balanceColumns: string[] = ["address", "balance"];
   balanceHeaders: string[] = ["Адрес", "Баланс"];
   isLoading: boolean = false;
+
+  @ViewChild(OwnerBalanceComponent) ownerBalanceComponent: any;
+  @ViewChild(MatExpansionPanel) expansionPanel: any;
 
   constructor(
     private bs: BaseService,
@@ -69,6 +73,11 @@ export class ServiceOwnerComponent implements OnInit {
 
   ngOnInit() {}
 
+  onTabChange() {
+    this.ownerBalanceComponent.resetInput();
+    this.expansionPanel.close();
+  }
+
   getBalance() {
     this.e20ts.totalSupply()
       .then((balance: number) => {
@@ -83,9 +92,6 @@ export class ServiceOwnerComponent implements OnInit {
       })[0].id;
       this.operationsCopy = this.operationsCopy.filter((op: any) => {
         return op.to == id.toLowerCase();
-      });
-      this.operationsCopy.map((op: any) => {
-        console.log(op);
       });
   }
 

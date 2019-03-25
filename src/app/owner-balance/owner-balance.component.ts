@@ -66,4 +66,11 @@ export class OwnerBalanceComponent implements OnInit {
     this.amountToRemove *= 1;
     this.removeInput.nativeElement.value = this.amountToRemove;
   }
+
+  resetInput() {
+    this.amountToAdd = 0;
+    this.amountToRemove = 0;
+    this.isAddOpened = false;
+    this.isRemoveOpened = false;
+  }
 }

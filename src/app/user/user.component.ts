@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { BalanceComponent } from '../balance/balance.component';
 import { MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
 import { IOperation, IUser, IStation, ITariff } from '../mock-data/models';
@@ -32,6 +33,8 @@ export class UserComponent implements OnInit {
   chargingProcess: boolean = false;
   isLoading: boolean = false;
 
+  @ViewChild(BalanceComponent) balanceComponent: any;
+
   constructor(
     private bs: BaseService, 
     private sb: MatSnackBar, 
@@ -53,6 +56,11 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  onTabChange() {
+    this.balanceComponent.resetInput();
+    this.address = "";
   }
 
   getBalance() {

@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, AfterViewInit } from '@angular/core';
+import { BalanceComponent } from '../balance/balance.component';
+import { MatExpansionPanel } from '@angular/material';
 import { MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
 import { HistoryService } from '../util/history.service';
@@ -34,6 +36,8 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   @ViewChild('dtpfrom') dtpFrom: any;
   @ViewChild('dtpto') dtpTo: any;
   @ViewChild('priceInput') priceInput: any;
+  @ViewChild(BalanceComponent) balanceComponent: any;
+  @ViewChildren(MatExpansionPanel) expansionPanels: any;
 
 
   constructor(
@@ -58,6 +62,14 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
     
   ngAfterViewInit() {}
+
+  onTabChange() {
+    this.clearInputs();
+    this.expansionPanels.forEach((panel: any) => {
+      panel.close();
+    });
+    this.balanceComponent.resetInput();
+  }
     
   getBalance() {
     this.e20ts.getBalance(this.user)
@@ -140,7 +152,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     }
     this.fs.createCharger(this.newStation, this.newStation, this.user)
       .then((result) => {
-        console.log(result);
         this.sb.open("Добавление станции", "Готово", {
           duration: 3000
         });
