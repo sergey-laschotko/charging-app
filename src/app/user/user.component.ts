@@ -124,14 +124,19 @@ export class UserComponent implements OnInit {
 
   reserve() {
     let reserveFinish = this.reserveMinutes * 60000;
-    console.log(this.date.valueOf(), reserveFinish);
-    // this.bs.reserve(this.user, this.address, formatDate(this.date).string);
-    this.sb.open("Бронирование", "Готово", {
-      duration: 3000
-    });
+    let start = this.date.valueOf();
+    let end = start + reserveFinish;
+    this.chs.reserve(start, end)
+      .then((result: any) => {
+        console.log(result);
+        this.sb.open("Бронирование", "Готово", {
+          duration: 3000
+        });
+      });
+    this.reserveMinutes = 30;
     this.address = "";
     this.closeModal();
-    // this.updateJournal();
+    this.updateJournal();
     this.variants = [...this.stations];
   }
 

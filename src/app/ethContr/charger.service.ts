@@ -75,8 +75,8 @@ export class ChargerService {
     // Here we have init again, gotta correct
     // await this.init(addr);
 
-    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.web3.eth.defaultAccount)
-    const gas = await this.Charger.methods.reserve(from,to).estimateGas({from: this.web3Service.web3.eth.defaultAccount})
+    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
+    const gas = await this.Charger.methods.reserve(from,to).estimateGas({from: this.web3Service.defaultAccount})
     const funcAbi = {
       nonce,
       gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
