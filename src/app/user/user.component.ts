@@ -136,7 +136,13 @@ export class UserComponent implements OnInit {
     let reserveFinish = this.reserveMinutes * 60000;
     let start = this.date.valueOf();
     let end = start + reserveFinish;
-    this.chs.reserve(start, end)
+    let charger: IStation = null; 
+    this.stations.map((station: IStation) => {
+      if (station.address === this.address){
+        charger = station;
+      }
+    });
+    this.chs.reserve(start, end, charger.id)
       .then((result: any) => {
         console.log(result);
         this.sb.open("Бронирование", "Готово", {
@@ -183,7 +189,7 @@ export class UserComponent implements OnInit {
     this.hs.getHistory()
       .subscribe((result: any) => {
         result.result.forEach((op: any) => {
-          op.timeStamp = new Date(Number(op.timeStamp));
+          op.timeStamp = new Date(Number(op.timeStamp * 1000));
         });
         this.operations = result.result.filter((op: any) => {
           return op.from === this.user.toLowerCase();

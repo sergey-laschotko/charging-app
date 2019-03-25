@@ -53,8 +53,8 @@ export class ChargerService {
   public async addRate(from: number,to: number,newRate: number) {
     // await this.init(addr);
 
-    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.web3.eth.defaultAccount)
-    const gas = await this.Charger.methods.addRate(from,to,newRate).estimateGas({from: this.web3Service.web3.eth.defaultAccount})
+    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.stationOwner)
+    const gas = await this.Charger.methods.addRate(from,to,newRate).estimateGas({from: this.web3Service.stationOwner})
     const funcAbi = {
       nonce,
       gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
@@ -71,9 +71,9 @@ export class ChargerService {
     .on('error', console.error);
   }
 
-  public async reserve(from: number,to: number) {
+  public async reserve(from: number,to: number, addr: string) {
     // Here we have init again, gotta correct
-    // await this.init(addr);
+    await this.init(addr);
 
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
     const gas = await this.Charger.methods.reserve(from,to).estimateGas({from: this.web3Service.defaultAccount})
@@ -84,7 +84,7 @@ export class ChargerService {
       to: this.Charger.address,
       data: this.Charger.methods.reserve(from,to).encodeABI(),
     };
-    const rawdata = this.web3Service.generateRaw(funcAbi,env.stationOwner.pk);
+    const rawdata = this.web3Service.generateRaw(funcAbi,env.user.pk);
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
     .on('receipt', function(receipt){
         console.log(['Receipt:', receipt]);

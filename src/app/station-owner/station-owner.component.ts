@@ -8,6 +8,7 @@ import { IStation, IOperation, ITariff } from '../mock-data/models';
 import { formatDate, onlyDigits } from "../../lib/lib";
 import { RegisterService } from "../ethContr/register.service";
 import { ERC20TokenService } from "../ethContr/erc20Token.service";
+import { ChargerService } from "../ethContr/charger.service";
 import { FactoryService } from "../ethContr/factory.service";
 
 @Component({
@@ -46,22 +47,51 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     private e20ts: ERC20TokenService,
     private hs: HistoryService, 
     private fs: FactoryService,
+    private chs: ChargerService,
     private sb: MatSnackBar
     ) {
       this.isLoading = true;
       this.user = this.e20ts.getStationOwner();
       this.getBalance();
-      this.rs.showChargers()
-        .then((stations: IStation[]) => {
-          this.stations = stations;
-          this.isLoading = false;
-        });
+      this.showChargers();
       this.updateJournal();
     }
     
   ngOnInit() {}
     
   ngAfterViewInit() {}
+
+  showChargers() {
+    this.rs.showChargers()
+        .then((stations: IStation[]) => {
+          this.stations = stations;
+          this.stations.forEach((station: any) => {
+            station.tariff.forEach((tariff: any) => {
+              if (tariff) {
+                let fromHours: any = Math.floor(tariff.from / 3600);
+                let fromMinutes: any = (tariff.from % 3600) / 60;
+                let toHours: any = Math.floor(tariff.to / 3600);
+                let toMinutes: any = (tariff.to % 3600) / 60;
+                if (fromHours < 10) {
+                  fromHours = "0" + fromHours;
+                }
+                if (fromMinutes < 10) {
+                  fromMinutes = "0" + fromMinutes;
+                }
+                if (toHours < 10) {
+                  toHours = "0" + toHours;
+                }
+                if (toMinutes < 10) {
+                  toMinutes = "0" + toMinutes;
+                }
+                tariff.from = `${fromHours}:${fromMinutes}`;
+                tariff.to = `${toHours}:${toMinutes}`;
+              }
+            });
+          });
+          this.isLoading = false;
+        });
+  }
 
   onTabChange() {
     this.adding = false;
@@ -166,10 +196,18 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   addNewTariff(address: string) {
-    this.sb.open("Добавление тарифа", "Готово", {
-      duration: 3000
-    });
-    this.updateJournal();
+    let [fromHour, fromMinute] = this.newTariffFrom.split(":");
+    let [toHour, toMinute] = this.newTariffTo.split(":");
+    let from = Number(fromHour) * 3600 + Number(fromMinute) * 60;
+    let to = Number(toHour) * 3600 + Number(toMinute) * 60;
+    this.chs.addRate(from, to, this.newTariffPrice)
+      .then((result: any) => {
+        this.showChargers();
+        this.sb.open("Добавление тарифа", "Готово", {
+          duration: 3000
+        });
+        this.updateJournal();
+      });
     this.newTariffFrom = "00:00";
     this.newTariffTo = "00:00";
     this.newTariffPrice = 0;
@@ -212,7 +250,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     this.hs.getHistory()
         .subscribe((result: any) => {
           result.result.forEach((op: any) => {
-            op.timeStamp = new Date(Number(op.timeStamp));
+            op.timeStamp = new Date(Number(op.timeStamp * 1000));
           });
           this.operations = result.result.filter((op: any) => {
             return op.from === this.user.toLowerCase();

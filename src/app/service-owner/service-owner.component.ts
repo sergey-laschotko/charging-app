@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { OwnerBalanceComponent } from '../owner-balance/owner-balance.component';
 import { MatExpansionPanel } from '@angular/material';
 import { BaseService } from '../base.service';
@@ -31,7 +31,7 @@ export class ServiceOwnerComponent implements OnInit {
   isLoading: boolean = false;
 
   @ViewChild(OwnerBalanceComponent) ownerBalanceComponent: any;
-  @ViewChild(MatExpansionPanel) expansionPanel: any;
+  @ViewChildren(MatExpansionPanel) expansionPanels: any;
 
   constructor(
     private bs: BaseService,
@@ -64,7 +64,7 @@ export class ServiceOwnerComponent implements OnInit {
     this.hs.getHistory()
       .subscribe((result: any) => {
         result.result.forEach((op: any) => {
-          op.timeStamp = new Date(Number(op.timeStamp));
+          op.timeStamp = new Date(Number(op.timeStamp * 1000));
         });
         this.operations = result.result;
         this.isLoading = false;
@@ -75,7 +75,9 @@ export class ServiceOwnerComponent implements OnInit {
 
   onTabChange() {
     this.ownerBalanceComponent.resetInput();
-    this.expansionPanel.close();
+    this.expansionPanels.forEach((panel: any) => {
+      panel.close();
+    });
   }
 
   getBalance() {
