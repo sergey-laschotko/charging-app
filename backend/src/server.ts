@@ -8,7 +8,7 @@ server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
 
 server.get("/", (req, res) => {
-    res.json({ message: "Server Is Ready" });
+    res.json({ message: "Server is ready" });
 });
 
 server.listen(port, () => {
