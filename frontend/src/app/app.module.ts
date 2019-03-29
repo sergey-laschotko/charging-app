@@ -16,8 +16,6 @@ import { BalanceComponent } from './balance/balance.component';
 import { DatetimepickerComponent } from './datetimepicker/datetimepicker.component';
 import { ModalComponent } from './modal/modal.component';
 import { TableComponent } from './table/table.component';
-import { UtilModule } from './util/util.module';
-import { ContrModule } from './ethContr/contr.module';
 import { OwnerBalanceComponent } from './owner-balance/owner-balance.component';
 import { PageLoaderComponent } from './page-loader/page-loader.component';
 
@@ -51,8 +49,6 @@ const routes: Routes = [
     MaterialAppModule,
     FormsModule,
     RouterModule.forRoot(routes),
-    UtilModule,
-    ContrModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

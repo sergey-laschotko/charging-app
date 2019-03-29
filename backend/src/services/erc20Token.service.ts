@@ -1,17 +1,12 @@
-import {Injectable} from '@angular/core';
-import {Web3Service} from '../util/web3.service';
-import {Subject} from 'rxjs';
-import env from '../../../config/env';
+import {Web3Service} from './web3.service';
+
 declare let require: any;
+const env = require('../../config/env');
+const erc20TokenArtifacts = require('../../build/contracts/ERC20Token.json');
 
-const erc20TokenArtifacts = require('../../../build/contracts/ERC20Token.json');
-
-@Injectable()
 export class ERC20TokenService {
   ready: Promise<any>;
   ERC20Token: any;
-
-  public accountsObservable = new Subject<string[]>();
 
   constructor(private web3Service: Web3Service) {
     this.ready = new Promise((resolve, reject) => {
@@ -44,7 +39,7 @@ export class ERC20TokenService {
     const rawdata = this.web3Service.generateRaw(funcAbi,pk);
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt){
+    .on('receipt', function(receipt: any){
         console.log(['Receipt:', receipt]);
     })
     .on('error', console.error);
@@ -63,7 +58,7 @@ export class ERC20TokenService {
     const rawdata = this.web3Service.generateRaw(funcAbi,env.user.pk);
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt){
+    .on('receipt', function(receipt: any){
         console.log(['Receipt:', receipt]);
     })
     .on('error', console.error);
@@ -106,7 +101,7 @@ export class ERC20TokenService {
     };
     const rawdata = this.web3Service.generateRaw(funcAbi,env.admin.pk);
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt){
+    .on('receipt', function(receipt: any){
         console.log(['Receipt:', receipt]);
     })
     .on('error', console.error);
@@ -124,7 +119,7 @@ export class ERC20TokenService {
     const rawdata = this.web3Service.generateRaw(funcAbi,env.admin.pk);
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt){
+    .on('receipt', function(receipt: any){
         console.log(['Receipt:', receipt]);
     })
     .on('error', console.error);

@@ -1,21 +1,15 @@
-import {Injectable} from '@angular/core';
-import {Web3Service} from '../util/web3.service';
-import {Subject} from 'rxjs';
+import {Web3Service} from './web3.service';
 import { ChargerService } from './charger.service';
 import { ERC20TokenService } from './erc20Token.service';
-import env from '../../../config/env';
+
 declare let require: any;
+const env = require('../../config/env');
+const registerArtifacts = require('../../build/contracts/Register.json');
 
-const registerArtifacts = require('../../../build/contracts/Register.json');
-
-
-@Injectable()
 export class RegisterService {
   public ready: Promise<any>;
   private web3: any;
   Register: any;
-
-  public accountsObservable = new Subject<string[]>();
 
   constructor(
     private web3Service: Web3Service, 
@@ -42,7 +36,7 @@ export class RegisterService {
     const rawdata = this.web3Service.generateRaw(funcAbi,env.stationOwner.pk);
 
     this.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt){
+    .on('receipt', function(receipt: any){
         console.log(['Receipt:', receipt]);
     })
     .on('error', console.error);
@@ -59,7 +53,7 @@ export class RegisterService {
     return this.ready
       .then(async () => {
         const address: string[] = await this.Register.methods.showChargers().call()
-        let chargers = [];
+        let chargers: any[] = [];
         let promises = address.map(async v => {
           let inst = await this.chargerService.init(v);
           let address = await inst.methods.geo().call();

@@ -1,29 +1,23 @@
-import {Injectable} from '@angular/core';
-import {Web3Service} from '../util/web3.service';
-import {Subject} from 'rxjs';
+import {Web3Service} from './web3.service';
 import { ERC20TokenService } from './erc20Token.service';
-import env from '../../../config/env';
+
 declare let require: any;
+const env = require('../../config/env');
+const chargerArtifacts = require('../../build/contracts/Charger.json');
 
-const chargerArtifacts = require('../../../build/contracts/Charger.json');
-
-
-@Injectable()
 export class ChargerService {
   Charger: any;
-
-  public accountsObservable = new Subject<string[]>();
 
   constructor(private web3Service: Web3Service,
               private erc20TokenService: ERC20TokenService) {
   }
 
-  public async init(addr?) {
+  public async init(addr?: string) {
     this.Charger = new this.web3Service.web3.eth.Contract(chargerArtifacts.abi, addr);
     return new this.web3Service.web3.eth.Contract(chargerArtifacts.abi, addr);
   }
 
-  public async startCharging(addr) {
+  public async startCharging(addr: string) {
     await this.init(addr);
     console.log(addr)
     console.log('Approving tokens to', this.Charger.address);
@@ -44,7 +38,7 @@ export class ChargerService {
     const rawdata = this.web3Service.generateRaw(funcAbi,env.user.pk);
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt){
+    .on('receipt', function(receipt: any){
         console.log(['Receipt:', receipt]);
     })
     .on('error', console.error);
@@ -65,7 +59,7 @@ export class ChargerService {
     const rawdata = this.web3Service.generateRaw(funcAbi,env.stationOwner.pk);
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt){
+    .on('receipt', function(receipt: any){
         console.log(['Receipt:', receipt]);
     })
     .on('error', console.error);
@@ -86,19 +80,19 @@ export class ChargerService {
     };
     const rawdata = this.web3Service.generateRaw(funcAbi,env.user.pk);
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt){
+    .on('receipt', function(receipt: any){
         console.log(['Receipt:', receipt]);
     })
     .on('error', console.error);
   }
-  async getReservations(addr,address: string) {
+  async getReservations(addr: string,address: string) {
     await this.init(addr);
 
     // Returns indexes user owns for the next method
     return await this.Charger.methods.getReservations(address).call();
   }
 
-  async reservationsTime(addr,index: number) {
+  async reservationsTime(addr: string,index: number) {
     await this.init(addr);
 
     return await this.Charger.methods.reservationsTime(index).call();

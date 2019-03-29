@@ -2,12 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { BalanceComponent } from '../balance/balance.component';
 import { MatSnackBar } from '@angular/material';
 import { BaseService } from '../base.service';
-import { IOperation, IUser, IStation, ITariff } from '../mock-data/models';
+import { IOperation, IUser, IStation, ITariff } from '../models';
 import { formatDate } from "../../lib/lib";
-import { RegisterService } from "../ethContr/register.service";
-import { ERC20TokenService } from "../ethContr/erc20Token.service";
-import { ChargerService } from "../ethContr/charger.service";
-import { HistoryService } from "../util/history.service";
 
 @Component({
   selector: 'app-user',
@@ -37,22 +33,11 @@ export class UserComponent implements OnInit {
 
   constructor(
     private bs: BaseService, 
-    private sb: MatSnackBar, 
-    private rs: RegisterService,
-    private e20ts: ERC20TokenService,
-    private chs: ChargerService,
-    private hs: HistoryService,
+    private sb: MatSnackBar,
   ) {
     this.isLoading = true;
-    this.user = this.e20ts.getUser();
     this.getBalance();
     this.updateJournal();
-    this.rs.showChargers()
-      .then((stations: IStation[]) => {
-        this.stations = stations;
-        this.variants = stations;
-        this.isLoading = false;
-      });
   }
 
   ngOnInit() {
@@ -64,29 +49,26 @@ export class UserComponent implements OnInit {
   }
 
   getBalance() {
-    this.e20ts.getBalance(this.user)
-      .then((balance: number) => {
-      this.balance = balance;
-    });
+    
   }
 
   onBuy(amount: number) {
     this.buyingProcess = true;
-    this.e20ts.buyTokens(amount, this.user)
-      .then((status: any) => {
-        if (status) {
-          this.sb.open("Покупка токенов", "Готово", {
-            duration: 3000
-          });
-          this.getBalance();
-          this.buyingProcess = false;
-        } else {
-          this.sb.open("Покупка не удалась", "Ошибка", {
-            duration: 3000
-          })
-          this.buyingProcess = false;
-        }
-      });
+    // this.e20ts.buyTokens(amount, this.user)
+    //   .then((status: any) => {
+    //     if (status) {
+    //       this.sb.open("Покупка токенов", "Готово", {
+    //         duration: 3000
+    //       });
+    //       this.getBalance();
+    //       this.buyingProcess = false;
+    //     } else {
+    //       this.sb.open("Покупка не удалась", "Ошибка", {
+    //         duration: 3000
+    //       })
+    //       this.buyingProcess = false;
+    //     }
+    //   });
     this.updateJournal();
   }
 
@@ -142,13 +124,13 @@ export class UserComponent implements OnInit {
         charger = station;
       }
     });
-    this.chs.reserve(start, end, charger.id)
-      .then((result: any) => {
-        console.log(result);
-        this.sb.open("Бронирование", "Готово", {
-          duration: 3000
-        });
-      });
+    // this.chs.reserve(start, end, charger.id)
+    //   .then((result: any) => {
+    //     console.log(result);
+    //     this.sb.open("Бронирование", "Готово", {
+    //       duration: 3000
+    //     });
+    //   });
     this.reserveMinutes = 30;
     this.address = "";
     this.closeModal();
@@ -170,15 +152,15 @@ export class UserComponent implements OnInit {
       }
     });
     this.paymentProcess = true;
-    this.chs.startCharging(charger.id)
-      .then(() => {
-          this.chargingProcess = true;
-          this.paymentProcess = false;
-          setTimeout(() => {
-            this.chargingProcess = false;
-            this.address = "";
-          }, 12000);
-      });
+    // this.chs.startCharging(charger.id)
+    //   .then(() => {
+    //       this.chargingProcess = true;
+    //       this.paymentProcess = false;
+    //       setTimeout(() => {
+    //         this.chargingProcess = false;
+    //         this.address = "";
+    //       }, 12000);
+    //   });
   }
 
   closeModal() {
@@ -186,14 +168,14 @@ export class UserComponent implements OnInit {
   }
 
   updateJournal() {
-    this.hs.getHistory()
-      .subscribe((result: any) => {
-        result.result.forEach((op: any) => {
-          op.timeStamp = new Date(Number(op.timeStamp * 1000));
-        });
-        this.operations = result.result.filter((op: any) => {
-          return op.from === this.user.toLowerCase();
-        });;
-      });
+    // this.hs.getHistory()
+    //   .subscribe((result: any) => {
+    //     result.result.forEach((op: any) => {
+    //       op.timeStamp = new Date(Number(op.timeStamp * 1000));
+    //     });
+    //     this.operations = result.result.filter((op: any) => {
+    //       return op.from === this.user.toLowerCase();
+    //     });;
+    //   });
   }
 }
