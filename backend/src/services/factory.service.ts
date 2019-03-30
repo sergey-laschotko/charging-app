@@ -19,22 +19,26 @@ export class FactoryService {
   }
 
   public async createCharger(geo: string,name: string,owner: string) {
-    const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.stationOwner)
-    const gas = await this.Factory.methods.createCharger(geo,name,owner).estimateGas()
-    const funcAbi = {
-      nonce,
-      gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
-      gas,
-      to: this.Factory.address,
-      value: 0,
-      data: this.Factory.methods.createCharger(geo,name,owner).encodeABI(),
-    };
-    const rawdata = this.web3Service.generateRaw(funcAbi,env.stationOwner.pk);
+    return this.ready
+      .then(async () => {
+        const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.stationOwner)
+        const gas = await this.Factory.methods.createCharger(geo,name,owner).estimateGas()
+        const funcAbi = {
+          nonce,
+          gasPrice: this.web3Service.web3.utils.toHex(this.web3Service.web3.utils.toWei('47', 'gwei')),
+          gas,
+          to: this.Factory.address,
+          value: 0,
+          data: this.Factory.methods.createCharger(geo,name,owner).encodeABI(),
+        };
 
-    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt: any){
-        console.log(['Receipt:', receipt]);
-    })
-    .on('error', console.error);
+        const rawdata = this.web3Service.generateRaw(funcAbi,env.stationOwner.pk);
+    
+        return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
+        .on('receipt', function(receipt: any){
+            console.log(['Receipt:', receipt]);
+        })
+        .on('error', console.error);
+    });
   }
 }

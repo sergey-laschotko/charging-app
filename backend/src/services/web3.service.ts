@@ -5,9 +5,9 @@ const EthereumTx = require('ethereumjs-tx');
 declare const Buffer: any;
 
 export class Web3Service {
-  defaultAccount = env.defaultAccount;
-  stationOwner = env.stationOwner;
-  admin = env.serviceOwner;
+  defaultAccount = env.defaultAccountAddress;
+  stationOwner = env.stationOwnerAddress;
+  admin = env.serviceOwnerAddress;
   web3: any;
   eth: any;
 
