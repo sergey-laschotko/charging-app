@@ -41,8 +41,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     private sb: MatSnackBar
     ) {
       this.isLoading = true;
-      // this.user = this.e20ts.getStationOwner();
-      this.getBalance();
+      this.getUser();
       this.showChargers();
       this.updateJournal();
     }
@@ -51,36 +50,44 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     
   ngAfterViewInit() {}
 
+  getUser() {
+    this.bs.getStationOwner()
+      .subscribe((result: any) => {
+        this.user = result;
+        this.getBalance();
+      });
+  }
+
   showChargers() {
-    // this.rs.showChargers()
-    //     .then((stations: IStation[]) => {
-    //       this.stations = stations;
-    //       this.stations.forEach((station: any) => {
-    //         station.tariff.forEach((tariff: any) => {
-    //           if (tariff) {
-    //             let fromHours: any = Math.floor(tariff.from / 3600);
-    //             let fromMinutes: any = (tariff.from % 3600) / 60;
-    //             let toHours: any = Math.floor(tariff.to / 3600);
-    //             let toMinutes: any = (tariff.to % 3600) / 60;
-    //             if (fromHours < 10) {
-    //               fromHours = "0" + fromHours;
-    //             }
-    //             if (fromMinutes < 10) {
-    //               fromMinutes = "0" + fromMinutes;
-    //             }
-    //             if (toHours < 10) {
-    //               toHours = "0" + toHours;
-    //             }
-    //             if (toMinutes < 10) {
-    //               toMinutes = "0" + toMinutes;
-    //             }
-    //             tariff.from = `${fromHours}:${fromMinutes}`;
-    //             tariff.to = `${toHours}:${toMinutes}`;
-    //           }
-    //         });
-    //       });
-    //       this.isLoading = false;
-    //     });
+    this.bs.getStations()
+        .subscribe((stations: IStation[]) => {
+          this.stations = stations;
+          this.stations.forEach((station: any) => {
+            station.tariff.forEach((tariff: any) => {
+              if (tariff) {
+                let fromHours: any = Math.floor(tariff.from / 3600);
+                let fromMinutes: any = (tariff.from % 3600) / 60;
+                let toHours: any = Math.floor(tariff.to / 3600);
+                let toMinutes: any = (tariff.to % 3600) / 60;
+                if (fromHours < 10) {
+                  fromHours = "0" + fromHours;
+                }
+                if (fromMinutes < 10) {
+                  fromMinutes = "0" + fromMinutes;
+                }
+                if (toHours < 10) {
+                  toHours = "0" + toHours;
+                }
+                if (toMinutes < 10) {
+                  toMinutes = "0" + toMinutes;
+                }
+                tariff.from = `${fromHours}:${fromMinutes}`;
+                tariff.to = `${toHours}:${toMinutes}`;
+              }
+            });
+          });
+          this.isLoading = false;
+        });
   }
 
   onTabChange() {
@@ -93,27 +100,27 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
     
   getBalance() {
-    // this.e20ts.getBalance(this.user)
-    //   .then((balance: number) => {
-    //   this.balance = balance;
-    // });
+    this.bs.getBalance(this.user)
+      .subscribe((balance: number) => {
+      this.balance = balance;
+    });
   }
   
   buyTokens(amount: number) {
-    // this.e20ts.buyTokens(amount, this.user)
-    //   .then((status: any) => {
-    //     if (status) {
-    //       this.sb.open("Покупка токенов", "Готово", {
-    //         duration: 3000
-    //       });
-    //       this.getBalance();
-    //       this.updateJournal();
-    //     } else {
-    //       this.sb.open("Покупка не удалась", "Ошибка", {
-    //         duration: 3000
-    //       })
-    //     }
-    //   });
+    this.bs.buyTokens(amount, this.user)
+      .subscribe((status: any) => {
+        if (status) {
+          this.sb.open("Покупка токенов", "Готово", {
+            duration: 3000
+          });
+          this.getBalance();
+          this.updateJournal();
+        } else {
+          this.sb.open("Покупка не удалась", "Ошибка", {
+            duration: 3000
+          })
+        }
+      });
   }
   
   formatDate(date: Date) {
@@ -171,13 +178,13 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     if (!this.newStation) {
       return;
     }
-    // this.fs.createCharger(this.newStation, this.newStation, this.user)
-    //   .then((result) => {
-    //     this.sb.open("Добавление станции", "Готово", {
-    //       duration: 3000
-    //     });
-    //     this.updateJournal();
-    //   });
+    this.bs.createCharger(this.newStation, this.newStation, this.user)
+      .subscribe((result: any) => {
+        this.sb.open("Добавление станции", "Готово", {
+          duration: 3000
+        });
+        this.updateJournal();
+      });
     this.toggleAdding();
   }
 
@@ -190,14 +197,14 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     let [toHour, toMinute] = this.newTariffTo.split(":");
     let from = Number(fromHour) * 3600 + Number(fromMinute) * 60;
     let to = Number(toHour) * 3600 + Number(toMinute) * 60;
-    // this.chs.addRate(from, to, this.newTariffPrice)
-    //   .then((result: any) => {
-    //     this.showChargers();
-    //     this.sb.open("Добавление тарифа", "Готово", {
-    //       duration: 3000
-    //     });
-    //     this.updateJournal();
-    //   });
+    this.bs.addRate(from, to, this.newTariffPrice)
+      .subscribe((result: any) => {
+        this.showChargers();
+        this.sb.open("Добавление тарифа", "Готово", {
+          duration: 3000
+        });
+        this.updateJournal();
+      });
     this.newTariffFrom = "00:00";
     this.newTariffTo = "00:00";
     this.newTariffPrice = 0;
@@ -237,14 +244,14 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   updateJournal() {
-    // this.hs.getHistory()
-    //     .subscribe((result: any) => {
-    //       result.result.forEach((op: any) => {
-    //         op.timeStamp = new Date(Number(op.timeStamp * 1000));
-    //       });
-    //       this.operations = result.result.filter((op: any) => {
-    //         return op.from === this.user.toLowerCase();
-    //       });
-    //     });
+    this.bs.getHistory()
+        .subscribe((result: any) => {
+          result.forEach((op: any) => {
+            op.timeStamp = new Date(Number(op.timeStamp * 1000));
+          });
+          this.operations = result.filter((op: any) => {
+            return op.from === this.user.toLowerCase();
+          });
+        });
   }
 }

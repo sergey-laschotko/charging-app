@@ -80,6 +80,7 @@ export class UserComponent implements OnInit {
     this.buyingProcess = true;
     this.bs.buyTokens(amount, this.user)
       .subscribe((status: any) => {
+        console.log(status);
         if (status) {
           this.sb.open("Покупка токенов", "Готово", {
             duration: 3000

@@ -50,4 +50,12 @@ export class BaseService {
   getStations() {
     return this.http.get(`${this.url}/show-chargers`);
   }
+
+  createCharger(address: string, name: string, owner: string) {
+    return this.http.post(`${this.url}/create-charger`, { address, name, owner });
+  }
+
+  addRate(from: number, to: number, rate: number) {
+    return this.http.post(`${this.url}/add-rate`, { from, to, rate });
+  }
 }
