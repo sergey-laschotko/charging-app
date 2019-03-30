@@ -34,6 +34,9 @@ router.get("/total-supply", (req, res) => {
     erc20tokenService.totalSupply()
         .then((result: any) => {
             res.json(parseInt(result["_hex"], 16));
+        })
+        .catch(e => {
+            console.log("Getting Total Supply: " + e.message);
         });
 });
 
@@ -43,6 +46,9 @@ router.post("/get-balance", (req, res) => {
     erc20tokenService.getBalance(address)
         .then((result: any) => {
             res.json(parseInt(result["_hex"], 16));
+        })
+        .catch(e => {
+            console.log("Getting balance: " + e.message)
         });
 });
 
@@ -52,6 +58,9 @@ router.post("/buy-tokens", (req, res) => {
     erc20tokenService.buyTokens(amount, address)
         .then((result: any) => {
             res.json(result);
+        })
+        .catch(e => {
+            console.log("Buying tokens: " + e.message);
         });
 });
 
@@ -60,6 +69,9 @@ router.post("/mint", (req, res) => {
     erc20tokenService.mint(amount)
         .then((result: any) => {
             res.json(result);
+        })
+        .catch(e => {
+            console.log("Minting: " + e.message);
         });
 });
 
@@ -68,6 +80,9 @@ router.post("/burn", (req, res) => {
     erc20tokenService.burn(amount)
         .then((result: any) => {
             res.json(result);
+        })
+        .catch(e => {
+            console.log("Burning: " + e.message);
         });
 });
 
@@ -76,6 +91,9 @@ router.post("/start-charging", (req, res) => {
     chargerService.startCharging(address)
         .then((result: any) => {
             res.json(result);
+        })
+        .catch(e => {
+            console.log("Starting charging: " + e.message);
         });
 });
 
@@ -86,6 +104,9 @@ router.post("/add-rate", (req, res) => {
     chargerService.addRate(from, to, rate)
         .then((result: any) => {
             res.json(result);
+        })
+        .catch(e => {
+            console.log("Adding rate: " + e.message);
         });
 });
 
@@ -97,6 +118,9 @@ router.post("/reserve", (req, res) => {
     chargerService.reserve(from, to, address)
         .then((result: any) => {
             res.json(result);
+        })
+        .catch(e => {
+            console.log("Reserving: " + e.message);
         });
 });
 
@@ -108,6 +132,9 @@ router.post("/create-charger", (req, res) => {
     factoryService.createCharger(address, name, owner)
         .then((result: any) => {
             res.json(result);
+        })
+        .catch(e => {
+            console.log("Creating charger: " + e.message);
         });
 });
 
@@ -115,6 +142,9 @@ router.get("/history", (req, res) => {
     historyService.getHistory()
         .then((result: any) => {
             res.json(result.data.result);
+        })
+        .catch(e => {
+            console.log("Getting history: " + e.message);
         });
 });
 
@@ -122,6 +152,9 @@ router.get("/show-chargers", (req, res) => {
     registerService.showChargers()
         .then((result: any) => {
             res.json(result);
+        })
+        .catch(e => {
+            console.log("Showing chargers: " + e.message);
         });
 });
 

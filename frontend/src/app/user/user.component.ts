@@ -35,8 +35,8 @@ export class UserComponent implements OnInit {
     private bs: BaseService, 
     private sb: MatSnackBar,
   ) {
-    this.isLoading = true;
-    this.getBalance();
+    this.getUser();
+    this.getStations();
     this.updateJournal();
   }
 
@@ -48,27 +48,51 @@ export class UserComponent implements OnInit {
     this.address = "";
   }
 
+  getUser() {
+    this.isLoading = true;
+    this.bs.getUser()
+      .subscribe((result: any) => {
+        this.user = result;
+        this.getBalance();
+        this.isLoading = false;
+      });
+  }
+
   getBalance() {
-    
+    this.isLoading = true;
+    this.bs.getBalance(this.user)
+      .subscribe((result: any) => {
+        this.balance = result;
+        this.isLoading = false;
+      });
+  }
+
+  getStations() {
+    this.isLoading = true;
+    this.bs.getStations()
+      .subscribe((result: any) => {
+        this.stations = result;
+        this.variants = [...this.stations];
+      });
   }
 
   onBuy(amount: number) {
     this.buyingProcess = true;
-    // this.e20ts.buyTokens(amount, this.user)
-    //   .then((status: any) => {
-    //     if (status) {
-    //       this.sb.open("Покупка токенов", "Готово", {
-    //         duration: 3000
-    //       });
-    //       this.getBalance();
-    //       this.buyingProcess = false;
-    //     } else {
-    //       this.sb.open("Покупка не удалась", "Ошибка", {
-    //         duration: 3000
-    //       })
-    //       this.buyingProcess = false;
-    //     }
-    //   });
+    this.bs.buyTokens(amount, this.user)
+      .subscribe((status: any) => {
+        if (status) {
+          this.sb.open("Покупка токенов", "Готово", {
+            duration: 3000
+          });
+          this.getBalance();
+          this.buyingProcess = false;
+        } else {
+          this.sb.open("Покупка не удалась", "Ошибка", {
+            duration: 3000
+          })
+          this.buyingProcess = false;
+        }
+      });
     this.updateJournal();
   }
 
@@ -124,13 +148,13 @@ export class UserComponent implements OnInit {
         charger = station;
       }
     });
-    // this.chs.reserve(start, end, charger.id)
-    //   .then((result: any) => {
-    //     console.log(result);
-    //     this.sb.open("Бронирование", "Готово", {
-    //       duration: 3000
-    //     });
-    //   });
+    this.bs.reserve(start, end, charger.id)
+      .subscribe((result: any) => {
+        console.log(result);
+        this.sb.open("Бронирование", "Готово", {
+          duration: 3000
+        });
+      });
     this.reserveMinutes = 30;
     this.address = "";
     this.closeModal();
@@ -152,15 +176,15 @@ export class UserComponent implements OnInit {
       }
     });
     this.paymentProcess = true;
-    // this.chs.startCharging(charger.id)
-    //   .then(() => {
-    //       this.chargingProcess = true;
-    //       this.paymentProcess = false;
-    //       setTimeout(() => {
-    //         this.chargingProcess = false;
-    //         this.address = "";
-    //       }, 12000);
-    //   });
+    this.bs.charge(charger.id)
+      .subscribe(() => {
+          this.chargingProcess = true;
+          this.paymentProcess = false;
+          setTimeout(() => {
+            this.chargingProcess = false;
+            this.address = "";
+          }, 12000);
+      });
   }
 
   closeModal() {
@@ -168,14 +192,16 @@ export class UserComponent implements OnInit {
   }
 
   updateJournal() {
-    // this.hs.getHistory()
-    //   .subscribe((result: any) => {
-    //     result.result.forEach((op: any) => {
-    //       op.timeStamp = new Date(Number(op.timeStamp * 1000));
-    //     });
-    //     this.operations = result.result.filter((op: any) => {
-    //       return op.from === this.user.toLowerCase();
-    //     });;
-    //   });
+    this.isLoading = true;
+    this.bs.getHistory()
+      .subscribe((result: any) => {
+        result.forEach((op: any) => {
+          op.timeStamp = new Date(Number(op.timeStamp * 1000));
+        });
+        this.operations = result.filter((op: any) => {
+          return op.from === this.user.toLowerCase();
+        });;
+        this.isLoading = false;
+      });
   }
 }
