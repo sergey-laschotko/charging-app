@@ -20,7 +20,7 @@ export class BaseService {
     return this.http.get(`${this.url}/station-owner`);
   }
 
-  getStationsOwners() {
+  getServiceOwner() {
     return this.http.get(`${this.url}/service-owner`);
   }
 
@@ -57,5 +57,17 @@ export class BaseService {
 
   addRate(from: number, to: number, rate: number) {
     return this.http.post(`${this.url}/add-rate`, { from, to, rate });
+  }
+
+  getTotalSupply() {
+    return this.http.get(`${this.url}/total-supply`);
+  }
+
+  mint(amount: number) {
+    return this.http.post(`${this.url}/mint`, amount);
+  }
+
+  burn(amount: number) {
+    return this.http.post(`${this.url}/burn`, amount);
   }
 }
