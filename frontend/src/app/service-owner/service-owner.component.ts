@@ -40,6 +40,11 @@ export class ServiceOwnerComponent implements OnInit {
     this.bs.getStations()
     .subscribe((stations: IStation[]) => {
       this.stations = stations;
+      if (this.stations.length) {
+        this.stations.forEach((station: IStation) => {
+          station.balance = parseInt(station.balance["_hex"], 16);
+        });
+      }
       this.selectedStation = this.stations[0].address;
       this.bs.getHistory()
       .subscribe((result: any) => {

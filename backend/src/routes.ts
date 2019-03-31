@@ -101,7 +101,8 @@ router.post("/add-rate", (req, res) => {
     const from = req.body.from;
     const to = req.body.to;
     const rate = req.body.rate;
-    chargerService.addRate(from, to, rate)
+    const addr = req.body.address;
+    chargerService.addRate(from, to, rate, addr)
         .then((result: any) => {
             res.json(result);
         })

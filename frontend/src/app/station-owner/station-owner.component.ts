@@ -83,6 +83,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
                 }
                 tariff.from = `${fromHours}:${fromMinutes}`;
                 tariff.to = `${toHours}:${toMinutes}`;
+                tariff.price = parseInt(tariff.price["_hex"], 16);
               }
             });
           });
@@ -192,12 +193,12 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     return this.newStation.length > 0;
   }
 
-  addNewTariff(address: string) {
+  addNewTariff(station: IStation) {
     let [fromHour, fromMinute] = this.newTariffFrom.split(":");
     let [toHour, toMinute] = this.newTariffTo.split(":");
     let from = Number(fromHour) * 3600 + Number(fromMinute) * 60;
     let to = Number(toHour) * 3600 + Number(toMinute) * 60;
-    this.bs.addRate(from, to, this.newTariffPrice)
+    this.bs.addRate(from, to, this.newTariffPrice, station.id)
       .subscribe((result: any) => {
         this.showChargers();
         this.sb.open("Добавление тарифа", "Готово", {

@@ -44,8 +44,8 @@ export class ChargerService {
     .on('error', console.error);
   }
 
-  public async addRate(from: number,to: number,newRate: number) {
-    // await this.init(addr);
+  public async addRate(from: number,to: number,newRate: number, addr: string) {
+    await this.init(addr);
 
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.stationOwner)
     const gas = await this.Charger.methods.addRate(from,to,newRate).estimateGas({from: this.web3Service.stationOwner})

@@ -55,8 +55,8 @@ export class BaseService {
     return this.http.post(`${this.url}/create-charger`, { address, name, owner });
   }
 
-  addRate(from: number, to: number, rate: number) {
-    return this.http.post(`${this.url}/add-rate`, { from, to, rate });
+  addRate(from: number, to: number, rate: number, address: string) {
+    return this.http.post(`${this.url}/add-rate`, { from, to, rate, address });
   }
 
   getTotalSupply() {
