@@ -37,7 +37,6 @@ export class UserComponent implements OnInit {
   ) {
     this.getUser();
     this.getStations();
-    this.updateJournal();
   }
 
   ngOnInit() {
@@ -54,6 +53,7 @@ export class UserComponent implements OnInit {
       .subscribe((result: any) => {
         this.user = result;
         this.getBalance();
+        this.updateJournal();
         this.isLoading = false;
       });
   }
@@ -193,14 +193,15 @@ export class UserComponent implements OnInit {
 
   updateJournal() {
     this.isLoading = true;
-    this.bs.getHistory()
+    this.bs.getHistory(this.user)
       .subscribe((result: any) => {
+        console.log(result);
         result.forEach((op: any) => {
           op.timeStamp = new Date(Number(op.timeStamp * 1000));
         });
         this.operations = result.filter((op: any) => {
           return op.from === this.user.toLowerCase();
-        });;
+        });
         this.isLoading = false;
       });
   }

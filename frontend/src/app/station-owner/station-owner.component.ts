@@ -44,7 +44,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
       this.isLoading = true;
       this.getUser();
       this.showChargers();
-      this.updateJournal();
     }
     
   ngOnInit() {}
@@ -56,6 +55,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
       .subscribe((result: any) => {
         this.user = result;
         this.getBalance();
+        this.updateJournal();
       });
   }
 
@@ -250,12 +250,13 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
 
   updateJournal() {
-    this.bs.getHistory()
+    this.bs.getHistory(this.user)
         .subscribe((result: any) => {
           result.forEach((op: any) => {
             op.timeStamp = new Date(Number(op.timeStamp * 1000));
           });
           this.operations = result.filter((op: any) => {
+            console.log(op.from, this.user.toLowerCase());
             return op.from === this.user.toLowerCase();
           });
         });

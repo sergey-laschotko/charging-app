@@ -140,8 +140,9 @@ router.post("/create-charger", (req, res) => {
         });
 });
 
-router.get("/history", (req, res) => {
-    historyService.getHistory()
+router.post("/history", (req, res) => {
+    const address = req.body.address;
+    historyService.getHistory(address)
         .then((result: any) => {
             res.json(result.data.result);
         })

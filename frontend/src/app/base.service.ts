@@ -31,8 +31,8 @@ export class BaseService {
     return this.http.post(`${this.url}/get-balance`, address);
   }
 
-  getHistory() {
-    return this.http.get(`${this.url}/history`);
+  getHistory(address: string) {
+    return this.http.post(`${this.url}/history`, { address });
   }
 
   buyTokens(amount: number, address: string) {

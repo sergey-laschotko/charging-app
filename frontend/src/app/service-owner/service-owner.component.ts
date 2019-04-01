@@ -18,7 +18,6 @@ export class ServiceOwnerComponent implements OnInit {
   removingProcess: boolean = false;
   serviceProviders: any[] = [];
   operations: IOperation[] = [];
-  operationsCopy: IOperation[] = [];
   displayedColumns: string[] = ["timeStamp", "from", "to"];
   columnsHeaders: string[] = ["Дата", "Отправитель", "Получатель"];
   stations: IStation[] = [];
@@ -41,28 +40,28 @@ export class ServiceOwnerComponent implements OnInit {
     .subscribe((stations: IStation[]) => {
       this.stations = stations;
       this.selectedStation = this.stations[0].address;
-      this.bs.getHistory()
-      .subscribe((result: any) => {
-        result.forEach((op: any) => {
-          op.timeStamp = new Date(Number(op.timeStamp * 1000));
+      this.bs.getHistory(this.stations[0].id)
+        .subscribe((result: any) => {
+          result.forEach((op: any) => {
+            op.timeStamp = new Date(Number(op.timeStamp * 1000));
+          });
+          this.operations = result;
+          this.showStationJournal();
+          this.isLoading = false;
         });
-        this.operations = result;
-        this.showStationJournal();
-        this.isLoading = false;
-      });
       let serviceProvider = {
         name: "",
         balance: 0,
         stations: []
       };
       this.bs.getStationOwner()
-        .subscribe((result: any) => {
-          serviceProvider.name = result;
-          this.bs.getBalance(serviceProvider.name)
-            .subscribe((balance: number) => {
-              serviceProvider.balance = balance;
-            });
+      .subscribe((result: any) => {
+        serviceProvider.name = result;
+        this.bs.getBalance(serviceProvider.name)
+        .subscribe((balance: number) => {
+          serviceProvider.balance = balance;
         });
+      });
       serviceProvider.stations = [...this.stations];
       this.serviceProviders.push(serviceProvider);
     });
@@ -92,13 +91,13 @@ export class ServiceOwnerComponent implements OnInit {
   }
 
   showStationJournal() {
-    this.operationsCopy = [...this.operations];
-    let id = this.stations.filter((station: IStation) => {
+    let netAddress = this.stations.filter((station: IStation) => {
       return station.address === this.selectedStation;
-    })[0].id;
-    this.operationsCopy = this.operationsCopy.filter((op: any) => {
-      return op.to == id.toLowerCase();
-    });
+    })[0]["id"];
+    this.bs.getHistory(netAddress)
+      .subscribe((result: any) => {
+        this.operations = result;
+      });
   }
 
   produceTokens(amount: number) {

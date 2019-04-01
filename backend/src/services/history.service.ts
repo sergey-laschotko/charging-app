@@ -6,7 +6,7 @@ export class HistoryService {
 
     constructor() {}
     
-    getHistory() {
-        return axios.get(this.uri);
+    getHistory(address: string) {
+        return axios.get(`${this.uri}${address}`);
     }
 }
