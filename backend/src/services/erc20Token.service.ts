@@ -1,4 +1,5 @@
 import {Web3Service} from './web3.service';
+import { on } from 'cluster';
 
 declare let require: any;
 const env = require('../../config/env');
@@ -36,13 +37,8 @@ export class ERC20TokenService {
     // const pk = env.filter(v => {
     //   return v.address === address
     // })[0].pk;
-    const rawdata = this.web3Service.generateRaw(funcAbi,pk);
-
-    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt: any){
-        console.log(['Receipt:', receipt]);
-    })
-    .on('error', console.error);
+    const rawdata = await this.web3Service.generateRaw(funcAbi,pk);
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata);
   }
 
   public async approveTokens(spender:string, v:number) {
@@ -58,10 +54,6 @@ export class ERC20TokenService {
     const rawdata = this.web3Service.generateRaw(funcAbi,env.user.pk);
 
     return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt: any){
-        console.log(['Receipt:', receipt]);
-    })
-    .on('error', console.error);
   }
 
   async getBalance(address: string) {
@@ -100,11 +92,19 @@ export class ERC20TokenService {
       data: this.ERC20Token.methods.mint(this.web3Service.admin,amount).encodeABI(),
     };
     const rawdata = this.web3Service.generateRaw(funcAbi,env.admin.pk);
-    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt: any){
-        console.log(['Receipt:', receipt]);
-    })
-    .on('error', console.error);
+    this.web3Service.web3.eth.sendSignedTransaction(rawdata)
+      .on("transactionHash", (transactionHash: any) => {
+        console.log(transactionHash);
+      })
+      .on("receipt", (receipt: any) => {
+        console.log(receipt);
+      })
+      .on('error', (error: any) => {
+        console.log(error);
+      })
+      .then((receipt: any) => {
+        console.log(receipt);
+      })
   }
   public async burn(amount: number) {
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.admin)
@@ -118,10 +118,6 @@ export class ERC20TokenService {
     };
     const rawdata = this.web3Service.generateRaw(funcAbi,env.admin.pk);
 
-    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt: any){
-        console.log(['Receipt:', receipt]);
-    })
-    .on('error', console.error);
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata);
   }
 }

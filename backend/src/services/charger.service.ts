@@ -19,10 +19,7 @@ export class ChargerService {
 
   public async startCharging(addr: string) {
     await this.init(addr);
-    console.log(addr)
-    console.log('Approving tokens to', this.Charger.address);
     const rec = await this.erc20TokenService.approveTokens(this.Charger.address, 150);
-    console.log('Rec',rec)
 
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.defaultAccount)
     // const gas = await this.Charger.methods.startCharging().estimateGas()
@@ -34,14 +31,9 @@ export class ChargerService {
       to: this.Charger.address,
       data: this.Charger.methods.startCharging().encodeABI(),
     };
-    console.log(this.Charger.address)
     const rawdata = this.web3Service.generateRaw(funcAbi,env.user.pk);
 
-    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt: any){
-        console.log(['Receipt:', receipt]);
-    })
-    .on('error', console.error);
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata);
   }
 
   public async addRate(from: number,to: number,newRate: number, addr: string) {
@@ -58,11 +50,7 @@ export class ChargerService {
     };
     const rawdata = this.web3Service.generateRaw(funcAbi,env.stationOwner.pk);
 
-    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt: any){
-        console.log(['Receipt:', receipt]);
-    })
-    .on('error', console.error);
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata);
   }
 
   public async reserve(from: number,to: number, addr: string) {
@@ -79,11 +67,7 @@ export class ChargerService {
       data: this.Charger.methods.reserve(from,to).encodeABI(),
     };
     const rawdata = this.web3Service.generateRaw(funcAbi,env.user.pk);
-    return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt: any){
-        console.log(['Receipt:', receipt]);
-    })
-    .on('error', console.error);
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata);
   }
   async getReservations(addr: string,address: string) {
     await this.init(addr);

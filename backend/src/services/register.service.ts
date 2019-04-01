@@ -35,11 +35,7 @@ export class RegisterService {
     };
     const rawdata = this.web3Service.generateRaw(funcAbi,env.stationOwner.pk);
 
-    this.web3.eth.sendSignedTransaction(rawdata)
-    .on('receipt', function(receipt: any){
-        console.log(['Receipt:', receipt]);
-    })
-    .on('error', console.error);
+    return this.web3.eth.sendSignedTransaction(rawdata);
   }
 
   public async showFreeChargers() {

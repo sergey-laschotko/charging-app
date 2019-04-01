@@ -79,9 +79,8 @@ export class UserComponent implements OnInit {
   onBuy(amount: number) {
     this.buyingProcess = true;
     this.bs.buyTokens(amount, this.user)
-      .subscribe((status: any) => {
-        console.log(status);
-        if (status) {
+      .subscribe((result: any) => {
+        if (result) {
           this.sb.open("Покупка токенов", "Готово", {
             duration: 3000
           });
@@ -151,10 +150,10 @@ export class UserComponent implements OnInit {
     });
     this.bs.reserve(start, end, charger.id)
       .subscribe((result: any) => {
-        console.log(result);
         this.sb.open("Бронирование", "Готово", {
           duration: 3000
         });
+        this.updateJournal();
       });
     this.reserveMinutes = 30;
     this.address = "";

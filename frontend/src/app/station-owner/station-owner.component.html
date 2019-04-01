@@ -6,7 +6,7 @@
     </mat-card>
     <mat-tab-group (selectedTabChange)="onTabChange()">
       <mat-tab label="Баланс">
-          <app-balance [tokens]="balance" add="Купить" remove="Продать" (onAdd)="buyTokens($event)" (onRemove)="saleTokens($event)"></app-balance>
+          <app-balance [tokens]="balance" add="Купить" remove="Продать" [buyingProcess]="buyingProcess"   (onAdd)="buyTokens($event)" (onRemove)="saleTokens($event)"></app-balance>
       </mat-tab>
       <mat-tab label="Зарегистрированные станции">
         <div class="registered-stations">
@@ -65,7 +65,7 @@
                 <mat-list class="tariffs-list">
                   <mat-list-item *ngFor="let tariff of station.tariff.sort(sortTariff)" class="tariffs-list_item">
                     <span class="tariffs-list_view">
-                      <span>C {{tariff.from}} по {{tariff.to}} цена {{tariff.price}}</span>
+                      <span>C <b>{{tariff.from}}</b> по <b>{{tariff.to}}</b> цена <b>{{tariff.price}}</b></span>
                     </span>
                   </mat-list-item>
                 </mat-list>

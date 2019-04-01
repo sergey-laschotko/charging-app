@@ -32,7 +32,9 @@
                 Тарифы:
                 <span *ngIf="!station.tariff.length">На данный момент тарифов нет</span>
                 <mat-list *ngIf="station.tariff.length">
-                  <mat-list-item *ngFor="let tariff of station.tariff">C {{tariff.from}} до {{tariff.to}} цена {{tariff.price}}</mat-list-item>
+                  <mat-list-item *ngFor="let tariff of station.tariff">
+                    <p>C <b>{{tariff.from}}</b> до <b>{{tariff.to}}</b> цена <b>{{tariff.price}}</b></p>
+                  </mat-list-item>
                 </mat-list>
               </p>
               </mat-expansion-panel>

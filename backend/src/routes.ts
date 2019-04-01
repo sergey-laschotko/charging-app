@@ -33,7 +33,7 @@ router.get("/service-owner", (req, res) => {
 router.get("/total-supply", (req, res) => {
     erc20tokenService.totalSupply()
         .then((result: any) => {
-            res.json(parseInt(result["_hex"], 16));
+            res.json(result);
         })
         .catch(e => {
             console.log("Getting Total Supply: " + e.message);
@@ -42,26 +42,27 @@ router.get("/total-supply", (req, res) => {
 
 router.post("/get-balance", (req, res) => {
     const address = req.body.address;
-    console.log(address);
     erc20tokenService.getBalance(address)
         .then((result: any) => {
-            res.json(parseInt(result["_hex"], 16));
+            res.json(result);
         })
         .catch(e => {
             console.log("Getting balance: " + e.message)
         });
 });
 
-router.post("/buy-tokens", (req, res) => {
+router.post("/buy-tokens", async (req, res) => {
     const amount = req.body.amount;
     const address = req.body.address;
-    erc20tokenService.buyTokens(amount, address)
-        .then((result: any) => {
-            res.json(result);
+    const result = erc20tokenService.buyTokens(amount, address);
+    result
+        .then((r: any) => {
+            res.json(r);
         })
-        .catch(e => {
-            console.log("Buying tokens: " + e.message);
-        });
+        .catch((e: any) => {
+            console.log(`Buying Tokens Error: ${e}`);
+            res.json(false);
+        })
 });
 
 router.post("/mint", (req, res) => {

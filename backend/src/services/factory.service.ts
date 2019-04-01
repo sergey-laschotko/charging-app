@@ -35,10 +35,6 @@ export class FactoryService {
         const rawdata = this.web3Service.generateRaw(funcAbi,env.stationOwner.pk);
     
         return this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-        .on('receipt', function(receipt: any){
-            console.log(['Receipt:', receipt]);
-        })
-        .on('error', console.error);
     });
   }
 }

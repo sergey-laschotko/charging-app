@@ -46,3 +46,7 @@ export function onlyDigits(e: any) {
 
     if (chr < "0" || chr > "9") return false;
 }
+
+export function addNill(number: number) {
+  return number < 10 ? `0${number}` : `${number}`;
+}

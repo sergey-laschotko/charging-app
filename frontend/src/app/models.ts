@@ -10,7 +10,7 @@ export interface IStation {
     id: string;
     address: string;
     balance: number;
-    tariffs?: ITariff[];
+    tariff?: ITariff[];
 }
 
 export interface ITariff {

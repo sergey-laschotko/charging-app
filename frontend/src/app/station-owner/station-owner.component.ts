@@ -28,6 +28,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ["timeStamp", "from", "to"];
   columnsHeaders: string[] = ["Дата", "Отправитель", "Получатель"];
   isLoading: boolean = false;
+  buyingProcess: boolean = false;
 
   @ViewChild('dtpfrom') dtpFrom: any;
   @ViewChild('dtpto') dtpTo: any;
@@ -83,7 +84,6 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
                 }
                 tariff.from = `${fromHours}:${fromMinutes}`;
                 tariff.to = `${toHours}:${toMinutes}`;
-                tariff.price = parseInt(tariff.price["_hex"], 16);
               }
             });
           });
@@ -108,6 +108,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
   }
   
   buyTokens(amount: number) {
+    this.buyingProcess = true;
     this.bs.buyTokens(amount, this.user)
       .subscribe((status: any) => {
         if (status) {
@@ -121,6 +122,7 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
             duration: 3000
           })
         }
+        this.buyingProcess = false;
       });
   }
   
@@ -181,10 +183,13 @@ export class StationOwnerComponent implements OnInit, AfterViewInit {
     }
     this.bs.createCharger(this.newStation, this.newStation, this.user)
       .subscribe((result: any) => {
-        this.sb.open("Добавление станции", "Готово", {
-          duration: 3000
-        });
-        this.updateJournal();
+        if (result) {
+          this.sb.open("Добавление станции", "Готово", {
+            duration: 3000
+          });
+          this.showChargers();
+          this.updateJournal();
+        }
       });
     this.toggleAdding();
   }

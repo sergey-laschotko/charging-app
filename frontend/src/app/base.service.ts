@@ -64,10 +64,10 @@ export class BaseService {
   }
 
   mint(amount: number) {
-    return this.http.post(`${this.url}/mint`, amount);
+    return this.http.post(`${this.url}/mint`, { amount });
   }
 
   burn(amount: number) {
-    return this.http.post(`${this.url}/burn`, amount);
+    return this.http.post(`${this.url}/burn`, { amount });
   }
 }
