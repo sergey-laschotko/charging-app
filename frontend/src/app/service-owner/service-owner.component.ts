@@ -104,24 +104,28 @@ export class ServiceOwnerComponent implements OnInit {
   produceTokens(amount: number) {
     this.producingProcess = true;
     this.bs.mint(amount)
-      .subscribe(() => {
-        this.producingProcess = false;
-        this.sb.open("Выпущено токенов: ", `${amount}`, {
-          duration: 3000
-        });
-        this.getBalance();
+      .subscribe((result: any) => {
+        if (result) {
+          this.producingProcess = false;
+          this.sb.open("Выпущено токенов: ", `${amount}`, {
+            duration: 3000
+          });
+          this.getBalance();
+        }
       });
   }
 
   removeTokens(amount: number) {
     this.removingProcess = true;
     this.bs.burn(amount)
-      .subscribe(() => {
-        this.removingProcess = false;
-        this.sb.open("Сожжено токенов: ", `${amount}`, {
-          duration: 3000
-        });
-        this.getBalance();
+      .subscribe((result: any) => {
+        if (result) {
+          this.removingProcess = false;
+          this.sb.open("Сожжено токенов: ", `${amount}`, {
+            duration: 3000
+          });
+          this.getBalance();
+        }
       });
   }
 }

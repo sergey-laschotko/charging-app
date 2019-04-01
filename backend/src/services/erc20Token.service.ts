@@ -92,19 +92,7 @@ export class ERC20TokenService {
       data: this.ERC20Token.methods.mint(this.web3Service.admin,amount).encodeABI(),
     };
     const rawdata = this.web3Service.generateRaw(funcAbi,env.admin.pk);
-    this.web3Service.web3.eth.sendSignedTransaction(rawdata)
-      .on("transactionHash", (transactionHash: any) => {
-        console.log(transactionHash);
-      })
-      .on("receipt", (receipt: any) => {
-        console.log(receipt);
-      })
-      .on('error', (error: any) => {
-        console.log(error);
-      })
-      .then((receipt: any) => {
-        console.log(receipt);
-      })
+    return this.web3Service.web3.eth.sendSignedTransaction(rawdata);
   }
   public async burn(amount: number) {
     const nonce = await this.web3Service.web3.eth.getTransactionCount(this.web3Service.admin)
